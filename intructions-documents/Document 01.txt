@@ -1,0 +1,285 @@
+Document 01
+
+⸻
+
+📘 Cosmos Journal Pro V3
+
+Document 01 — Vision Produit & Philosophie
+
+Version
+
+Version : 3.0
+
+Nom du projet :
+
+Cosmos Journal Pro – Trading Intelligence Platform
+
+⸻
+
+Vision
+
+Cosmos Journal Pro n’est pas un journal de trading.
+
+C’est une plateforme d’intelligence destinée à analyser, comprendre et améliorer les performances d’un trader grâce à une collecte intelligente de données, des statistiques avancées et une expérience utilisateur premium.
+
+L’application doit permettre au trader de répondre à trois questions essentielles :
+
+Qu’est-ce qui fonctionne ?
+
+Pourquoi cela fonctionne ?
+
+Comment devenir objectivement meilleur ?
+
+Chaque fonctionnalité devra contribuer à répondre à l’une de ces trois questions.
+
+⸻
+
+Mission
+
+Transformer les données brutes de trading en informations exploitables afin d’améliorer la qualité des décisions du trader.
+
+Le logiciel ne doit jamais se contenter d’afficher des chiffres.
+
+Il doit expliquer les résultats.
+
+⸻
+
+Philosophie
+
+Le marché est imprévisible.
+
+Le comportement du trader ne doit pas l’être.
+
+L’objectif principal de Cosmos Journal Pro est donc de mesurer tout ce qui dépend réellement du trader :
+
+	•	sa discipline ;
+	•	son exécution ;
+	•	sa gestion du risque ;
+	•	son respect du plan ;
+	•	son évolution dans le temps.
+
+Le logiciel n’a pas pour vocation de prédire les marchés.
+
+Il a pour vocation d’améliorer le trader.
+
+⸻
+
+ADN du projet
+
+Cosmos Journal Pro doit être :
+
+	•	élégant ;
+	•	minimaliste ;
+	•	extrêmement rapide ;
+	•	fluide ;
+	•	agréable à utiliser ;
+	•	statistiquement puissant ;
+	•	évolutif.
+
+Chaque écran devra donner une impression de simplicité.
+
+La puissance devra être cachée derrière une interface intuitive.
+
+⸻
+
+Le principe fondamental
+
+Une règle s’applique à tout le projet.
+
+Toute donnée enregistrée doit produire au moins une statistique utile.
+
+Si une information ne sert à rien dans les analyses futures,
+
+elle ne sera pas demandée.
+
+⸻
+
+Les deux performances
+
+Le logiciel devra toujours distinguer deux performances différentes.
+
+Performance de la stratégie
+
+Le marché.
+
+Le setup.
+
+Les probabilités.
+
+Les unités de temps.
+
+Les actifs.
+
+Les stratégies.
+
+Les sessions.
+
+⸻
+
+Performance du trader
+
+Discipline.
+
+Respect du plan.
+
+Gestion émotionnelle.
+
+Interventions manuelles.
+
+Patience.
+
+Exécution.
+
+Ces deux dimensions devront toujours être séparées.
+
+⸻
+
+Le Delta Émotionnel
+
+Le Delta Émotionnel constitue l’un des piliers fondamentaux de Cosmos Journal Pro.
+
+Il ne mesure pas les gains.
+
+Il ne mesure pas les pertes.
+
+Il mesure exclusivement :
+
+Le coût réel des décisions émotionnelles.
+
+Autrement dit :
+
+Quelle différence existe entre ce que le plan aurait produit et ce que les émotions ont réellement produit ?
+
+Le Delta Émotionnel doit permettre au trader de visualiser immédiatement le prix de ses interventions manuelles.
+
+Il représente donc un indicateur de discipline, et non de performance financière.
+
+Il devra être mis en avant dans le Dashboard, les Analytics et les Insights.
+
+⸻
+
+Les objectifs du logiciel
+
+Le logiciel doit permettre de répondre automatiquement à des questions telles que :
+
+	•	Quel actif est réellement le plus rentable ?
+	•	Quelle stratégie fonctionne le mieux ?
+	•	Quel HTF est le plus performant ?
+	•	Quel LTF donne les meilleures entrées ?
+	•	Quelle combinaison HTF/LTF produit les meilleurs résultats ?
+	•	Quelle session est la plus rentable ?
+	•	Quelle durée moyenne produit les meilleurs résultats ?
+	•	Quel niveau de risque est optimal ?
+	•	Quel type de compte produit les meilleures performances ?
+	•	Combien coûtent réellement mes émotions ?
+
+⸻
+
+Objectifs UX
+
+Chaque décision de conception devra respecter les règles suivantes.
+
+Règle 1
+
+Un trade doit pouvoir être enregistré en moins de vingt secondes.
+
+⸻
+
+Règle 2
+
+L’utilisateur ne doit jamais effectuer un calcul mental.
+
+Le logiciel calcule tout automatiquement.
+
+⸻
+
+Règle 3
+
+L’interface doit toujours rester plus simple que les analyses.
+
+⸻
+
+Règle 4
+
+Les statistiques doivent raconter une histoire.
+
+Le logiciel ne montre pas seulement des chiffres.
+
+Il explique ce qu’ils signifient.
+
+⸻
+
+Règle 5
+
+Aucun écran ne doit paraître surchargé.
+
+Le blanc (ou l’espace négatif en thème sombre) est considéré comme un élément de design.
+
+⸻
+
+Les piliers de Cosmos Journal Pro
+
+1. Rapidité
+
+Le logiciel doit être agréable à remplir.
+
+⸻
+
+2. Discipline
+
+Le Delta Émotionnel devient un KPI majeur.
+
+⸻
+
+3. Analyse
+
+Chaque trade améliore la qualité des statistiques.
+
+⸻
+
+4. Intelligence
+
+L’application découvre progressivement les habitudes du trader.
+
+⸻
+
+5. Évolution
+
+L’application est pensée pour évoluer pendant plusieurs années sans devoir être reconstruite.
+
+⸻
+
+Le rôle de l’Intelligence
+
+Le logiciel ne prendra jamais les décisions à la place du trader.
+
+Il fournira uniquement :
+
+	•	des observations ;
+	•	des corrélations ;
+	•	des statistiques ;
+	•	des recommandations basées sur les données.
+
+Le trader reste toujours maître de ses décisions.
+
+⸻
+
+La règle d’or
+
+Cette phrase devra apparaître au début de toute la documentation du projet.
+
+Cosmos Journal Pro n’est pas conçu pour enregistrer des trades.
+
+Il est conçu pour révéler les habitudes qui améliorent ou détériorent les performances du trader grâce à une collecte intelligente de données, une analyse statistique avancée et une expérience utilisateur premium.
+
+⸻
+
+Les valeurs du projet
+
+Chaque fonctionnalité devra respecter les cinq valeurs suivantes :
+
+	0.	Utilité : chaque élément doit apporter une valeur concrète.
+	0.	Simplicité : la puissance ne doit jamais compliquer l’utilisation.
+	0.	Fiabilité : les calculs et statistiques doivent être exacts et cohérents.
+	0.	Évolutivité : l’architecture doit permettre d’ajouter de nouvelles fonctionnalités sans réécriture majeure.
+	0.	Transparence : l’utilisateur doit toujours comprendre comment une statistique ou un insight est calculé.

@@ -1,0 +1,565 @@
+Document 02
+
+⸻
+ 
+📘 DOCUMENT 02
+COSMOS JOURNAL PRO V3
+Cahier des charges fonctionnel
+ 
+⸻
+ 
+1. OBJECTIF
+Le Journal constitue le cœur de l’application.
+Il doit permettre :
+	•	d’enregistrer un trade en moins de 20 secondes ;
+	•	de récolter toutes les données réellement utiles ;
+	•	d’automatiser un maximum de calculs ;
+	•	de produire les analyses les plus pertinentes possibles.
+Le formulaire ne doit jamais donner l’impression d’être complexe.
+ 
+⸻
+ 
+2. STRUCTURE GLOBALE
+Le formulaire sera divisé en 8 cartes.
+Au lieu d’une immense page.
+On aura :
+① Compte
+
+② Trade
+
+③ Analyse
+
+④ Gestion
+
+⑤ Résultat
+
+⑥ Delta émotionnel
+
+⑦ Notes
+
+⑧ Validation
+Chaque carte est indépendante.
+ 
+⸻
+ 
+CARTE 1
+COMPTE
+Nouvelle section.
+Elle remplacera totalement le système actuel.
+ 
+⸻
+ 
+Compte utilisé
+Dropdown.
+Exemple
+▼ Compte Perso 40$
+
+▼ FTMO 100K
+
+▼ The5ers
+
+▼ Compte Swing
+
+▼ Compte Crypto
+Chaque compte possède :
+	•	Nom
+	•	Type
+	•	Capital
+	•	Devise
+	•	Couleur
+ 
+⸻
+ 
+Type
+Deux types.
+○ Prop Firm
+
+○ Fonds propres
+ 
+⸻
+ 
+Capital
+Calcul automatique.
+Mais modifiable.
+40 $
+
+100 000 $
+
+250 $
+ 
+⸻
+ 
+Devise
+Automatique.
+$
+€
+FCFA
+etc.
+ 
+⸻
+ 
+RÈGLE
+Si
+Prop Firm
+↓
+Slider
+0.25
+
+0.50
+
+0.75
+
+1
+ 
+⸻
+ 
+Si
+Fonds propres
+↓
+Slider
+5
+
+7.5
+
+10
+
+12.5
+
+15
+ 
+⸻
+ 
+Le montant risqué est recalculé immédiatement.
+ 
+⸻
+ 
+CARTE 2
+CONTEXTE DU TRADE
+ 
+⸻
+ 
+Date
+ 
+⸻
+ 
+Heure d’entrée
+ 
+⸻
+ 
+Heure de sortie
+ 
+⸻
+ 
+Durée
+Calcul automatique.
+ 
+⸻
+ 
+Session
+Liste personnalisable.
+Par défaut
+Asie
+
+Londres
+
+New York
+ 
+⸻
+ 
+Actif
+Liste personnalisable.
+ 
+⸻
+ 
+Direction
+Buy
+
+Sell
+ 
+⸻
+ 
+CARTE 3
+ANALYSE
+C’est ici que se trouve la plus grosse nouveauté.
+ 
+⸻
+ 
+HTF
+Liste personnalisable.
+Par défaut
+Weekly
+
+Daily
+
+H4
+
+H1
+ 
+⸻
+ 
+LTF
+Liste personnalisable.
+M15
+
+M5
+
+M1
+ 
+⸻
+ 
+Le logiciel devra enregistrer automatiquement :
+Daily → M5
+comme une combinaison unique.
+ 
+⸻
+ 
+Stratégie
+Liste personnalisable.
+ 
+⸻
+ 
+Qualité du Setup ⭐
+Nouvelle donnée.
+★★★★★
+
+★★★★☆
+
+★★★☆☆
+
+★★☆☆☆
+
+★☆☆☆☆
+Cette donnée servira ensuite aux statistiques.
+ 
+⸻
+ 
+Confluence
+Checklist.
+Exemple.
+□ Structure
+
+□ Liquidité
+
+□ OB
+
+□ FVG
+
+□ SMT
+
+□ Volume
+Personnalisable.
+ 
+⸻
+ 
+CARTE 4
+GESTION
+ 
+⸻
+ 
+Risque %
+Slider intelligent.
+ 
+⸻
+ 
+Montant risqué
+Calcul automatique.
+ 
+⸻
+ 
+RR prévu
+ 
+⸻
+ 
+RR obtenu
+Calcul automatique.
+ 
+⸻
+ 
+Respect du plan
+Oui
+
+Partiellement
+
+Non
+ 
+⸻
+ 
+CARTE 5
+RÉSULTAT
+ 
+⸻
+ 
+Résultat %
+ 
+⸻
+ 
+Résultat $
+ 
+⸻
+ 
+Trade
+Gagnant
+
+Perdant
+
+BE
+Calcul automatique.
+ 
+⸻
+ 
+CARTE 6
+DELTA ÉMOTIONNEL
+Pour moi.
+Cette carte mérite d’être isolée.
+Elle est le cœur psychologique de Cosmos Journal Pro.
+ 
+⸻
+ 
+Résultat théorique
+Celui prévu par le plan.
+ 
+⸻
+ 
+Résultat réel
+Celui obtenu.
+ 
+⸻
+ 
+Delta émotionnel
+Calcul automatique.
+ 
+⸻
+ 
+Cause
+Checklist.
+Sortie anticipée
+
+Déplacement SL
+
+Déplacement TP
+
+FOMO
+
+Revenge
+
+Peur
+
+Cupidité
+
+Hésitation
+
+Entrée tardive
+
+Entrée précoce
+
+Sur-gestion
+Personnalisable.
+ 
+⸻
+ 
+Intervention manuelle ?
+Oui
+
+Non
+ 
+⸻
+ 
+Impact financier
+Calcul automatique.
+-35 $
+ 
+⸻
+ 
+Impact en R
+Calcul automatique.
+ 
+⸻
+ 
+CARTE 7
+NOTES
+Notes libres.
+ 
+⸻
+ 
+Capture HTF
+ 
+⸻
+ 
+Capture LTF
+ 
+⸻
+ 
+Capture Résultat
+ 
+⸻
+ 
+Tags
+Personnalisables.
+ 
+⸻
+ 
+CARTE 8
+VALIDATION
+Bouton.
+Enregistrer
+Animation.
+Retour visuel.
+ 
+⸻
+ 
+PARAMÈTRES
+Refonte complète.
+Le bouton ⚙ ne servira plus uniquement aux préférences.
+Il deviendra le centre de personnalisation.
+ 
+⸻
+ 
+L’utilisateur pourra gérer :
+Comptes
+Créer
+Modifier
+Supprimer
+ 
+⸻
+ 
+Actifs
+Ajouter
+Supprimer
+Réordonner
+ 
+⸻
+ 
+Sessions
+Ajouter
+Supprimer
+ 
+⸻
+ 
+HTF
+Ajouter
+Supprimer
+ 
+⸻
+ 
+LTF
+Ajouter
+Supprimer
+ 
+⸻
+ 
+Stratégies
+Ajouter
+Supprimer
+ 
+⸻
+ 
+Confluences
+Ajouter
+Supprimer
+ 
+⸻
+ 
+Causes du Delta émotionnel
+Ajouter
+Supprimer
+ 
+⸻
+ 
+Thème
+Clair
+Sombre
+Auto
+ 
+⸻
+ 
+Sauvegarde
+Exporter
+Importer
+ 
+⸻
+ 
+Réinitialiser
+ 
+⸻
+ 
+ANALYTICS
+Le Dashboard ne fera plus que montrer des chiffres.
+Toute l’intelligence sera ici.
+ 
+⸻
+ 
+Performance
+Par compte.
+ 
+⸻
+ 
+Performance
+Par actif.
+ 
+⸻
+ 
+Performance
+Par stratégie.
+ 
+⸻
+ 
+Performance
+Par session.
+ 
+⸻
+ 
+Performance
+Par HTF.
+ 
+⸻
+ 
+Performance
+Par LTF.
+ 
+⸻
+ 
+Performance
+Par combinaison
+HTF → LTF.
+ 
+⸻
+ 
+Performance
+Par risque.
+ 
+⸻
+ 
+Performance
+Par durée.
+ 
+⸻
+ 
+Performance
+Par qualité de setup.
+ 
+⸻
+ 
+Performance
+Par respect du plan.
+ 
+⸻
+ 
+Performance
+Par Delta émotionnel.
+ 
+⸻
+ 
+Performance
+Par intervention manuelle.
+ 
+⸻
+ 
+INSIGHTS IA
+Je veux que cette page soit la signature de Cosmos Journal Pro.
+Exemples :
+Tes setups notés ★★★★★ ont un taux de réussite de 78 %, contre seulement 41 % pour les setups ★★★☆☆.
+Les trades où tu interviens manuellement réduisent ton expectancy moyenne de 1,8R.
+La combinaison Daily → M5 représente 32 % de tes trades mais 58 % de ton profit total.
+Tu performes mieux avec un risque de 5 % sur tes comptes personnels qu’avec 10 %.
+Les sessions de New York sont tes plus rentables, mais uniquement lorsque ton biais HTF est Daily.
+Ces informations doivent être générées automatiquement à partir des données, sans interprétation arbitraire.

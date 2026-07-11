@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<!-- saved from url=(0084)file:///C:/Users/HP/Documents/Cosmos%20Journal%20Pro%20V3/cosmos_journal_pro_v2.html -->
+<html lang="fr" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmos Journal Pro V3 - Trading Intelligence Platform</title>
+ <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">C</div>
+        <div>
+          <h1 class="brand-title">Cosmos Journal Pro <span class="badge">V3</span></h1>
+          <p class="brand-subtitle">Révéler les habitudes qui améliorent ou détériorent les performances.</p>
+        </div>
+      </div>
+
+      <nav class="top-nav" aria-label="Navigation principale">
+        <button class="nav-button active" type="button" data-view="dashboard">Dashboard</button>
+        <button class="nav-button" type="button" data-view="journal">Journal</button>
+        <button class="nav-button" type="button" data-view="analytics">Analytics</button>
+        <button class="nav-button" type="button" data-view="insights">Insights</button>
+      </nav>
+
+      <div class="header-actions">
+        <button class="button ghost" type="button" data-action="toggle-theme">Thème</button>
+        <button class="button" type="button" data-action="open-settings">Paramètres</button>
+        <button class="button" type="button" data-action="import-json">Importer JSON</button>
+        <button class="button" type="button" data-action="export-json">Exporter JSON</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="view active" id="view-dashboard">
+      <section class="hero-grid" aria-label="Synthèse">
+        <div class="panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Mission du moment</p>
+              <h2 id="mission-title">Construire une base statistique fiable</h2>
+              <p class="muted" id="mission-copy">Ajoutez vos premiers trades pour permettre à Cosmos de comparer le résultat réel, le résultat théorique et le Delta émotionnel.</p>
+            </div>
+            <span class="badge" id="data-version">Data v3.0</span>
+          </div>
+          <div class="kpi-grid">
+            <article class="card kpi">
+              <span class="kpi-label">P&amp;L réel</span>
+              <strong class="kpi-value neutral" id="kpi-real">+0.00%</strong>
+              <p class="kpi-note">Résultat enregistré.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">P&amp;L théorique</span>
+              <strong class="kpi-value neutral" id="kpi-theoretical">+0.00%</strong>
+              <p class="kpi-note">Exécution idéale V2 migrée.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Delta émotionnel</span>
+              <strong class="kpi-value neutral" id="kpi-delta">+0.00%</strong>
+              <p class="kpi-note" id="delta-note">Ajoutez un trade pour mesurer le coût réel de l'exécution.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Trades</span>
+              <strong class="kpi-value neutral" id="kpi-count">0</strong>
+              <p class="kpi-note">Base locale versionnée.</p>
+            </article>
+          </div>
+
+          <!-- Milestone 3A : KPI enrichis (Document 05 §9), calculés via le moteur d'analyse
+               agrégé déjà prêt depuis le Milestone 2A (winrate, profitFactor, expectancy...). -->
+          <div class="kpi-grid" style="margin-top:16px;">
+            <article class="card kpi">
+              <span class="kpi-label">Capital actuel</span>
+              <strong class="kpi-value neutral" id="kpi-capital">0.00</strong>
+              <p class="kpi-note">Tous comptes actifs confondus.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Winrate</span>
+              <strong class="kpi-value neutral" id="kpi-winrate">—</strong>
+              <p class="kpi-note">% de trades gagnants.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Profit Factor</span>
+              <strong class="kpi-value neutral" id="kpi-profit-factor">—</strong>
+              <p class="kpi-note">Gains ÷ pertes.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Expectancy</span>
+              <strong class="kpi-value neutral" id="kpi-expectancy">—</strong>
+              <p class="kpi-note">Espérance de gain par trade (R).</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Drawdown max</span>
+              <strong class="kpi-value neutral" id="kpi-drawdown">—</strong>
+              <p class="kpi-note">Pire recul depuis un sommet.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">RR moyen</span>
+              <strong class="kpi-value neutral" id="kpi-avg-rr">—</strong>
+              <p class="kpi-note">Risque/Récompense obtenu, en moyenne.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Durée moyenne</span>
+              <strong class="kpi-value neutral" id="kpi-avg-duration">—</strong>
+              <p class="kpi-note">Basée sur les trades avec heures saisies.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Respect du plan</span>
+              <strong class="kpi-value neutral" id="kpi-plan-respect">—</strong>
+              <p class="kpi-note">% de trades "Oui".</p>
+            </article>
+          </div>
+        </div>
+
+        <aside class="panel mission">
+          <p class="eyebrow">Architecture V3</p>
+          <h2>Une base solide pour évoluer sereinement</h2>
+          <p class="muted">Le stockage, les paramètres, les calculs et l'interface sont organisés en modules internes pour évoluer sans réécriture majeure.</p>
+          <div class="segmented" id="feature-registry">
+            <span class="badge">Multi-comptes · active</span>
+          
+            <span class="badge">Paramètres dynamiques · active</span>
+          
+            <span class="badge">Analytics · active</span>
+          
+            <span class="badge">Insights & Jumeau Numérique · active</span>
+          </div>
+        </aside>
+      </section>
+
+      <!-- Milestone 4 (Document 05 §8) : Jumeau Numérique — courbe réelle vs courbe théorique. -->
+      <section class="hero-grid" aria-label="Jumeau Numérique" style="margin-top:24px;">
+        <div class="panel" style="grid-column: 1 / -1;">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Jumeau Numérique</p>
+              <h2>Résultat réel vs résultat théorique</h2>
+              <p class="muted" id="digital-twin-gap">Ajoutez des trades pour comparer votre exécution réelle à une exécution parfaite du plan.</p>
+            </div>
+          </div>
+          <div id="digital-twin-chart"></div>
+        </div>
+      </section>
+      </div>
+
+      <div class="view" id="view-journal">
+      <section class="workspace-grid" aria-label="Journal actuel">
+        <div class="panel" id="journal-panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Mode Focus</p>
+              <h2>Nouveau trade</h2>
+              <p class="muted" id="wizard-step-label">Carte 1 / 8 — Compte</p>
+            </div>
+          </div>
+
+          <div class="wizard-progress"><div class="wizard-progress-fill" id="wizard-progress-fill"></div></div>
+
+          <form class="form-grid wizard" id="trade-form">
+
+            <!-- CARTE 1 — COMPTE (Document 02) -->
+            <section class="wizard-card active" data-card="1">
+              <h3>① Compte</h3>
+              <div class="field">
+                <label for="account-select">Compte utilisé</label>
+                <select id="account-select" required>
+                  <option value="acc-personal-40">Compte Perso 40$ · USD</option>
+                </select>
+              </div>
+              <p class="readonly-display" id="account-type-preview"></p>
+              <div class="field">
+                <label for="risk-select">Risque</label>
+                <select id="risk-select" required>
+                  <option value="0.25">0.25%</option>
+                  <option value="0.5">0.50%</option>
+                  <option value="0.75">0.75%</option>
+                  <option value="1">1.00%</option>
+                </select>
+                <p class="muted" id="risk-amount-preview"></p>
+              </div>
+            </section>
+
+            <!-- CARTE 2 — CONTEXTE DU TRADE (Document 02) -->
+            <section class="wizard-card" data-card="2">
+              <h3>② Trade</h3>
+              <div class="field">
+                <label for="trade-date">Date</label>
+                <input type="date" id="trade-date">
+              </div>
+              <div class="field">
+                <label for="entry-time">Heure d'entrée</label>
+                <input type="time" id="entry-time">
+              </div>
+              <div class="field">
+                <label for="exit-time">Heure de sortie</label>
+                <input type="time" id="exit-time">
+              </div>
+              <p class="readonly-display" id="duration-preview">Durée : —</p>
+              <div class="field">
+                <label for="session-select">Session</label>
+                <select id="session-select" required><option>Asie</option><option>Londres</option><option>New York</option></select>
+              </div>
+              <div class="field">
+                <label>Actif</label>
+                <div class="segmented" id="asset-options"><button type="button" class="chip">EUR/USD</button><button type="button" class="chip">GBP/USD</button><button type="button" class="chip">XAU/USD</button><button type="button" class="chip">BTC/USD</button></div>
+                <input type="hidden" id="asset-value" required>
+              </div>
+              <div class="field">
+                <label>Direction</label>
+                <div class="segmented" id="direction-options">
+                  <button type="button" class="chip active">Buy</button>
+                  <button type="button" class="chip">Sell</button>
+                </div>
+                <input type="hidden" id="direction-value" value="Buy">
+              </div>
+            </section>
+
+            <!-- CARTE 3 — ANALYSE (Document 02) -->
+            <section class="wizard-card" data-card="3">
+              <h3>③ Analyse</h3>
+              <div class="field">
+                <label for="htf-select">HTF</label>
+                <select id="htf-select"><option>Weekly</option><option>Daily</option><option>H4</option><option>H1</option></select>
+              </div>
+              <div class="field">
+                <label for="timeframe-select">LTF</label>
+                <select id="timeframe-select" required><option>M15</option><option>M5</option><option>M1</option></select>
+              </div>
+              <p class="readonly-display" id="combo-preview">Combinaison : —</p>
+              <div class="field">
+                <label>Stratégie</label>
+                <div class="segmented" id="strategy-options"><button type="button" class="chip">Strat 1 - OB/BPR</button><button type="button" class="chip">Strat 2 - OB/POC/LIQ</button></div>
+                <input type="hidden" id="strategy-value" required>
+              </div>
+              <div class="field">
+                <label>Qualité du setup</label>
+                <div class="segmented" id="setup-quality-stars"></div>
+                <input type="hidden" id="setup-quality-value" value="0">
+              </div>
+              <div class="field">
+                <label>Confluences</label>
+                <div class="checklist" id="confluences-options"></div>
+              </div>
+            </section>
+
+            <!-- CARTE 4 — GESTION (Document 02) -->
+            <section class="wizard-card" data-card="4">
+              <h3>④ Gestion</h3>
+              <p class="readonly-display" id="gestion-risk-summary">Risque : —</p>
+              <div class="field">
+                <label for="rr-planned">RR prévu</label>
+                <input type="number" id="rr-planned" step="0.1" min="0" placeholder="ex : 2">
+              </div>
+              <p class="readonly-display" id="rr-obtained-display">RR obtenu : à renseigner en Carte 5</p>
+              <div class="field">
+                <label for="plan-respect-select">Respect du plan</label>
+                <select id="plan-respect-select">
+                  <option value="Oui">Oui</option>
+                  <option value="Partiellement">Partiellement</option>
+                  <option value="Non">Non</option>
+                </select>
+              </div>
+            </section>
+
+            <!-- CARTE 5 — RÉSULTAT (Document 02) -->
+            <section class="wizard-card" data-card="5">
+              <h3>⑤ Résultat</h3>
+              <div class="field">
+                <label for="result-currency-input">Résultat (devise du compte)</label>
+                <input type="number" id="result-currency-input" step="0.01" placeholder="ex : 40 ou -20">
+              </div>
+              <p class="readonly-display" id="result-percent-display">Résultat % : —</p>
+              <p class="readonly-display" id="trade-status-display">Trade : —</p>
+            </section>
+
+            <!-- CARTE 6 — DELTA ÉMOTIONNEL (Document 02) -->
+            <section class="wizard-card" data-card="6">
+              <h3>⑥ Delta émotionnel</h3>
+              <p class="readonly-display" id="theoretical-result-display">Résultat théorique (plan) : —</p>
+              <p class="readonly-display" id="real-result-display">Résultat réel : —</p>
+              <p class="readonly-display" id="emotional-delta-display">Delta émotionnel : —</p>
+              <div class="field">
+                <label>Cause principale</label>
+                <div class="segmented" id="emotional-cause-options"></div>
+                <input type="hidden" id="emotional-cause-value">
+              </div>
+              <div class="field">
+                <label>Causes secondaires</label>
+                <div class="checklist" id="emotional-causes-secondary-options"></div>
+              </div>
+              <div class="field">
+                <label>Intervention manuelle ?</label>
+                <div class="segmented" id="manual-intervention-options">
+                  <button type="button" class="chip">Oui</button>
+                  <button type="button" class="chip active">Non</button>
+                </div>
+                <input type="hidden" id="manual-intervention-value" value="Non">
+              </div>
+            </section>
+
+            <!-- CARTE 7 — NOTES (Document 02) -->
+            <section class="wizard-card" data-card="7">
+              <h3>⑦ Notes</h3>
+              <div class="field">
+                <label for="notes">Commentaire</label>
+                <textarea id="notes" placeholder="Ressenti, contexte, exécution..."></textarea>
+              </div>
+              <div class="field">
+                <label for="tags-input">Tags (séparés par une virgule)</label>
+                <input type="text" id="tags-input" placeholder="Setup A+, À revoir">
+              </div>
+              <div class="field">
+                <label for="capture-htf-input">Capture HTF (lien)</label>
+                <input type="text" id="capture-htf-input" placeholder="https://...">
+              </div>
+              <div class="field">
+                <label for="capture-ltf-input">Capture LTF (lien)</label>
+                <input type="text" id="capture-ltf-input" placeholder="https://...">
+              </div>
+              <div class="field">
+                <label for="capture-result-input">Capture Résultat (lien)</label>
+                <input type="text" id="capture-result-input" placeholder="https://...">
+              </div>
+            </section>
+
+            <!-- CARTE 8 — VALIDATION (Document 02) -->
+            <section class="wizard-card" data-card="8">
+              <h3>⑧ Validation</h3>
+              <p class="muted" id="validation-summary"></p>
+              <button class="button primary" type="submit">Enregistrer le trade</button>
+            </section>
+
+            <div class="wizard-nav">
+              <button type="button" class="button ghost" id="wizard-prev">Précédent</button>
+              <button type="button" class="button primary" id="wizard-next">Suivant</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel" id="history-panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Historique</p>
+              <h2>Registre comportemental</h2>
+              <p class="muted" id="history-subtitle">Aucun trade enregistré.</p>
+            </div>
+            <button class="button danger" type="button" data-action="clear-data">Réinitialiser</button>
+          </div>
+          <div class="trade-list" id="trade-list">
+              <div class="empty-state">
+                <div>
+                  <h3>Aucun trade enregistré</h3>
+                  <p class="muted">Ajoutez votre premier trade. Cosmos gardera la structure prête pour les Analytics V3.</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+      </div>
+
+      <div class="view" id="view-analytics">
+        <div class="panel">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Le laboratoire</p>
+              <h2>Analytics</h2>
+              <p class="muted">Les statistiques se recalculent immédiatement dès que tu changes un filtre.</p>
+            </div>
+            <button class="button ghost" type="button" id="analytics-filter-reset">Réinitialiser les filtres</button>
+          </div>
+
+          <div class="form-grid" id="analytics-filters" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); display:grid; gap:16px;">
+            <div class="field">
+              <label for="analytics-filter-account">Compte</label>
+              <select id="analytics-filter-account"><option value="">Tous</option></select>
+            </div>
+            <div class="field">
+              <label for="analytics-filter-asset">Actif</label>
+              <select id="analytics-filter-asset"><option value="">Tous</option></select>
+            </div>
+            <div class="field">
+              <label for="analytics-filter-session">Session</label>
+              <select id="analytics-filter-session"><option value="">Toutes</option></select>
+            </div>
+            <div class="field">
+              <label for="analytics-filter-htf">HTF</label>
+              <select id="analytics-filter-htf"><option value="">Tous</option></select>
+            </div>
+            <div class="field">
+              <label for="analytics-filter-ltf">LTF</label>
+              <select id="analytics-filter-ltf"><option value="">Tous</option></select>
+            </div>
+            <div class="field">
+              <label for="analytics-filter-strategy">Stratégie</label>
+              <select id="analytics-filter-strategy"><option value="">Toutes</option></select>
+            </div>
+            <div class="field">
+              <label for="analytics-filter-date-from">Du</label>
+              <input type="date" id="analytics-filter-date-from">
+            </div>
+            <div class="field">
+              <label for="analytics-filter-date-to">Au</label>
+              <input type="date" id="analytics-filter-date-to">
+            </div>
+          </div>
+          <p class="muted" id="analytics-filter-note" style="margin-top:8px;"></p>
+
+          <div class="kpi-grid" style="margin-top:24px;">
+            <article class="card kpi">
+              <span class="kpi-label">Trades filtrés</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-count">0</strong>
+              <p class="kpi-note">Sur le total enregistré.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">P&amp;L réel</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-real">+0.00%</strong>
+              <p class="kpi-note">Somme sur la sélection.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">P&amp;L théorique</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-theoretical">+0.00%</strong>
+              <p class="kpi-note">Somme sur la sélection.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Delta émotionnel</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-delta">+0.00%</strong>
+              <p class="kpi-note">Réel − théorique.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Winrate</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-winrate">—</strong>
+              <p class="kpi-note">% de trades gagnants.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Profit Factor</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-profit-factor">—</strong>
+              <p class="kpi-note">Gains ÷ pertes.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Expectancy</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-expectancy">—</strong>
+              <p class="kpi-note">Espérance par trade (R).</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">RR moyen</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-avg-rr">—</strong>
+              <p class="kpi-note">Sur la sélection.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Durée moyenne</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-avg-duration">—</strong>
+              <p class="kpi-note">Trades avec heures saisies.</p>
+            </article>
+            <article class="card kpi">
+              <span class="kpi-label">Respect du plan</span>
+              <strong class="kpi-value neutral" id="analytics-kpi-plan-respect">—</strong>
+              <p class="kpi-note">% de trades "Oui".</p>
+            </article>
+          </div>
+
+          <div class="trade-list" id="analytics-trade-list" style="margin-top:24px;"></div>
+
+          <!-- Milestone 3C (Document 02, section ANALYTICS) : tableaux de performance par dimension. -->
+          <div class="section-header" style="margin-top:32px;">
+            <div>
+              <p class="eyebrow">Comparaison</p>
+              <h2>Performance par dimension</h2>
+              <p class="muted">Calculée sur les trades actuellement filtrés ci-dessus.</p>
+            </div>
+            <div class="field" style="min-width:220px;">
+              <label for="breakdown-dimension">Regrouper par</label>
+              <select id="breakdown-dimension">
+                <option value="account">Compte</option>
+                <option value="asset">Actif</option>
+                <option value="strategy">Stratégie</option>
+                <option value="session">Session</option>
+                <option value="htf">HTF</option>
+                <option value="ltf">LTF</option>
+                <option value="combination">Combinaison HTF → LTF</option>
+                <option value="risk">Risque</option>
+                <option value="duration">Durée</option>
+                <option value="setupQuality">Qualité du setup</option>
+                <option value="planRespect">Respect du plan</option>
+                <option value="manualIntervention">Intervention manuelle</option>
+              </select>
+            </div>
+          </div>
+          <div id="breakdown-table"></div>
+        </div>
+      </div>
+
+      <div class="view" id="view-insights">
+        <div class="panel">
+          <p class="eyebrow">Insights IA</p>
+          <h2>Ce que Cosmos observe</h2>
+          <p class="muted">Généré uniquement à partir de données statistiquement pertinentes — jamais de conclusion inventée sur un échantillon trop faible.</p>
+
+          <div id="insights-empty-state" class="empty-state hidden" style="margin-top:16px;">
+            <div>
+              <h3>Pas assez de données</h3>
+              <p class="muted" id="insights-empty-copy">Ajoutez encore des trades pour obtenir une analyse fiable.</p>
+            </div>
+          </div>
+
+          <div id="insights-content" class="hidden" style="margin-top:16px; display:grid; gap:20px;">
+            <div>
+              <h3>🟢 Les forces</h3>
+              <div id="insights-forces" class="trade-list"></div>
+            </div>
+            <div>
+              <h3>🔴 Les faiblesses</h3>
+              <div id="insights-faiblesses" class="trade-list"></div>
+            </div>
+            <div>
+              <h3>🔵 Les opportunités</h3>
+              <div id="insights-opportunites" class="trade-list"></div>
+            </div>
+            <div>
+              <h3>⭐ Les recommandations</h3>
+              <div id="insights-recommandations" class="trade-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="settings-modal" aria-hidden="true">
+    <div class="panel settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <aside class="settings-nav" id="settings-nav">
+            <button class="button settings-tab active" type="button" data-settings-category="accounts">
+              Comptes
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="assets">
+              Actifs
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="sessions">
+              Sessions
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="htf">
+              HTF
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="ltf">
+              LTF
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="strategies">
+              Stratégies
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="confluences">
+              Confluences
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="emotionalCauses">
+              Causes émotionnelles
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="tags">
+              Tags
+            </button>
+          
+            <button class="button settings-tab " type="button" data-settings-category="appearance">
+              Apparence
+            </button>
+          </aside>
+      <section class="settings-body">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Centre de personnalisation</p>
+            <h2 id="settings-title">Paramètres dynamiques</h2>
+            <p class="muted">Toutes les listes de l'application sont pilotées par les données.</p>
+          </div>
+          <button class="button ghost" type="button" data-action="close-settings">Fermer</button>
+        </div>
+        <div id="settings-content">
+            <h3>Comptes</h3>
+            <p class="muted">Chaque compte définit son type (Prop Firm ou Fonds propres), ce qui ajuste automatiquement les paliers de risque disponibles dans le formulaire.</p>
+            <div class="setting-items">
+              
+                <span class="setting-pill">Compte Perso 40$ · Fonds propres · USD</span>
+              
+            </div>
+            <form class="form-grid" data-add-account="">
+              <div class="field">
+                <label for="account-name">Nom</label>
+                <input id="account-name" name="name" required="" placeholder="Compte Perso 40$">
+              </div>
+              <div class="field">
+                <label for="account-type">Type</label>
+                <select id="account-type" name="type">
+                  <option>Fonds propres</option>
+                  <option>Prop Firm</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="account-capital">Capital</label>
+                <input id="account-capital" name="capital" type="number" min="0" step="0.01" required="">
+              </div>
+              <div class="field">
+                <label for="account-currency">Devise</label>
+                <input id="account-currency" name="currency" value="USD" maxlength="8" required="">
+              </div>
+              <button class="button primary" type="submit">Créer le compte</button>
+            </form>
+          </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="export-modal" aria-hidden="true">
+    <div class="panel" role="dialog" aria-modal="true" style="width:min(760px,100%);">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Sauvegarde</p>
+          <h2>Export JSON</h2>
+          <p class="muted">Copiez cette sauvegarde versionnée avant toute transformation majeure.</p>
+        </div>
+        <button class="button ghost" type="button" data-action="close-export">Fermer</button>
+      </div>
+      <textarea id="export-output" readonly="" style="width:100%; min-height:360px; border-radius:12px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); padding:16px; font-family:ui-monospace, SFMono-Regular, Consolas, monospace;"></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+        <button class="button primary" type="button" data-action="copy-export">Copier</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="import-modal" aria-hidden="true">
+    <div class="panel" role="dialog" aria-modal="true" style="width:min(760px,100%);">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Sauvegarde</p>
+          <h2>Import JSON</h2>
+          <p class="muted">Collez une sauvegarde Cosmos (V2 ou V3) ou choisissez un fichier. Vos données actuelles seront remplacées après confirmation.</p>
+        </div>
+        <button class="button ghost" type="button" data-action="close-import">Fermer</button>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label for="import-file">Fichier .json</label>
+        <input type="file" id="import-file" accept="application/json,.json">
+      </div>
+      <textarea id="import-input" placeholder="Collez ici le contenu JSON exporté depuis Cosmos..." style="width:100%; min-height:300px; border-radius:12px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); padding:16px; font-family:ui-monospace, SFMono-Regular, Consolas, monospace;"></textarea>
+      <p class="muted" id="import-feedback" style="margin-top:8px;"></p>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+        <button class="button primary" type="button" data-action="run-import">Importer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="app.js" defer></script>
+
+</body></html>

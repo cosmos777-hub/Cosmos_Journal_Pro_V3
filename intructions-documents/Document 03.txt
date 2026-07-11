@@ -1,0 +1,1148 @@
+Document 03
+
+⸻
+
+📘 DOCUMENT 03
+
+COSMOS JOURNAL PRO V3
+
+DESIGN SYSTEM & UI/UX PREMIUM
+
+⸻
+
+Philosophie
+
+L’utilisateur passe parfois plusieurs heures à analyser les marchés.
+
+Le journal ne doit jamais ajouter de fatigue mentale.
+
+Chaque écran doit transmettre une sensation de :
+
+	•	calme ;
+	•	contrôle ;
+	•	clarté ;
+	•	précision.
+
+Le design doit disparaître derrière l’expérience.
+
+L’utilisateur ne doit jamais réfléchir à l’interface.
+
+⸻
+
+Les inspirations
+
+Le design devra s’inspirer de :
+
+	•	Apple
+	•	Notion
+	•	Linear
+	•	Raycast
+	•	Arc Browser
+
+Pas pour les copier.
+
+Pour retrouver leur philosophie.
+
+⸻
+
+Les cinq principes
+
+1. Simplicité
+
+Chaque élément affiché doit avoir une utilité.
+
+Aucun composant décoratif inutile.
+
+⸻
+
+2. Lisibilité
+
+Le regard doit comprendre un écran en moins de trois secondes.
+
+⸻
+
+3. Fluidité
+
+Aucune animation agressive.
+
+Tout doit sembler naturel.
+
+⸻
+
+4. Cohérence
+
+Un bouton doit toujours se comporter de la même façon.
+
+Une carte aussi.
+
+Une animation aussi.
+
+⸻
+
+5. Rapidité
+
+L’interface doit sembler instantanée.
+
+⸻
+
+Palette
+
+Je pense qu’il faut abandonner l’idée d’un simple thème sombre.
+
+Je veux un thème professionnel.
+
+Background
+
+Noir profond
+
+Pas totalement noir.
+
+⸻
+
+Surface
+
+Légèrement plus claire.
+
+⸻
+
+Border
+
+Très discrète.
+
+Presque invisible.
+
+⸻
+
+Accent
+
+Le bleu Cosmos.
+
+Il deviendra la signature visuelle.
+
+⸻
+
+Success
+
+Vert discret.
+
+⸻
+
+Warning
+
+Orange doux.
+
+⸻
+
+Danger
+
+Rouge profond.
+
+Jamais saturé.
+
+⸻
+
+Coins
+
+Je veux une identité moderne.
+
+Toutes les cartes :
+
+16 px
+
+Les boutons :
+
+14 px
+
+Les champs :
+
+12 px
+
+Les badges :
+
+999 px
+
+⸻
+
+Espacement
+
+Le spacing sera basé sur une grille de 8 px.
+
+Exemple.
+
+8
+
+16
+
+24
+
+32
+
+48
+
+64
+
+96
+
+Jamais de valeurs aléatoires.
+
+⸻
+
+Ombres
+
+Très discrètes.
+
+Le but n’est pas de créer du relief.
+
+Seulement de séparer les couches.
+
+⸻
+
+Typographie
+
+Hiérarchie stricte.
+
+Titre principal
+
+Très visible.
+
+⸻
+
+Sous-titre
+
+Plus discret.
+
+⸻
+
+Valeur statistique
+
+Très grande.
+
+⸻
+
+Texte
+
+Simple.
+
+⸻
+
+Aucune police fantaisie.
+
+⸻
+
+Icônes
+
+Style minimal.
+
+Une seule bibliothèque.
+
+Même épaisseur partout.
+
+⸻
+
+Boutons
+
+Je veux trois niveaux.
+
+Primaire
+
+Bleu Cosmos.
+
+⸻
+
+Secondaire
+
+Surface.
+
+⸻
+
+Tertiaire
+
+Transparent.
+
+⸻
+
+Hover
+
+Très léger.
+
+Jamais flashy.
+
+⸻
+
+Les cartes
+
+Toutes les cartes respecteront les mêmes règles.
+
+Header
+
+↓
+
+Titre
+
+↓
+
+Description
+
+↓
+
+Contenu
+
+↓
+
+Actions
+
+Toujours.
+
+⸻
+
+Les formulaires
+
+Je veux énormément simplifier.
+
+Aujourd’hui les formulaires ressemblent souvent à ça.
+
+Champ.
+
+Champ.
+
+Champ.
+
+Champ.
+
+Champ.
+
+Je préfère.
+
+Carte.
+
+↓
+
+Petit titre.
+
+↓
+
+Deux ou trois champs.
+
+↓
+
+On passe à la carte suivante.
+
+Psychologiquement c’est beaucoup plus agréable.
+
+⸻
+
+Navigation
+
+Je pense que le Header doit devenir beaucoup plus premium.
+
+À gauche.
+
+Logo Cosmos.
+
+Au centre.
+
+Navigation.
+
+Dashboard
+
+Journal
+
+Analytics
+
+Insights
+
+À droite.
+
+Profil
+
+Paramètres
+
+Thème
+
+⸻
+
+Les statistiques
+
+Très important.
+
+Les KPI doivent être gigantesques.
+
+Par exemple.
+
+Winrate
+
+72 %
+
+Puis.
+
+En dessous.
+
+Petite explication.
+
+Même chose.
+
+Profit.
+
+Même chose.
+
+Delta émotionnel.
+
+⸻
+
+Les graphiques
+
+Fond transparent.
+
+Très peu de grille.
+
+Aucune surcharge.
+
+⸻
+
+Animations
+
+Je veux des animations Apple.
+
+⸻
+
+Apparition
+
+250 ms.
+
+Fade.
+
+Translate.
+
+⸻
+
+Hover
+
+Scale
+
+1 → 1.02
+
+⸻
+
+Click
+
+0.98
+
+Puis retour.
+
+⸻
+
+Ouverture d’une carte
+
+Très fluide.
+
+⸻
+
+Aucune animation supérieure à 300 ms.
+
+⸻
+
+Responsive
+
+Desktop
+
+Expérience maximale.
+
+⸻
+
+Tablette
+
+Réorganisation.
+
+⸻
+
+Mobile
+
+Priorité à la saisie.
+
+Les Analytics seront simplifiés.
+
+⸻
+
+Les notifications
+
+Jamais de popup.
+
+Je préfère des petits Toast élégants.
+
+Exemple.
+
+✓ Trade enregistré.
+
+Puis disparition.
+
+⸻
+
+Les modales
+
+Flou d’arrière-plan.
+
+Animation légère.
+
+Fermeture ESC.
+
+⸻
+
+Le Dashboard
+
+Je veux qu’il donne un effet “cockpit”.
+
+Mais sans surcharge.
+
+Première ligne.
+
+Les KPI.
+
+Deuxième ligne.
+
+Les performances.
+
+Troisième ligne.
+
+Les Insights.
+
+⸻
+
+Analytics
+
+Le laboratoire.
+
+Tout sera filtrable.
+
+Compte.
+
+↓
+
+Actif.
+
+↓
+
+Session.
+
+↓
+
+HTF.
+
+↓
+
+LTF.
+
+↓
+
+Stratégie.
+
+↓
+
+Période.
+
+⸻
+
+Paramètres
+
+Probablement l’écran le plus sous-estimé.
+
+Je veux quelque chose qui ressemble à Notion.
+
+Une colonne.
+
+Les catégories.
+
+À droite.
+
+Les paramètres.
+
+Très simple.
+
+⸻
+
+Accessibilité
+
+Contraste élevé.
+
+Navigation clavier.
+
+Focus visible.
+
+Animations réduites si demandé par l’utilisateur.
+
+⸻
+
+Les micro-interactions
+
+Je veux énormément de petites attentions.
+
+Exemple.
+
+Le Delta émotionnel.
+
+Si
+
+0
+
+↓
+
+Bleu.
+
+Si positif (respect du plan ou gain par meilleure exécution)
+
+↓
+
+Vert.
+
+Si négatif
+
+↓
+
+Rouge.
+
+Avec une animation très discrète.
+
+⸻
+
+Le détail qui change tout
+
+Voici une idée qui m’est venue en rédigeant ce document.
+
+Je veux que Cosmos Journal Pro ait une personnalité visuelle.
+
+Aujourd’hui, beaucoup d’applications sont jolies.
+
+Mais elles n’ont aucune identité.
+
+Je voudrais que Cosmos ait un élément graphique récurrent : de légères lignes orbitales, des dégradés subtils et des jeux de lumière inspirés du cosmos, utilisés avec parcimonie. Pas des effets tape-à-l’œil, mais une signature élégante qui rappelle le nom de l’application.
+
+Tu ouvres l’application.
+
+Tu sais immédiatement que tu es sur Cosmos Journal Pro.
+
+Pas parce qu’il y a un logo.
+
+Parce que tout le langage visuel est cohérent.
+
+⸻
+
+🌌 Ma proposition la plus ambitieuse : le “Mode Focus”
+
+C’est l’idée dont je suis le plus fier.
+
+Quand tu es en train d’enregistrer un trade, le reste de l’interface s’efface légèrement.
+
+Les distractions disparaissent.
+
+Il ne reste que :
+
+	•	les cartes du formulaire ;
+	•	une barre de progression discrète ;
+	•	un indicateur “20 secondes” (facultatif) pour encourager une saisie rapide ;
+	•	un résumé intelligent qui se met à jour au fur et à mesure.
+
+Tu entres dans un véritable mode de concentration.
+
+Quand tu termines et que tu cliques sur Enregistrer :
+
+✓ animation élégante,
+
+✓ toast discret,
+
+✓ retour au Dashboard.
+
+Tu as vraiment la sensation de terminer une action importante.
+
+
+Excellent. Et je pense même que ce document va devenir celui qui fera gagner le plus de temps à Codex.
+En réalité, les développeurs savent créer des composants. Ce qui est difficile, c’est de comprendre l’expérience que l’utilisateur doit vivre. C’est exactement le rôle de ce document.
+ 
+⸻
+ 
+📘 DOCUMENT 3.5
+COSMOS JOURNAL PRO V3
+UX FLOWS & PARCOURS UTILISATEUR
+Objectif : définir précisément comment l’utilisateur interagit avec l’application afin que chaque parcours soit rapide, fluide, cohérent et agréable.
+ 
+⸻
+ 
+🌌 Les trois états de l’application
+Avant même de parler d’écrans, Cosmos Journal Pro repose sur trois états mentaux.
+1️⃣ Capture
+L’utilisateur enregistre un trade.
+L’application doit être :
+	•	rapide ;
+	•	calme ;
+	•	concentrée.
+Aucune distraction.
+ 
+⸻
+ 
+2️⃣ Compréhension
+L’utilisateur cherche à comprendre ses résultats.
+L’application devient analytique.
+Elle explique.
+Elle compare.
+Elle visualise.
+ 
+⸻
+ 
+3️⃣ Amélioration
+L’utilisateur ne regarde plus le passé.
+Il cherche comment devenir meilleur.
+L’application devient un coach.
+ 
+⸻
+ 
+Premier lancement
+Objectif
+Donner une excellente première impression.
+ 
+⸻
+ 
+Splash Screen
+Logo Cosmos.
+Animation très discrète.
+2 secondes maximum.
+ 
+⸻
+ 
+Écran de bienvenue
+Texte.
+Bienvenue dans Cosmos Journal Pro.
+Sous-titre.
+Construisez votre avantage statistique.
+Deux boutons.
+Créer mon premier compte
+
+Importer mes données
+ 
+⸻
+ 
+Création d’un compte
+Étape 1
+Nom.
+Compte Perso 40$
+ 
+⸻
+ 
+Étape 2
+Type.
+○ Fonds propres
+
+○ Prop Firm
+ 
+⸻
+ 
+Étape 3
+Capital.
+40$
+ 
+⸻
+ 
+Étape 4
+Devise.
+USD
+ 
+⸻
+ 
+Étape 5
+Validation.
+Toast.
+Compte créé.
+Retour Dashboard.
+ 
+⸻
+ 
+Premier Dashboard
+Le Dashboard ne doit jamais être vide.
+Je veux des cartes avec un état vide intelligent.
+Exemple.
+Aucun trade enregistré.
+
+↓
+
+Ajoutez votre premier trade.
+Plutôt que.
+0
+
+0
+
+0
+
+0
+ 
+⸻
+ 
+Ajouter un trade
+Le bouton “+” doit toujours être visible.
+Desktop.
+Header.
+Mobile.
+Floating Action Button.
+ 
+⸻
+ 
+Ouverture
+Animation.
+250 ms.
+Le formulaire apparaît.
+Le reste de l’application passe légèrement en arrière-plan.
+C’est le Mode Focus.
+ 
+⸻
+ 
+Mode Focus
+Pendant la saisie.
+Le Dashboard disparaît.
+Les Analytics disparaissent.
+Les notifications disparaissent.
+Le cerveau doit rester concentré.
+ 
+⸻
+ 
+En haut.
+Nouveau Trade
+Puis.
+Carte 1
+
+↓
+
+Carte 2
+
+↓
+
+Carte 3
+Une seule mission.
+Finir le trade.
+ 
+⸻
+ 
+Barre de progression
+En haut.
+Compte
+
+█████░░░░
+
+12%
+Puis.
+Gestion
+
+████████░
+
+82%
+L’utilisateur sait toujours où il en est.
+ 
+⸻
+ 
+Validation
+Quand le bouton
+Enregistrer
+est pressé.
+Animation.
+Le bouton devient.
+✓ Enregistrement...
+Puis.
+Trade enregistré.
+Toast.
+Retour Dashboard.
+ 
+⸻
+ 
+Dashboard
+Chaque carte est cliquable.
+Exemple.
+Winrate
+
+↓
+
+Analytics Winrate
+ 
+⸻
+ 
+Delta émotionnel
+
+↓
+
+Historique Delta
+ 
+⸻
+ 
+HTF
+
+↓
+
+Comparaison HTF
+Tout devient un raccourci.
+ 
+⸻
+ 
+Analytics
+L’utilisateur arrive.
+En haut.
+Filtres.
+Compte
+
+Période
+
+Actif
+
+Session
+
+HTF
+
+LTF
+En dessous.
+Les graphiques se mettent à jour immédiatement.
+Sans bouton.
+ 
+⸻
+ 
+Insights IA
+Cette page raconte une histoire.
+Je veux une structure.
+ 
+⸻
+ 
+Les forces
+🟢
+Ce qui fonctionne.
+ 
+⸻
+ 
+Les faiblesses
+🔴
+Ce qui coûte de l’argent.
+ 
+⸻
+ 
+Les opportunités
+🔵
+Ce qu’il faudrait tester.
+ 
+⸻
+ 
+Les recommandations
+⭐
+Ce que Cosmos conseille.
+ 
+⸻
+ 
+Paramètres
+Organisation.
+Comptes
+
+↓
+
+Actifs
+
+↓
+
+Stratégies
+
+↓
+
+Sessions
+
+↓
+
+HTF
+
+↓
+
+LTF
+
+↓
+
+Confluences
+
+↓
+
+Delta émotionnel
+
+↓
+
+Sauvegarde
+
+↓
+
+Apparence
+Chaque catégorie.
+Une seule colonne.
+Très simple.
+ 
+⸻
+ 
+Ajouter un actif
+L’utilisateur clique.
++
+Une mini fenêtre.
+Nom
+
+EURUSD
+Puis.
+Ajouter
+Terminé.
+ 
+⸻
+ 
+Même logique.
+Pour :
+	•	stratégies ;
+	•	sessions ;
+	•	unités de temps ;
+	•	tags ;
+	•	causes émotionnelles.
+Une seule interface.
+Toujours identique.
+ 
+⸻
+ 
+Gestion des comptes
+Je veux une expérience proche d’une banque.
+Liste.
+Compte Perso
+
+40$
+ 
+⸻
+ 
+FTMO
+
+100 000$
+Chaque carte.
+Modifier.
+Supprimer.
+Dupliquer.
+Archiver.
+ 
+⸻
+ 
+Historique
+Chaque trade.
+Carte compacte.
+EURUSD
+
++2R
+
++80$
+
+Daily → M5
+Cliquer.
+↓
+Tout le détail apparaît.
+Sans changer de page.
+ 
+⸻
+ 
+Recherche
+Recherche instantanée.
+Exemple.
+BTC
+Tous les trades BTC apparaissent immédiatement.
+ 
+⸻
+ 
+Export
+Deux boutons.
+Exporter
+
+↓
+
+CSV
+
+JSON
+ 
+⸻
+ 
+Import
+Même logique.
+ 
+⸻
+ 
+Confirmation
+Je veux supprimer le moins de popups possible.
+Mais.
+Pour les actions critiques.
+Exemple.
+Supprimer un compte
+Confirmation obligatoire.
+ 
+⸻
+ 
+Les erreurs
+Les erreurs ne doivent jamais être agressives.
+Exemple.
+Au lieu de.
+Erreur.
+Je préfère.
+Impossible d'enregistrer le trade.
+
+Le champ "Actif" est vide.
+Avec.
+↓
+Le champ est automatiquement mis en évidence.
+ 
+⸻
+ 
+États vides
+Je veux énormément soigner ça.
+Exemple.
+Analytics.
+Pas assez de données.
+
+Ajoutez encore
+
+15 trades
+
+pour obtenir une analyse fiable.
+C’est beaucoup plus motivant.
+ 
+⸻
+ 
+Temps réel
+Je veux que les calculs apparaissent pendant la saisie.
+Exemple.
+Tu modifies.
+Capital
+
+40$
+Puis.
+Risque
+
+5%
+Le journal affiche immédiatement.
+Montant risqué
+
+2$
+Sans cliquer.
+ 
+⸻
+ 
+Animation finale
+Quand un trade est enregistré.
+Je voudrais quelque chose de très discret.
+Une petite lueur Cosmos traverse le bouton.
+Puis.
+✓ Trade enregistré
+Le formulaire se ferme.
+Le Dashboard se met à jour.
+ 
+⸻
+ 
+🌠 La fonctionnalité qui, selon moi, changera tout : le Centre de Mission
+Voici une idée qui m’est venue en écrivant ce document.
+Aujourd’hui, tu ouvres un journal et tu vois des chiffres.
+Je propose qu’en haut du Dashboard, il y ait une seule carte qui résume ta mission actuelle.
+Par exemple :
+ 
+⸻
+ 
+🎯 Mission du moment
+Réduire le Delta Émotionnel de -6,2R à moins de -3R ce mois-ci.
+Ou :
+Confirmer si la combinaison Daily → M5 reste rentable après 30 trades supplémentaires.
+Ou encore :
+Tester le risque de 5 % sur ton compte personnel pendant 20 trades, sans modifier ton plan.
+ 
+⸻
+

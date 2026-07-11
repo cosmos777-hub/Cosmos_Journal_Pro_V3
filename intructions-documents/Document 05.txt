@@ -1,0 +1,227 @@
+Document 05
+
+⸻
+ 
+📘 DOCUMENT 05
+DATA DICTIONARY & MOTEUR STATISTIQUE
+Objectif : définir précisément toutes les données enregistrées, leurs relations, leurs validations et les formules de calcul utilisées dans Cosmos Journal Pro.
+ 
+⸻
+ 
+1. Philosophie des données
+Chaque donnée enregistrée doit répondre à une question.
+Par exemple :
+Donnée	Pourquoi ?
+HTF	Identifier le contexte le plus rentable
+LTF	Identifier les meilleures entrées
+Durée	Déterminer les trades les plus efficaces
+Delta émotionnel	Mesurer le coût de l’indiscipline
+Qualité du setup	Vérifier si ton intuition est fiable
+Intervention manuelle	Séparer la performance de la stratégie de celle du trader
+ 
+⸻
+ 
+2. Entités principales
+Account (Compte)
+	•	id
+	•	nom
+	•	type (Prop Firm / Fonds propres)
+	•	capital_initial
+	•	capital_actuel
+	•	devise
+	•	couleur
+	•	date_creation
+	•	archivé (booléen)
+ 
+⸻
+ 
+Trade
+Chaque trade est autonome.
+Il contient :
+Identification
+	•	id
+	•	account_id
+	•	date
+	•	heure entrée
+	•	heure sortie
+ 
+⸻
+ 
+Contexte
+	•	actif
+	•	direction
+	•	session
+	•	stratégie
+ 
+⸻
+ 
+Analyse
+	•	HTF
+	•	LTF
+	•	combinaison HTF/LTF
+	•	qualité du setup
+	•	confluences
+ 
+⸻
+ 
+Gestion
+	•	risque %
+	•	risque $
+	•	RR prévu
+	•	RR obtenu
+ 
+⸻
+ 
+Résultat
+	•	gain/perte $
+	•	gain/perte %
+	•	résultat en R
+	•	durée
+ 
+⸻
+ 
+Discipline
+	•	respect du plan
+	•	intervention manuelle
+	•	delta émotionnel
+	•	cause principale
+	•	causes secondaires
+ 
+⸻
+ 
+Médias
+	•	capture HTF
+	•	capture LTF
+	•	capture résultat
+ 
+⸻
+ 
+Notes
+	•	commentaire
+	•	tags
+ 
+⸻
+ 
+3. Relations
+Un compte possède plusieurs trades.
+Un trade possède :
+	•	une stratégie
+	•	une session
+	•	un HTF
+	•	un LTF
+	•	un actif
+Toutes ces catégories sont personnalisables via les paramètres.
+ 
+⸻
+ 
+4. Formules principales
+Winrate
+Nombre de trades gagnants ÷ nombre total de trades.
+ 
+⸻
+ 
+Profit Factor
+Somme des gains ÷ somme des pertes.
+ 
+⸻
+ 
+Expectancy
+Gain moyen × Winrate
+−
+Perte moyenne × Taux de perte
+ 
+⸻
+ 
+Drawdown
+Calculé automatiquement après chaque trade.
+ 
+⸻
+ 
+Durée moyenne
+Somme des durées ÷ nombre de trades.
+ 
+⸻
+ 
+RR moyen
+Somme des RR ÷ nombre de trades.
+ 
+⸻
+ 
+5. Le Delta Émotionnel
+Je veux formaliser ce concept.
+Le Delta Émotionnel est défini comme :
+La différence entre le résultat prévu par le plan de trading et le résultat réellement obtenu après les interventions du trader.
+Il doit être exprimé :
+	•	en R ;
+	•	en devise ;
+	•	en pourcentage.
+Il est cumulable.
+Il est filtrable.
+Il est historisable.
+ 
+⸻
+ 
+6. Les moteurs d’analyse
+Chaque statistique sera disponible :
+	•	Globalement
+	•	Par compte
+	•	Par actif
+	•	Par session
+	•	Par stratégie
+	•	Par HTF
+	•	Par LTF
+	•	Par combinaison HTF/LTF
+	•	Par durée
+	•	Par risque
+	•	Par qualité de setup
+	•	Par respect du plan
+ 
+⸻
+ 
+7. Les Insights
+Les Insights devront respecter une règle :
+Ne jamais inventer une conclusion.
+Ils doivent être générés uniquement lorsqu’un échantillon est statistiquement pertinent.
+Par exemple :
+Minimum :
+30 trades.
+Sinon.
+L’application affiche.
+Données insuffisantes.
+ 
+⸻
+ 
+8. Le Jumeau Numérique
+C’est la fonctionnalité phare.
+Pour chaque trade.
+Le logiciel conservera :
+Trade réel
+Ce qui s’est réellement produit.
+ 
+⸻
+ 
+Trade idéal
+Ce qui se serait produit avec une exécution parfaite.
+Le tableau de bord affichera deux courbes :
+	•	Résultat réel.
+	•	Résultat théorique.
+L’écart entre les deux est ton potentiel inexploité.
+ 
+⸻
+ 
+9. Les KPI principaux
+Je propose de limiter le Dashboard à une dizaine de KPI majeurs :
+	•	Capital actuel
+	•	P&L
+	•	Winrate
+	•	Profit Factor
+	•	Expectancy
+	•	Drawdown
+	•	Delta émotionnel
+	•	Respect du plan
+	•	Meilleure combinaison HTF/LTF
+	•	Mission du moment
+Tout le reste est disponible dans Analytics.
+ 
+⸻
+

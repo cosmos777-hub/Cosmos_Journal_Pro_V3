@@ -1,0 +1,324 @@
+Document 04
+
+⸻
+ 
+📘 DOCUMENT 04
+COSMOS JOURNAL PRO V3
+Architecture Technique & Règles de Développement
+Objectif : garantir une architecture propre, modulaire, performante et évolutive afin que Cosmos Journal Pro puisse évoluer pendant plusieurs années sans réécriture majeure.
+ 
+⸻
+ 
+1. Les principes techniques
+Chaque décision de développement devra respecter les principes suivants :
+1. Simplicité
+Le code doit être facile à comprendre.
+On préfère deux fonctions simples à une fonction “intelligente” de 300 lignes.
+ 
+⸻
+ 
+2. Modularité
+Chaque module possède une seule responsabilité.
+Exemple :
+	•	Calcul des statistiques
+	•	Gestion des comptes
+	•	Gestion des paramètres
+	•	Export
+	•	Analytics
+Aucun module ne doit tout faire.
+ 
+⸻
+ 
+3. Séparation stricte
+Le HTML n’effectue aucun calcul.
+Le CSS ne contient aucune logique.
+Le JavaScript ne mélange pas rendu graphique et calculs.
+ 
+⸻
+ 
+4. Évolutivité
+Ajouter une nouvelle statistique ne doit jamais casser une ancienne.
+Ajouter une nouvelle stratégie ne doit nécessiter aucune modification du code.
+Tout doit être piloté par les données.
+ 
+⸻
+ 
+2. Architecture des dossiers
+Même si, au départ, l’application reste distribuée sous la forme d’un fichier HTML autonome, le code doit être organisé comme s’il s’agissait déjà d’une application multi-fichiers.
+Lorsque le projet grandira, il suffira de séparer les modules sans réécrire leur logique.
+Structure cible :
+/
+├── index.html
+├── css/
+│   ├── tokens.css
+│   ├── base.css
+│   ├── layout.css
+│   ├── components.css
+│   ├── animations.css
+│   └── responsive.css
+│
+├── js/
+│   ├── app.js
+│   ├── ui.js
+│   ├── storage.js
+│   ├── settings.js
+│   ├── accounts.js
+│   ├── trades.js
+│   ├── analytics.js
+│   ├── insights.js
+│   ├── charts.js
+│   ├── exports.js
+│   ├── imports.js
+│   ├── validations.js
+│   └── utils.js
+│
+└── assets/
+ 
+⸻
+ 
+3. Les modules
+app.js
+Point d’entrée.
+Initialise toute l’application.
+Il ne contient presque aucune logique métier.
+ 
+⸻
+ 
+storage.js
+Responsable de :
+	•	sauvegarde
+	•	lecture
+	•	migration des données
+	•	versions des données
+	•	sauvegarde automatique
+Aucun autre module ne lit directement le stockage.
+ 
+⸻
+ 
+accounts.js
+Gestion des comptes.
+Créer.
+Modifier.
+Archiver.
+Supprimer.
+Calcul du capital.
+Calcul du risque.
+ 
+⸻
+ 
+trades.js
+Création.
+Modification.
+Validation.
+Historique.
+Aucun calcul analytique.
+ 
+⸻
+ 
+analytics.js
+Tous les calculs.
+	•	Winrate
+	•	Expectancy
+	•	Profit Factor
+	•	Drawdown
+	•	Delta émotionnel
+	•	HTF
+	•	LTF
+	•	Sessions
+Le Dashboard ne fait qu’afficher ce module.
+ 
+⸻
+ 
+insights.js
+Produit les observations automatiques.
+Aucune donnée n’est stockée ici.
+Tout est recalculé.
+ 
+⸻
+ 
+settings.js
+Toutes les listes personnalisables.
+	•	Actifs
+	•	Sessions
+	•	Stratégies
+	•	Comptes
+	•	HTF
+	•	LTF
+	•	Confluences
+	•	Causes émotionnelles
+ 
+⸻
+ 
+4. Le stockage
+Toutes les données utilisateur devront être regroupées dans un objet unique.
+Exemple :
+{
+  "version": "3.0",
+  "accounts": [],
+  "trades": [],
+  "settings": {},
+  "preferences": {}
+}
+Cette structure permettra d’ajouter facilement de nouveaux champs lors des futures versions.
+ 
+⸻
+ 
+5. Versionnement
+Chaque sauvegarde comporte un numéro de version.
+Exemple :
+3.0
+3.1
+4.0
+Ainsi, si la structure des données évolue, une migration automatique pourra être appliquée.
+ 
+⸻
+ 
+6. Les règles métier
+Toutes les règles métier doivent être centralisées.
+Exemples :
+	•	le risque autorisé selon le type de compte ;
+	•	le calcul du Delta Émotionnel ;
+	•	le calcul du RR ;
+	•	le calcul de la durée ;
+	•	les validations.
+Aucune règle métier ne doit être dupliquée.
+ 
+⸻
+ 
+7. Les calculs
+Tous les calculs doivent être purs.
+Même entrée.
+↓
+Même résultat.
+Aucun effet secondaire.
+Cela facilitera les tests.
+ 
+⸻
+ 
+8. Les performances
+L’application doit rester fluide même avec :
+	•	20 comptes ;
+	•	10 000 trades ;
+	•	plusieurs années d’historique.
+Pour cela :
+	•	mise en cache des statistiques ;
+	•	recalcul uniquement des données modifiées ;
+	•	rendu ciblé (ne pas redessiner toute l’interface).
+ 
+⸻
+ 
+9. Les composants UI
+Chaque composant possède :
+	•	son état normal ;
+	•	son état vide ;
+	•	son état de chargement ;
+	•	son état d’erreur.
+Aucun composant ne doit gérer ces états différemment.
+ 
+⸻
+ 
+10. Les graphiques
+Les graphiques ne calculent rien.
+Ils affichent uniquement des données déjà préparées par analytics.js.
+ 
+⸻
+ 
+11. Les paramètres personnalisables
+Toutes les listes de l’application sont pilotées par les paramètres.
+Cela inclut :
+	•	Actifs
+	•	Sessions
+	•	HTF
+	•	LTF
+	•	Stratégies
+	•	Confluences
+	•	Causes émotionnelles
+	•	Tags
+	•	Comptes
+Aucun élément ne doit être codé “en dur”, sauf les valeurs par défaut de Cosmos.
+ 
+⸻
+ 
+12. Journalisation
+Une section “Debug” pourra être activée pour le développement.
+Elle affichera :
+	•	temps de calcul ;
+	•	erreurs ;
+	•	version ;
+	•	taille des données.
+Invisible pour l’utilisateur final.
+ 
+⸻
+ 
+13. Sauvegarde
+Sauvegarde automatique.
+Sauvegarde manuelle.
+Export JSON.
+Export CSV.
+Import avec validation.
+Aucune donnée ne doit être écrasée sans confirmation.
+ 
+⸻
+ 
+14. Les tests
+Chaque nouvelle fonctionnalité doit être vérifiée selon quatre axes :
+	•	Fonctionne-t-elle ?
+	•	Les statistiques restent-elles correctes ?
+	•	Les performances sont-elles conservées ?
+	•	L’expérience utilisateur est-elle toujours fluide ?
+ 
+⸻
+ 
+15. Les conventions de nommage
+Le code doit être cohérent.
+Par exemple :
+	•	calculateRiskAmount()
+	•	calculateEmotionalDelta()
+	•	generateInsights()
+	•	updateDashboard()
+Des noms explicites, jamais d’abréviations obscures.
+ 
+⸻
+ 
+16. Préparer l’avenir
+Même si la V3 reste une application locale, l’architecture doit anticiper une future évolution :
+	•	synchronisation cloud ;
+	•	application mobile ;
+	•	base de données ;
+	•	comptes utilisateurs ;
+	•	IA plus avancée.
+Les choix techniques ne doivent pas bloquer ces évolutions.
+ 
+⸻
+ 
+🌌 La proposition qui, selon moi, fera passer Cosmos Journal Pro au niveau supérieur
+J’aimerais introduire un concept appelé Feature Registry.
+Au lieu de disperser les fonctionnalités dans le code, chaque grande fonctionnalité serait enregistrée dans un registre.
+Exemple :
+Nom :
+Delta émotionnel
+
+Dépend de :
+Trades
+Comptes
+
+Produit :
+Dashboard
+Analytics
+Insights
+
+Statut :
+Actif
+Même chose pour :
+	•	HTF/LTF
+	•	Qualité du setup
+	•	Durée
+	•	Risque
+	•	Sessions
+Cela apportera plusieurs avantages :
+	•	savoir immédiatement quelles parties de l’application sont impactées lorsqu’on modifie une fonctionnalité ;
+	•	faciliter les évolutions ;
+	•	limiter les régressions.
+C’est une approche que l’on retrouve souvent dans des produits logiciels complexes.
+ 
+⸻
