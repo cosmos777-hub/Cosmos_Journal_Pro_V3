@@ -1,0 +1,526 @@
+# DECISIONS_LOG.md
+
+**Cosmos Journal Pro V3 — Historique des décisions structurantes**
+
+---
+
+## Rôle de ce document
+
+Ce document conserve l'historique des décisions ayant un **impact durable** sur
+le projet : architecture, Design System, UX structurante, arbitrages produit
+importants.
+
+Il ne doit **jamais** devenir :
+- un journal de modifications ;
+- un historique de commits ;
+- un compte rendu de développement.
+
+Seules les décisions qui engagent l'avenir du projet y figurent — pas le
+détail de leur implémentation (qui reste dans les tickets et la documentation
+technique correspondante).
+
+---
+
+## Sprint 1 — Architecture Stabilization
+
+### D-001 — `calculations.js` reste un fichier unique
+**Contexte** : ARCH-001, découpage de `app.js`.
+**Décision** : ne pas séparer `calculations.js` en plusieurs fichiers
+(`analytics.js`, `insights.js`, `missions.js`) malgré sa taille.
+**Justification** : les fonctions internes s'appellent via `this`
+(`generateInsights` → `groupTradesByDimension`, `winrate`, `expectancy`...).
+Séparer aurait exigé de réécrire ces appels sans bénéfice réel, avec un
+risque de régression et de duplication de formules entre modules.
+
+### D-002 — Objet `ui` reconstruit par fusion dans `main.js`
+**Contexte** : ARCH-001, Livraison 3.
+**Décision** : `ui = { ...componentsUi, ...dashboardUi, ...journalUi, ... }`.
+**Justification** : préserve la compatibilité des appels `this.xxx()`
+existants sans réécrire le code, tout en permettant le découpage en modules
+par vue.
+
+### D-003 — Consolidation du shim `utils`
+**Contexte** : CODE-001.
+**Décision** : point d'assemblage unique dans `src/utils/index.js`.
+**Justification** : le même shim (`uid`, `clone`, `escape`, `formatPercent`,
+`formatR`, `tone`) était reconstruit à l'identique dans 8 fichiers — résidu
+de la prudence prise lors du premier découpage (ARCH-001, Livraison 1).
+Risque éliminé une fois l'architecture stabilisée.
+
+### D-004 — Architecture `src/` figée à l'issue du Sprint 1
+**Contexte** : ARCH-004.
+**Décision** : la structure `core/` / `ui/` / `utils/` est désormais
+officielle. Tout changement de structure futur nécessite une justification
+exceptionnelle et une validation explicite.
+
+---
+
+## Sprint 2 — UI System Foundation
+
+### D-005 — Le gradient de marque est porté par deux tokens dédiés
+**Contexte** : UI-001, audit des tokens visuels.
+**Constat** : la couleur `#7f7cff` (seconde couleur du dégradé de marque,
+utilisée aux côtés de `--cosmos`) était codée en dur à l'identique dans
+plusieurs fichiers CSS (`components.css`, `journal.css`), sans jamais être
+tokenisée.
+**Décision** : création du token `--cosmos-gradient-end` dans
+`variables.css`, aux côtés de `--cosmos`.
+**Justification** : cette couleur n'est pas une couleur fonctionnelle
+(contrairement à `--success`/`--warning`/`--danger`) — elle appartient à
+l'identité visuelle de la marque. Un nom explicite (`--cosmos-gradient-end`
+plutôt que `--cosmos-end`, jugé ambigu) rend son rôle immédiatement
+compréhensible.
+**Conséquence durable** : **le gradient officiel de Cosmos Journal Pro est
+désormais constitué du duo `--cosmos` / `--cosmos-gradient-end`**. Toute
+évolution future de l'identité visuelle (changement de teinte, déclinaison
+de thème) devra passer par ces deux variables — jamais par une couleur
+codée en dur.
+
+### D-006 — La grille de 8px s'applique à l'espacement, pas à toute valeur numérique
+**Contexte** : UI-001, audit des tokens visuels.
+**Constat** : plusieurs dimensions intrinsèques de composants (boutons 36px,
+champs 42px, chips 34px, badges 26px, colonnes de layout 220-420-250px,
+tailles de texte 11-34px) ne sont pas des multiples de 8, sans que cela
+constitue une incohérence.
+**Décision** : ces valeurs sont des **exceptions intentionnelles**, validées
+et non modifiées.
+**Règle officielle retenue** :
+> La grille de 8px s'applique principalement aux espacements et au rythme de
+> l'interface. Elle ne constitue pas une contrainte absolue pour les
+> dimensions intrinsèques des composants, la typographie ou les éléments
+> décoratifs lorsque des considérations ergonomiques ou esthétiques le
+> justifient.
+**Conséquence durable** : un futur refactoring ne doit **jamais** tenter de
+"corriger" ces valeurs vers un multiple de 8 au seul motif qu'elles ne le
+sont pas. Cas concrets couverts par cette règle :
+- dimensions de contrôles (boutons, champs, chips, badges) et leurs paddings horizontaux ;
+- largeurs de colonnes de layout dimensionnées pour leur contenu (header, workspace-grid, settings-nav) ;
+- éléments décoratifs de signature visuelle (ex. `.mission::after`, lignes orbitales) ;
+- échelle typographique (11 à 34px), cohérente en interne mais non issue de la grille de spacing ;
+- traits fins (bordures, outlines, barres de progression), qui ne suivent par nature aucune grille de spacing.
+
+### D-007 — `.button` (sans modificateur) reste le niveau "Secondaire" sans renommage
+**Contexte** : UI-002, audit du Button System.
+**Constat** : le niveau "Secondaire" des 3 niveaux de boutons du Document 03
+n'a pas de classe explicite (`.button.secondary`) — c'est l'absence de
+modificateur sur `.button` qui joue ce rôle.
+**Décision** : ne pas renommer/dupliquer le CSS pour introduire une classe
+`.button.secondary`. La documentation (`COMPONENT_CATALOG.md`) suffit à
+lever l'ambiguïté.
+**Justification** : un changement mécanique dans plusieurs fichiers pour un
+gain de nommage théorique ne produit pas de valeur mesurable — conforme à la
+devise du projet (*simplicité > perfection théorique*).
+
+### D-008 — Le Design System peut poser des fondations en avance du besoin fonctionnel
+**Contexte** : UI-002, décisions R1 (état `:disabled`) et R3 (`.icon-button`).
+**Décision** : conserver/introduire des éléments du Design System
+(`.icon-button`, état `:disabled`) même en l'absence de tout usage actuel
+dans l'application, à condition qu'ils soient explicitement documentés avec
+un statut clair (voir `COMPONENT_CATALOG.md`, notion de **statut de
+composant** : Stable / Reserved / Experimental / Deprecated).
+**Justification** : le Design System doit rester légèrement en avance sur
+les besoins de l'application plutôt que de toujours réagir après coup.
+Un élément non utilisé mais documenté comme "Reserved" n'est pas du code
+mort — c'est une fondation volontaire, à condition qu'elle soit tracée ici
+et dans le catalogue de composants, pour ne jamais être confondue avec un
+oubli lors d'un futur audit.
+**Conséquence durable** : avant de supprimer un composant ou un état CSS
+jugé "inutilisé" lors d'un futur audit, toujours vérifier son statut dans
+`COMPONENT_CATALOG.md` — un statut "Reserved" signifie que l'absence
+d'usage est délibérée.
+
+### D-009 — `.panel` et `.card` sont deux usages d'un même primitif, pas deux composants concurrents
+**Contexte** : UI-003, audit du Card System.
+**Constat** : `.panel` (layout.css) et `.card` (components.css) partagent
+exactement les mêmes propriétés visuelles (bordure, radius, fond, ombre) — le
+seul écart est le padding (24px vs 16px). Cette duplication était déjà
+documentée depuis ARCH-002 comme volontaire (séparation de fichiers), mais
+sans qu'un nom formalise ce qu'ils ont en commun.
+**Décision** : introduction de la notion de **primitive de design**, la
+première étant **Cosmos Surface** (fond + bordure + radius + ombre).
+`COMPONENT_CATALOG.md` est réorganisé en deux niveaux : **Design Primitives**
+(Cosmos Surface, Design Tokens, Motion *Reserved*, Typography *Reserved*) et
+**Components** (qui consomment ces primitives).
+**Justification** : `.panel` et `.card` ne doivent **pas** être fusionnés en
+un seul sélecteur CSS — ils jouent des rôles produit différents (conteneur
+de section vs statistique atomique). Mais les traiter comme deux composants
+sans lien ferait perdre une information architecturale précieuse. Nommer le
+primitif commun résout cette tension sans toucher au CSS existant.
+**Conséquence durable** : tout futur conteneur à surface visuelle (bordure +
+radius + fond) devrait d'abord se demander s'il consomme Cosmos Surface
+plutôt que de redéfinir ces quatre propriétés depuis zéro. Le système est
+désormais organisé sur deux niveaux (primitives / composants) — cette
+structure devra être maintenue à mesure que de nouvelles primitives
+apparaissent (ex. Motion, Typography, aujourd'hui *Reserved*).
+
+### D-010 — Panel sans `.section-header` : variante volontaire, pas une exception à corriger
+**Contexte** : UI-003, audit de la structure interne des panels.
+**Constat** : le panel `.mission` (aside "Architecture V3") n'utilise pas la
+structure `.section-header` (bloc texte + badge/action à droite) que suivent
+les 9 autres panels — il empile directement `eyebrow` → `h2` → `muted` →
+contenu.
+**Décision** : documentée comme variante légitime dans `COMPONENT_CATALOG.md`,
+réservée aux panels qui n'ont ni badge ni action à afficher à droite du
+titre.
+**Conséquence durable** : un futur ticket ne doit pas ajouter un
+`.section-header` vide à ce panel "pour la cohérence" — l'absence est le
+choix cohérent ici.
+
+> **Note (UX-003)** : le panel `.mission` ("Architecture V3") est retiré du
+> Dashboard (voir D-018). Cette décision D-010 reste valide comme règle
+> générale du Design System pour tout futur panel sans badge/action, même
+> si son exemple d'origine disparaît de l'interface.
+
+### D-011 — `.wizard-card` est un terme produit, pas un composant du Card System
+**Contexte** : UI-003, audit du Card System.
+**Constat** : `.wizard-card` (les 8 étapes du formulaire, Document 02) ne
+consomme aucune propriété de Cosmos Surface (pas de bordure/radius/fond/
+ombre propres) — c'est un pur mécanisme d'affichage. Son apparence de "carte"
+vient du `.panel` parent qui englobe tout le wizard.
+**Décision** : documenté explicitement dans `COMPONENT_CATALOG.md` comme un
+faux-ami terminologique, en dehors du Card System CSS.
+**Justification** : le mot "carte" y désigne une étape du parcours produit
+(vocabulaire du Document 02), pas le composant visuel `.card`. Sans cette
+clarification, un futur audit pourrait tenter de lui faire consommer Cosmos
+Surface, ce qui créerait une double bordure imbriquée dans le `.panel` parent.
+
+### D-012 — `.trade-row` : padding aligné sur le token `--space-2`
+**Contexte** : UI-003, R1.
+**Constat** : `.trade-row` utilisait `padding: 14px`, seule valeur non
+tokenisée de toute la famille Cosmos Surface (14px ne correspond à aucun
+token d'espacement existant).
+**Décision** : remplacé par `var(--space-2)` (16px), après vérification que
+l'écart de 2px ne dégrade pas la densité visuelle de l'historique des
+trades (liste répétée).
+**Justification** : aligne `.trade-row` sur le padding de `.card` (16px
+également) — cohérent, ces deux éléments appartenant au même registre de
+"contenu répété atomique" au sein de Cosmos Surface.
+
+### D-013 — Les états du Design System sont classés en 3 catégories étanches
+**Contexte** : UI-004, audit de la State Foundation.
+**Constat** : les 5 états envisagés (Empty, Loading, Error, Success,
+Disabled) ne sont pas de même nature — certains décrivent un composant en
+permanence (Empty, Disabled), d'autres le résultat ponctuel d'une action
+(Success, Error), d'autres encore le déroulement d'un processus dans le
+temps (Loading, Confirmation).
+**Décision** : création de `docs/POLISHING/STATE_MODEL.md`, organisé en
+trois catégories : **Component States**, **Feedback States**, **Workflow
+States**.
+**Justification** : sans cette distinction, un futur ticket pourrait tenter
+d'appliquer un état de workflow (ex. Loading) à un composant, ou un état de
+composant (ex. Disabled) à une notification — deux erreurs de nature
+différente que la classification rend explicitement impossibles.
+**Conséquence durable** : tout nouvel état proposé dans un futur ticket doit
+d'abord être classé dans l'une de ces trois catégories avant toute
+implémentation (voir `STATE_MODEL.md` §7, règle d'ajout d'un nouvel état).
+
+### D-014 — Loading reste non implémenté : statut "Reserved (Conceptual)"
+**Contexte** : UI-004, R4.
+**Constat** : aucune opération de l'application n'est asynchrone
+aujourd'hui (stockage local, calculs en mémoire) — un état de chargement
+n'aurait aucun déclencheur réel.
+**Décision** : Loading est documenté dans `STATE_MODEL.md` mais **aucun CSS
+n'est créé** — contrairement à `.icon-button` ou `:disabled` (UI-002, D-008),
+qui étaient des extensions triviales d'un système déjà en place. Loading
+n'a, lui, aucun terrain d'application concret, même non déclenché.
+**Justification** : la règle "poser des fondations en avance du besoin"
+(D-008) ne doit pas devenir un blanc-seing pour créer n'importe quel état
+théorique. Elle s'applique quand l'extension est quasi gratuite sur un
+mécanisme existant — pas quand elle nécessiterait d'inventer un mécanisme
+entier (spinner, gestion d'état asynchrone) sans aucun cas d'usage réel.
+**Conséquence durable** : Loading ne devra être implémenté que le jour où
+une opération réellement asynchrone apparaîtra dans l'application (ex.
+synchronisation cloud, Document 07 Roadmap V4). Ce nuancement (D-014)
+complète D-008 : les deux décisions ne se contredisent pas, elles tracent
+la limite entre "fondation à bas coût" et "sur-ingénierie".
+
+> **Statut au démarrage d'UX-003 (Sprint 3)** : Sprint 2 est officiellement
+> clos, y compris UI-004/D-013/D-014, dont les décisions restent en vigueur
+> sans réouverture. Le premier déclencheur réel envisagé pour Loading
+> (captures d'écran, stockage asynchrone) est désormais isolé dans le
+> ticket **MEDIA-001**, volontairement hors du Sprint 3 (voir D-024).
+> Loading reste donc "Reserved (Conceptual)" pendant tout le Sprint 3.
+
+---
+
+## 📊 Design Tokens — État actuel (photographie post-UI-001)
+
+| Catégorie | Tokens | Détail |
+|---|---|---|
+| **Couleurs** | 12 | `--bg`, `--bg-soft`, `--surface`, `--surface-2`, `--surface-3`, `--border`, `--border-strong`, `--text`, `--text-soft`, `--text-muted`, `--cosmos`, `--cosmos-strong`, `--cosmos-gradient-end` *(nouveau)*, `--success`, `--warning`, `--danger` — *(16 en comptant les tokens redéfinis par le thème clair, qui réutilise la même liste)* |
+| **Espacements** | 6 | `--space-1` (8px) à `--space-4` (32px), `--space-6` (48px). *Trou identifié : `--space-5` (40px) absent — non problématique, aucun composant n'en a besoin actuellement.* |
+| **Radius** | 4 | `--radius-card` (16px), `--radius-button` (14px), `--radius-field` (12px), `--radius-pill` (999px) |
+| **Ombres** | 1 | `--shadow-soft` |
+| **Transitions** | 2 | `--motion-fast` (160ms), `--motion` (250ms) |
+| **Nouveaux tokens créés pendant UI-001** | 1 | `--cosmos-gradient-end` |
+
+**Corrections apportées pendant UI-001** (rendu visuel strictement identique) :
+- 16 occurrences de couleurs de marque codées en dur (`rgba(90,167,255,*)`,
+  `rgba(224,95,112,*)`, `rgba(240,168,90,*)`, `rgba(66,211,146,*)`)
+  converties en `color-mix(in srgb, var(--token) N%, transparent)`, réparties
+  sur `base.css`, `components.css`, `dashboard.css`, `journal.css`, `settings.css`.
+- 2 occurrences de `#7f7cff` remplacées par `var(--cosmos-gradient-end)`.
+- 1 `border-radius: 14px` codé en dur remplacé par `var(--radius-button)` (`.brand-mark`).
+- 1 `gap: 8px` codé en dur remplacé par `var(--space-1)` (`.field`).
+
+Cette photographie servira de point de comparaison lors des prochains
+audits (typographie, animations) pour mesurer l'évolution du système sans
+devoir refaire un audit complet.
+
+---
+
+## Sprint 3 — UX Refinement (UX-003 — Journal Experience Redesign)
+
+### D-015 — Renumérotation UX-002 → UX-002bis
+**Contexte** : le ticket UX-003 a été temporairement utilisé pour deux
+périmètres différents (validation progressive du Wizard, puis Journal
+Experience Redesign).
+**Décision** : l'ancien UX-002 (validation ciblée Carte 2/Carte 3 du Wizard,
+désactivation du bouton Suivant tant que l'actif/la stratégie ne sont pas
+sélectionnés) est renommé **UX-002bis** et repasse dans la file après la
+clôture du périmètre UX-003 en cours.
+**Conséquence durable** : toute référence future à "UX-002" dans la
+documentation historique désigne la validation Wizard (Carte 2/3) — pas le
+Journal Experience Redesign, qui porte désormais le numéro UX-003.
+
+### D-016 — Wizard Carousel : aperçu limité au titre de carte
+**Contexte** : UX-003, refonte du Wizard en carousel horizontal (carte
+centrale + aperçus précédent/suivant).
+**Constat** : écart de volume ≈ 4x entre la carte la plus dense (② Trade) et
+la plus légère (⑧ Validation) — rend impossible un aperçu fidèle du contenu
+sans distordre la mise en page.
+**Décision** : les aperçus précédent/suivant affichent uniquement le
+**titre de la carte** (ex. "① Compte"), jamais un rendu miniature des champs.
+**Justification** : évite le problème de hauteur variable, reste lisible en
+réduction, et sert son unique objectif (situer l'utilisateur dans le
+parcours), sans tenter de reproduire un contenu qui n'a pas vocation à être
+lu à cette taille.
+**Conséquence durable** : un futur ajout de champ dans une carte du Wizard
+n'a aucun impact sur le carousel — l'aperçu ne dépend jamais du contenu réel
+de la carte, seulement de son titre déclaré dans `WIZARD_CARD_LABELS`.
+
+### D-017 — Historique du Journal : repliable, fermé par défaut, persistance complète
+**Contexte** : UX-003, réduction de la place occupée par le panneau
+Historique pendant la saisie.
+**Décision** : nouvelle préférence booléenne `historyCollapsed`, persistée
+dans `localStorage` au même titre que le thème (`state.data.preferences`),
+survivant à la fermeture du navigateur. Valeur par défaut : `true` (fermé).
+**Justification** : cohérence avec le mécanisme de préférence déjà existant
+(thème, catégorie de paramètres active) ; coût d'implémentation quasi
+identique à une persistance de session.
+**Conséquence durable** : le mécanisme `wizard-focus-dim` (estompage de
+l'historique en Mode Focus) devient largement redondant une fois
+l'historique fermé par défaut — il n'est pas supprimé pour autant (reste
+utile si l'utilisateur rouvre l'historique pendant la saisie), mais son rôle
+devient secondaire.
+
+### D-018 — Dashboard : retrait des artefacts de développement
+**Contexte** : UX-003, audit du Dashboard.
+**Constat** : le panneau "Architecture V3" est une exposition directe du
+Feature Registry (Document 04, outil pensé pour l'équipe technique) ; le
+badge "Data v3.0" expose le numéro de version du schéma de stockage interne
+(`state.data.version`).
+**Décision** : les deux éléments sont retirés de l'interface utilisateur. Le
+Feature Registry (`storage.js`, `featureRegistry`) n'est pas supprimé du
+code — seul son rendu dans `dashboardUi.renderFeatureRegistry()` et les
+éléments `#feature-registry`/`#data-version` du DOM disparaissent.
+**Justification** : aucun des deux éléments ne répond à une question qu'un
+trader se pose (Document 01 : *"chaque fonctionnalité devra contribuer à
+répondre à l'une des trois questions"*) — ce sont des outils de diagnostic,
+pas des KPI produit.
+**Conséquence durable** : si un futur besoin de diagnostic apparaît (ex.
+section Debug mentionnée au Document 04 §12), il devra être réintroduit
+comme panneau dédié et explicitement invisible pour l'utilisateur final —
+jamais mélangé au Dashboard produit.
+
+### D-019 — Grille KPI Dashboard : critère de valeur plutôt que conformité documentaire stricte
+**Contexte** : UX-003, fusion des deux grilles KPI (12 → 9 + ajout).
+**Décision** : le critère de sélection des KPI affichés sur le Dashboard
+n'est pas la liste figée du Document 03, mais une évaluation individuelle
+(utilité réelle, fréquence de consultation probable, redondance, caractère
+actionnable).
+**Résultat** : 9 KPI conservés (P&L réel, Delta émotionnel, Capital actuel,
+Winrate, Profit Factor, Expectancy, Drawdown max, Respect du plan, + nouveau :
+Meilleure combinaison HTF/LTF), 4 déplacés vers Analytics (P&L théorique,
+Trades, RR moyen, Durée moyenne) — ces derniers restent entièrement calculés
+et disponibles, seul leur emplacement d'affichage change.
+**Conséquence durable** : toute proposition future d'ajout de KPI au
+Dashboard devra passer par la même grille de critères (utilité/fréquence/
+redondance/actionnabilité), documentée ici, plutôt que par un simple ajout
+ad hoc.
+
+### D-020 — Sprint 3 redéfini comme "UX Refinement Sprint"
+**Contexte** : élargissement du périmètre initial (frictions UX détectées
+lors d'UX-001) suite à la revue stratégique intégrant Compact Layout, Smart
+Notes et Screenshots.
+**Décision** : le Sprint 3 n'est plus cadré uniquement par la liste des
+frictions F1-F10 d'UX-001, mais par un principe directeur explicite : chaque
+proposition est évaluée selon sa contribution à l'objectif <20-30s par trade
+(Workflow First).
+**Conséquence durable** : toute proposition future dans ce Sprint devra être
+passée au filtre Workflow First avant toute estimation de coût — un gain UX
+qui ralentit la saisie n'est pas automatiquement écarté, mais doit être
+positionné hors du chemin critique du Wizard (cf. D-023).
+
+### D-021 — Smart Notes : notes rapides et texte libre restent des champs distincts
+**Contexte** : UX-003 (Livraison 2D), refonte de la Carte 7.
+**Décision** : `quickNotes` (tableau de notes prédéfinies, personnalisables
+via Paramètres) et `notes` (texte libre) sont deux champs séparés sur le
+trade — jamais fusionnés/concaténés automatiquement.
+**Justification** : une concaténation automatique piégerait l'utilisateur
+qui voudrait ensuite éditer librement son texte (il retrouverait des
+fragments de notes rapides mélangés à sa prose). Garder les deux champs
+distincts préserve aussi la possibilité d'un affichage différencié dans
+l'historique (badges pour quickNotes, texte simple pour notes) sans logique
+de parsing.
+**Conséquence durable** : `quickNotes` suit le même modèle de
+personnalisation que `emotionalCauses`/`confluences` (liste dans
+`state.data.settings`, gérée via le centre de Paramètres générique) — aucun
+nouveau mécanisme de configuration à inventer pour de futures listes
+similaires.
+
+### D-022 — Screenshots retirés du Sprint 3, isolés dans MEDIA-001 *(superseded, voir D-024)*
+**Contexte** : UX-003C, audit Workflow First.
+**Constat initial** : toute action d'ajout de capture d'écran introduit une
+latence incompressible, contraire à l'objectif central du Sprint 3.
+**Décision finale (voir D-024)** : plutôt que de conserver Screenshots dans
+UX-003 hors chemin critique, le sujet est entièrement retiré du Sprint 3 et
+devient un ticket indépendant, **MEDIA-001 — Trade Attachments System**.
+
+### D-023 — Workflow First prime toujours sur la densité visuelle
+**Contexte** : Sprint UX Refinement, plusieurs propositions visaient à
+réduire la hauteur des cartes (Compact Layout, UX-003A).
+**Décision** : la réduction de la hauteur d'un écran n'est jamais un
+objectif en soi. Chaque optimisation doit d'abord améliorer la vitesse de
+saisie, la compréhension, ou le confort de lecture. Une interface plus
+compacte mais moins lisible sera refusée.
+**Conséquence durable** : toutes les futures optimisations CSS devront
+conserver la hiérarchie visuelle avant de chercher à économiser quelques
+pixels. Cette règle prime sur toute proposition future de compactage, y
+compris celles motivées par un gain de scroll.
+
+### D-026 — Intelligent Density : principe transversal à toute l'application
+**Contexte** : addendum d'architecture produit UX-003A, clarification que la
+réflexion ne se limitait pas au panneau Historique mais à la philosophie de
+conception générale de Cosmos Journal Pro V3.
+**Décision** : l'interface doit optimiser intelligemment l'utilisation de
+l'espace, **horizontalement comme verticalement**, afin d'augmenter la
+quantité d'informations visibles tout en conservant une excellente
+lisibilité et un workflow rapide. Le terme "Compact Layout" (D-023) est jugé
+insuffisant — il ne couvrait que la hauteur ; "Intelligent Density" couvre
+aussi la largeur et l'utilisation des grands écrans.
+**Justification** : ce principe ne se substitue pas à D-023 (Workflow First
+prime toujours sur la densité visuelle) — il l'étend. Réduire une dimension
+sans gain de lisibilité/vitesse reste refusé ; mais l'objectif n'est plus
+seulement "ne pas gaspiller de hauteur", c'est "utiliser activement l'espace
+disponible pour servir le workflow".
+**Conséquence durable** : ce principe s'applique désormais à tous les
+écrans (Dashboard, Journal, Analytics, Insights, Settings), pas seulement au
+Journal. Le Journal (UX-003A/B/C) sert de premier terrain d'application ;
+les tickets futurs sur les autres écrans devront s'y référer explicitement
+plutôt que de recréer un principe équivalent sous un autre nom.
+
+### D-027 — UX-003A : le Journal n'est plus une grille à deux colonnes de poids égal
+**Contexte** : refonte de l'architecture UX du Journal (UX-003A), suite à
+une incompréhension initiale où le sujet avait été traité comme une simple
+demande d'accordéon sur le panneau Historique existant (déjà livré via
+D-017/D-025). L'addendum produit a clarifié qu'il s'agissait d'une refonte
+de la hiérarchie de toute la vue Journal.
+**Décision** : `.workspace-grid` (2 colonnes 420px / 1fr, Wizard et
+Historique de poids visuel égal, côte à côte en permanence) est remplacé par
+`.journal-layout`, un empilement vertical où le Wizard (`#journal-panel`)
+occupe la zone de travail principale et l'Historique (`#history-panel`) une
+bande secondaire en dessous, jamais à côté. Les deux éléments partagent la
+même largeur de lecture (`max-width: 900px`), sans valeur figée arbitraire
+type 720-780px — la largeur exacte du Wizard reste ouverte pour ne pas
+contraindre le futur carousel (UX-003B).
+**Conséquence sur le poids visuel de l'Historique** : à l'état fermé, le
+panel Historique perd son ombre Cosmos Surface (`box-shadow: none` sur
+`.history-panel-collapsible`, restaurée uniquement quand le contenu est
+déployé) pour ne plus rivaliser visuellement avec le Wizard. Le mécanisme
+d'accordéon (D-025, `grid-template-rows` 0fr↔1fr) et la persistance
+`historyCollapsed` (D-017) restent inchangés — seule l'architecture de page
+qui les englobe change.
+**Ce qui n'est pas encore fait** : le carousel du Wizard (aperçus
+précédent/suivant, Mode Focus renforcé) est le périmètre d'UX-003B, pas
+d'UX-003A. La structure posée ici (Wizard en zone dominante) prépare ce
+terrain sans l'implémenter.
+**Conséquence durable** : toute référence future à "workspace-grid" dans la
+documentation antérieure à UX-003A (ex. D-006, qui cite "workspace-grid"
+comme exemple de largeur de colonne non multiple de 8) désigne une classe
+CSS qui n'existe plus — remplacée par `.journal-layout`. L'exception
+documentée par D-006 reste valide sur le principe (les dimensions
+intrinsèques de layout ne suivent pas la grille de 8px), seul le nom de la
+classe concernée change.
+
+### D-024 — MEDIA-001 créé, Screenshots totalement hors du Sprint 3
+**Contexte** : UX-003C (Screenshots) impliquait un stockage binaire
+(IndexedDB), une migration de format de `trade.media`, un export
+léger/complet, et le premier déclencheur réel du Workflow State Loading
+(D-014).
+**Décision** : ce périmètre ne constitue plus une sous-livraison d'UX-003
+mais un ticket indépendant, **MEDIA-001 — Trade Attachments System**,
+traité après la fin du Polishing (Sprints 3+). Aucune implémentation liée
+à IndexedDB, Loading, migration média ou export d'images n'est entreprise
+pendant le Sprint 3.
+**Justification** : la liste des sous-problèmes (stockage binaire,
+IndexedDB, export léger/complet, migration, premier vrai Loading,
+optimisation mémoire, compression, affichage, suppression des images...)
+constitue en volume un sous-projet à part entière, pas un ajustement UX.
+Le regrouper avec Historique/Dashboard/Wizard/Smart Notes/Compact Layout
+aurait fait porter à UX-003 un risque et une durée disproportionnés par
+rapport aux autres sous-livraisons.
+**Conséquence durable** : `trade.media` (liens texte `htf`/`ltf`/`result`)
+reste inchangé pendant tout le Sprint 3. Toute future implémentation de
+MEDIA-001 devra suivre son propre cycle complet (audit → livraisons →
+validation → documentation), au même titre que n'importe quel autre ticket,
+et mettra à jour `DECISIONS_LOG.md`, `COMPONENT_CATALOG.md` et
+`STATE_MODEL.md` (notamment pour la sortie de Loading de son statut
+"Reserved (Conceptual)").
+
+### D-041 — UX-005 : le Wizard devient un viewport autonome (architecture "Double Fond")
+**Contexte** : le scroll du Wizard était instable — #journal-panel utilisait une
+`max-height: 560px`, active uniquement quand le contenu d'une carte dépassait
+cette valeur (cartes ③/⑤) mais inactive sur les cartes compactes (①/④/⑦). Ce
+comportement changeant de carte en carte donnait l'impression que la scrollbar
+"bute" de façon imprévisible, et rien n'empêchait la page (`.main`) de scroller
+en plus du panel — deux scrolls actifs pouvaient se disputer le geste de la
+molette, masquant "Mode Focus" et les boutons Précédent/Suivant au chargement.
+
+**Décision** : architecture à deux niveaux ("Double Fond") :
+- `#journal-panel` devient le **CADRE** : hauteur **fixe** (`height`, plus
+  `max-height`) via la variable `--journal-viewport-height` (400px), seul
+  propriétaire du scroll de tout le Wizard (titre, progression, formulaire et
+  navigation compris — un seul bloc scrollable).
+- `.journal-viewport-inner` (nouveau wrapper) devient la **CARTE** : hauteur
+  naturelle jamais contrainte, porte le padding (`--space-3`) auparavant sur
+  `#journal-panel` lui-même.
+
+**Référence officielle de hauteur apparente** : la Carte ① (Compte) pleinement
+rendue — titre Mode Focus + barre de progression + carte ① + navigation. Valeur
+recalculée à partir des dimensions CSS réelles (padding, line-heights, gaps,
+min-height des contrôles) : ≈395px, arrondie à 400px. Cette estimation n'a pas
+été vérifiée par un rendu visuel réel — la variable dédiée permet un ajustement
+en un seul point si besoin, sans toucher au reste des règles.
+
+**Justification du padding déporté** : si le padding restait porté par le
+conteneur de scroll (`#journal-panel`) lui-même, le titre et les boutons
+toucheraient visuellement les bords du cadre exactement quand le scroll atteint
+ses extrémités. En le déportant sur `.journal-viewport-inner`, le padding fait
+partie du contenu scrollable : un espace respiré subsiste toujours avant/après,
+quelle que soit la position du scroll. Principe identique, déjà validé sur
+`.history-collapsible-inner` (voir D-025) — réutilisé ici plutôt que réinventé.
+
+**Conséquence durable (règle de gouvernance)** : la hauteur apparente du
+Wizard (Carte ①, `--journal-viewport-height`) est désormais la référence
+officielle et fixe. Toutes les autres cartes du Wizard doivent s'adapter à ce
+viewport — jamais l'inverse. Si une carte future est plus longue que la
+Carte ①, seul son contenu défile à l'intérieur du cadre existant ; le cadre
+lui-même ne doit jamais être agrandi pour accueillir une carte spécifique
+(cela romprait le principe même du Double Fond et réintroduirait l'instabilité
+corrigée par ce ticket).
+
+**Carte ⑥ (Notes)** : `min-height` du textarea Commentaire réduit à 56px
+(Intelligent Density). Aucun scroll interne ajouté — `resize: vertical` reste
+la seule voie d'agrandissement (déjà présent dans `components.css`), pour ne
+jamais introduire une seconde scrollbar imbriquée dans le Wizard.

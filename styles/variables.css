@@ -1,0 +1,54 @@
+/* ARCH-002 (Sprint 1, Livraison 1) — Variables CSS globales.
+   Couleurs, gradients, radius, ombres, espacements, transitions, thème.
+   Aucune règle métier ici : uniquement des définitions de variables. */
+
+    :root {
+      color-scheme: dark;
+      --bg: #07080d;
+      --bg-soft: #0b0d14;
+      --surface: #10131d;
+      --surface-2: #151927;
+      --surface-3: #1b2130;
+      --border: rgba(145, 158, 190, 0.14);
+      --border-strong: rgba(145, 158, 190, 0.24);
+      --text: #f4f7fb;
+      --text-soft: #a8b1c2;
+      --text-muted: #697386;
+      --cosmos: #5aa7ff;
+      --cosmos-strong: #8ec5ff;
+      /* UI-001 (Sprint 2) : deuxième couleur du dégradé de marque, jusqu'ici codée
+         en dur (#7f7cff) dans plusieurs fichiers CSS. --cosmos et --cosmos-gradient-end
+         forment ensemble le dégradé officiel de Cosmos Journal Pro (voir DECISIONS_LOG.md). */
+      --cosmos-gradient-end: #7f7cff;
+      --success: #42d392;
+      --warning: #f0a85a;
+      --danger: #e05f70;
+      --radius-card: 16px;
+      --radius-button: 14px;
+      --radius-field: 12px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 60px rgba(0, 0, 0, 0.28);
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-6: 48px;
+      --motion-fast: 160ms;
+      --motion: 250ms;
+      font-family: Inter, "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --bg-soft: #eef2f8;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --surface-3: #eef3fb;
+      --border: rgba(24, 31, 48, 0.12);
+      --border-strong: rgba(24, 31, 48, 0.22);
+      --text: #111827;
+      --text-soft: #435063;
+      --text-muted: #737f91;
+      --shadow-soft: 0 18px 50px rgba(42, 56, 84, 0.12);
+    }

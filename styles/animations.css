@@ -1,0 +1,43 @@
+/* ARCH-002 (Sprint 1, Livraison 3) — Animations, transitions, micro-interactions.
+   États hover/active des boutons, keyframes, préférence "réduire les animations".
+   Dépend de variables.css. */
+
+    /* UI-002 (Sprint 2, R2) : .chip et .star-button rejoignent le même langage
+       de micro-interaction que la famille .button — avant ce ticket, leurs
+       changements d'état étaient instantanés, créant une rupture avec le reste
+       de l'interface (Document 03 : "Hover très léger... Click 0.98 puis retour"). */
+    .button:hover,
+    .nav-button:hover,
+    .icon-button:hover,
+    .chip:hover,
+    .star-button:hover {
+      transform: scale(1.02);
+    }
+
+    .button:active,
+    .nav-button:active,
+    .icon-button:active,
+    .chip:active,
+    .star-button:active {
+      transform: scale(0.98);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        transition-duration: 1ms !important;
+      }
+    }

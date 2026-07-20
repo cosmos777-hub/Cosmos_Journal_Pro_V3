@@ -1,0 +1,110 @@
+/* ARCH-002 (Sprint 1, Livraison 2) — Layout structurel.
+   Containers, grid, panels, wrappers, spacing structurel, vues (Dashboard/
+   Journal/Analytics/Insights). Dépend de variables.css. */
+
+    .app-shell {
+      position: relative;
+      min-height: 100vh;
+    }
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(18px);
+    }
+    .header-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--space-1);
+    }
+    .main {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: var(--space-4) 0 var(--space-6);
+      display: grid;
+      gap: var(--space-3);
+    }
+    .hero-grid {
+      display: grid;
+      gap: var(--space-3);
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: stretch;
+    }
+
+    /* UX-003A (Sprint 3) : le Journal n'est plus une grille à 2 colonnes de poids
+       égal (ancien .workspace-grid : 420px / 1fr, Wizard et Historique côte à
+       côte en permanence). C'est désormais un empilement vertical où le Wizard
+       est la zone de travail principale et l'Historique une bande secondaire
+       en dessous, jamais à côté (voir DECISIONS_LOG.md D-026, addendum UX-003A). */
+    .journal-layout {
+      display: grid;
+      gap: var(--space-2);
+      justify-items: center;
+    }
+
+    /* Le Wizard reçoit un espace généreux mais pas de largeur figée arbitraire :
+       la valeur exacte reste ouverte pour ne pas contraindre le futur carousel
+       (UX-003B, aperçus précédent/suivant). max-width borne la lecture sur très
+       grand écran sans jamais forcer une colonne étroite comme l'ancien 420px. */
+    #journal-panel {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* L'Historique occupe toute la largeur disponible sous le Wizard, mais reste
+       borné à la même largeur de lecture pour ne pas déséquilibrer visuellement
+       la page (jamais plus large que la zone de travail principale). */
+    #history-panel {
+      width: 100%;
+      max-width: 900px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+    .view { display: none; }
+    .view.active { display: block; animation: fadeSlide var(--motion) ease both; }
+/* .panel et .card partageaient une déclaration groupée (`.panel, .card { ... }`)
+   dans l'ancien style.css monolithique. Séparées ici pour respecter la frontière
+   layout/components du ticket : mêmes déclarations, donc rendu strictement
+   identique. .card vit dans components.css (section suivante). */
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-3);
+}
+
+/* ARCH-002 (Sprint 1, Livraison 3) — Responsive structurel, déplacé depuis style.css. */
+@media (max-width: 980px) {
+  .app-header {
+    grid-template-columns: 1fr;
+  }
+  .top-nav,
+  .header-actions {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    width: min(100% - 20px, 1240px);
+    padding-top: var(--space-2);
+  }
+}

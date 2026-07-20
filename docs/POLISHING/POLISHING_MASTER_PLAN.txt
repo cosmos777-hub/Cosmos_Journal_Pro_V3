@@ -1,0 +1,311 @@
+# COSMOS JOURNAL PRO V3
+
+# POLISHING PHASE
+
+## 00_POLISHING_MASTER_PLAN.md
+
+**Version :** 1.0
+**Statut :** Ready for Development
+**Projet :** Cosmos Journal Pro V3
+**Phase :** Polishing
+**Auteur :** Product Management
+
+---
+
+# 1. Contexte
+
+La phase de conception et de développement de Cosmos Journal Pro V3 est désormais terminée.
+
+L'application dispose déjà de l'ensemble de ses fonctionnalités principales :
+
+- Dashboard
+- Journal
+- Analytics
+- Insights
+- Multi-comptes
+- Gestion du risque
+- Delta Émotionnel
+- Jumeau Numérique
+- Missions intelligentes
+- Paramètres dynamiques
+- Import / Export JSON
+
+L'objectif n'est plus d'ajouter de nouvelles fonctionnalités majeures.
+
+À partir de maintenant, le projet entre dans une phase de **Polishing**.
+
+Cette phase vise à transformer une application fonctionnelle en un logiciel premium, robuste, cohérent et agréable à utiliser.
+
+---
+
+# 2. Vision
+
+Le Polishing n'est pas une phase cosmétique.
+
+Il s'agit d'un travail méthodique visant à améliorer :
+
+- l'architecture
+- la qualité du code
+- l'expérience utilisateur
+- la cohérence visuelle
+- les performances
+- la maintenabilité
+- la robustesse générale
+
+Chaque amélioration devra apporter une réelle valeur au produit.
+
+Aucune modification ne devra être réalisée uniquement pour des raisons esthétiques.
+
+---
+
+# 3. Philosophie
+
+Le principe fondamental est simple :
+
+> Ne rien casser.
+
+Toutes les évolutions devront préserver :
+
+- le comportement actuel
+- les calculs existants
+- les fonctionnalités existantes
+- les données utilisateur
+- les performances
+
+Le Polishing est une évolution progressive.
+
+Jamais une réécriture complète.
+
+---
+
+# 4. Méthode de travail
+
+Le Polishing est divisé en plusieurs Sprints.
+
+Chaque Sprint possède son propre document de spécification.
+
+Ces documents seront transmis un par un.
+
+Le Sprint suivant ne commencera jamais avant la validation complète du Sprint précédent.
+
+---
+
+# 5. Organisation des Sprints
+
+Le Polishing est organisé en cinq Sprints.
+
+## Sprint 1
+
+Architecture Stabilization
+
+Objectif :
+
+Créer une base technique robuste sans modifier le comportement de l'application.
+
+---
+
+## Sprint 2
+
+UI System Foundation
+
+Objectif :
+
+Uniformiser complètement le système d'interface.
+
+Construire un véritable Design System interne.
+
+---
+
+## Sprint 3
+
+User Experience Optimization
+
+Objectif :
+
+Réduire la charge cognitive.
+
+Fluidifier toutes les interactions.
+
+Optimiser les parcours utilisateur.
+
+---
+
+## Sprint 4
+
+Performance & Quality
+
+Objectif :
+
+Optimiser :
+
+- performances
+- qualité du code
+- accessibilité
+- responsive
+- stabilité
+
+---
+
+## Sprint 5
+
+Release Candidate
+
+Objectif :
+
+Préparer Cosmos Journal Pro V3 pour une version V1 stable.
+
+Audit complet.
+
+Corrections finales.
+
+Validation générale.
+
+---
+
+# 6. Rôle de l'IA de développement
+
+Pendant cette phase, l'IA agit comme un Software Engineer.
+
+Elle doit appliquer les spécifications du Sprint.
+
+Elle ne doit pas prendre d'initiatives qui modifieraient la vision produit.
+
+Toute amélioration importante devra être explicitement demandée dans un Sprint.
+
+---
+
+# 7. Règles de développement
+
+Toutes les modifications devront respecter les règles suivantes.
+
+## Règle 1
+
+Ne jamais modifier une fonctionnalité qui n'est pas concernée par le Sprint.
+
+---
+
+## Règle 2
+
+Limiter les changements au périmètre défini.
+
+---
+
+## Règle 3
+
+Privilégier le refactoring au remplacement complet.
+
+---
+
+## Règle 4
+
+Conserver la compatibilité avec les données existantes.
+
+---
+
+## Règle 5
+
+Ne jamais simplifier une logique métier importante.
+
+En particulier :
+
+Le Delta Émotionnel constitue le cœur du produit.
+
+Cette fonctionnalité ne doit jamais être simplifiée ou supprimée sans validation explicite.
+
+---
+
+## Règle 6
+
+Chaque livraison doit laisser l'application dans un état fonctionnel.
+
+---
+
+## Règle 7
+
+Aucune régression visuelle ou fonctionnelle n'est acceptable.
+
+---
+
+# 8. Livraisons
+
+Chaque Sprint est découpé en plusieurs livraisons.
+
+Les livraisons doivent rester :
+
+- courtes
+- indépendantes
+- facilement testables
+
+L'objectif est de réduire le risque de régression.
+
+---
+
+# 9. Validation
+
+À la fin de chaque Sprint, les éléments suivants devront être vérifiés :
+
+✓ L'application démarre correctement.
+
+✓ Aucun message d'erreur dans la console.
+
+✓ Toutes les fonctionnalités existantes fonctionnent.
+
+✓ Les calculs restent identiques.
+
+✓ Les données sont conservées.
+
+✓ Les imports fonctionnent.
+
+✓ Les exports fonctionnent.
+
+✓ Les performances restent au minimum équivalentes.
+
+---
+
+# 10. Définition de Terminé
+
+Un Sprint est considéré comme terminé uniquement lorsque :
+
+- toutes les livraisons sont terminées ;
+- tous les critères d'acceptation sont validés ;
+- tous les tests de non-régression sont validés ;
+- aucune anomalie critique n'est détectée.
+
+---
+
+# 11. Ce qui est hors périmètre
+
+Pendant cette phase, il est interdit de :
+
+- ajouter une nouvelle fonctionnalité majeure ;
+- modifier la vision du produit ;
+- changer le fonctionnement du Delta Émotionnel ;
+- réécrire complètement l'application sans justification ;
+- remplacer l'architecture existante par un framework différent.
+
+---
+
+# 12. Objectif Final
+
+À la fin du Polishing, Cosmos Journal Pro V3 devra répondre aux critères suivants :
+
+- Architecture propre et évolutive.
+- Interface cohérente et premium.
+- Expérience utilisateur fluide.
+- Code robuste et maintenable.
+- Performances optimisées.
+- Accessibilité améliorée.
+- Responsive de qualité.
+- Documentation à jour.
+- Produit stable.
+- Prêt pour une Version 1.0.
+
+---
+
+# 13. Vision Produit
+
+Cosmos Journal Pro V3 n'est pas un simple journal de trading.
+
+C'est un système d'amélioration continue destiné à transformer les données de trading en décisions, à mesurer la discipline du trader et à favoriser une progression durable.
+
+Toutes les décisions prises durant cette phase devront préserver cette vision.

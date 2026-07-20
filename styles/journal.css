@@ -1,0 +1,815 @@
+/* ARCH-002 (Sprint 1, Livraison 3) — Styles spécifiques au Journal.
+   Wizard 8 cartes, barre de progression, étoiles de qualité, checklist
+   confluences/causes, Mode Focus. Dépend de variables.css. */
+
+    /* UX-005 (Wizard Viewport & Layout Refinement) — Architecture "Double Fond".
+       Référence officielle : la hauteur apparente du Wizard est celle de la
+       Carte ① (Compte) pleinement rendue — titre Mode Focus + barre de
+       progression + carte ① + navigation Précédent/Suivant. Cette valeur est
+       calculée à partir des dimensions CSS réelles (padding panel, line-heights,
+       gaps, min-height des contrôles) : ≈395px, arrondi à 400px.
+       C'est désormais LA référence de hauteur apparente officielle du Wizard :
+       toutes les autres cartes (②, ③, ⑤, ⑥...) s'adaptent à ce viewport sans
+       jamais le modifier. Si une carte est plus longue que la Carte ①, seul son
+       contenu défile à l'intérieur du viewport — le cadre, lui, ne bouge jamais.
+       Variable isolée ici (et non dans variables.css) car son périmètre reste le
+       Wizard uniquement, comme le reste du Design System Journal — voir
+       DESIGN_SYSTEM_JOURNAL.md. Un seul point de réglage si l'estimation doit
+       être affinée après vérification visuelle : changer uniquement cette valeur. */
+    :root {
+      --journal-viewport-height: 400px;
+    }
+
+    /* UX-003A.2 — Visual Rhythm & Visual Balance : regroupement de champs qui
+       forment une même famille cognitive sur une ligne (Règle 1), plutôt que
+       l'empilement systématique. field-row--2/--3 fixent uniquement le nombre
+       de colonnes ; la largeur de chaque colonne reste fluide (1fr), aucune
+       dimension figée.
+       UX-003A.3 (D-034 — Local Density) : gap resserré à 10px (au lieu de
+       --space-2/16px) — les champs d'une même ligne forment un seul bloc
+       cognitif, ils doivent être visuellement proches entre eux. */
+    .field-row {
+      display: grid;
+      gap: 10px;
+    }
+    .field-row--2 { grid-template-columns: repeat(2, 1fr); }
+    .field-row--3 { grid-template-columns: repeat(3, 1fr); }
+
+    /* Traitement Utility (captures, Carte ⑥) : légèrement en retrait visuel
+       (texte réduit) par rapport aux champs Primary de la même carte, sans
+       device de composition différent — juste un poids inférieur. */
+    .field-row--utility {
+      opacity: 0.85;
+    }
+
+    /* UX-003A.3 (D-034 — Local Density) : regroupe les champs d'une même
+       famille cognitive (ex. "Quand", "Contexte", "Cause") en un seul bloc.
+       Densité forte à l'intérieur (petit gap, aligné sur le token --space-1).
+       Pixel-perfect pass : le margin-bottom précédent (18px, valeur hors
+       grille) est retiré d'ici — l'espacement ENTRE les blocs est désormais
+       porté uniquement par .wizard-card.active (règle unique, plus bas),
+       pour éviter un double espacement additif (gap de la carte + margin du
+       bloc) qui rendait le rythme vertical irrégulier. */
+    .field-group {
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    /* UX-003A.4 (D-032/D-033 — Intelligent Width & Content Driven Layout) :
+       remplace .field-row pour les paires de contrôles COURTS (HTF/LTF,
+       RR prévu/Respect du plan...) où forcer deux colonnes égales de 1fr
+       donnait à chaque sélecteur la moitié de la carte, bien plus que son
+       contenu réel n'en a besoin. Ici, chaque .field garde sa largeur
+       naturelle (contenu) et s'aligne simplement sur la même ligne, avec un
+       wrap si l'espace manque. .field-row reste pertinent là où l'alignement
+       en colonnes égales sert la lecture (ex. Date/Heure/Heure, où les trois
+       champs ont une largeur naturelle proche) — les deux primitives
+       coexistent, chacune pour un cas d'usage différent. */
+    .control-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .control-cluster .field {
+      width: auto;
+    }
+    .control-cluster .field input,
+    .control-cluster .field select {
+      width: auto;
+      min-width: 0;
+      max-width: 140px;
+    }
+
+    /* Pixel-perfect pass — Carte ③ (Analyse) : HTF et LTF deviennent deux
+       colonnes indépendantes, chacune en flex vertical strict, pour garantir
+       que le bord gauche du label ("HTF") et le bord gauche extérieur de son
+       select soient parfaitement alignés (le comportement de grille par
+       défaut de .field pouvait laisser dériver l'un par rapport à l'autre
+       de quelques pixels selon la largeur naturelle du select). */
+    .timeframe-cluster .field {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    /* Pixel-perfect pass : verrou d'alignement gauche. Tous les blocs du
+       Wizard (titre, groupes de champs, lignes de contrôles, conteneurs de
+       chips) partagent la même ligne d'alignement invisible à gauche — celle
+       du padding du .panel parent (désormais celui de .journal-viewport-inner,
+       voir UX-005 plus bas). Règle défensive : aucun de ces éléments ne doit
+       jamais porter de margin/padding-left résiduel qui le décalerait, même
+       de quelques pixels. */
+    .wizard-card,
+    .field-group,
+    .field-row,
+    .control-cluster,
+    .field,
+    .segmented,
+    .checklist {
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+    /* UX-003A.3 (D-030 — Functional Size) : une carte à faible densité (①, ④, ⑦)
+       ne s'étire jamais pour remplir un panel plus large qu'elle. Conservé tel
+       quel, mais devenu redondant avec #journal-panel ci-dessous (même valeur,
+       380px) — sans effet indésirable : 100% de 380px reste 380px. */
+    .wizard-card--compact {
+      max-width: 380px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────
+       UX-005 (Wizard Viewport & Layout Refinement) — Architecture Double Fond
+       ─────────────────────────────────────────────────────────────────────
+       Principe : séparer le CADRE (hauteur apparente, fixe, jamais négociable)
+       de la CARTE (hauteur naturelle, illimitée), avec un seul conteneur
+       responsable du scroll — jamais deux.
+
+       #journal-panel = le CADRE. Hauteur FIXE (et non plus max-height comme
+       avant UX-005) : c'est le changement structurel clé. Avec une max-height,
+       le comportement du scroll changeait de carte en carte (actif seulement
+       quand le contenu dépassait 560px) — d'où la sensation de scrollbar qui
+       "bute" de façon imprévisible. Avec une height fixe, le cadre a toujours
+       la même taille apparente, quelle que soit la carte active — exactement
+       la référence Carte ① définie ci-dessus.
+
+       Le panel devient l'unique propriétaire du scroll de tout le Wizard :
+       titre "Mode Focus", barre de progression, carte active et navigation
+       Précédent/Suivant sont considérés comme un seul bloc scrollable
+       (voir .journal-viewport-inner ci-dessous). Plus aucun scroll ne doit
+       se produire au niveau de la page (.main) à cause du Journal.
+
+       Piège technique identique à celui déjà rencontré/corrigé sur
+       #history-collapsible (D-025) : #journal-panel est un item du grid
+       parent (.journal-layout, display:grid) — min-height:0 est nécessaire,
+       sinon le min-height:auto par défaut d'un item grid se cale sur la
+       hauteur du contenu et neutralise l'overflow. */
+    #journal-panel {
+      max-width: 380px;
+      height: var(--journal-viewport-height);
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      /* Le padding descend sur .journal-viewport-inner (voir plus bas) :
+         le panel lui-même reste un cadre neutre, sans padding propre. */
+      padding: 0;
+    }
+
+    /* Scrollbar premium, identique à celle déjà utilisée dans les Paramètres
+       (même largeur, mêmes couleurs, même comportement — homogénéité demandée
+       par UX-005). Portée par #journal-panel, seul propriétaire du scroll. */
+    #journal-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+    #journal-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #journal-panel::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+    #journal-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    /* La CARTE réelle : hauteur naturelle, jamais contrainte. Contient Mode
+       Focus, la progression et le formulaire complet — un seul bloc qui
+       défile en entier à l'intérieur du cadre #journal-panel ci-dessus.
+       Le padding vit ICI (et non sur #journal-panel) : c'est le point clé du
+       "Double Fond". S'il restait sur le conteneur de scroll lui-même, le
+       titre et les boutons Précédent/Suivant toucheraient visuellement les
+       bords exactement quand le scroll atteint ses extrémités. En le
+       descendant sur ce wrapper interne, le padding fait partie du contenu
+       scrollable : il y a toujours un espace respiré avant/après, quelle que
+       soit la position du scroll — même principe déjà validé sur
+       #history-collapsible / .history-collapsible-inner (voir D-025,
+       DECISIONS_LOG.md), réutilisé ici plutôt que réinventé. --radius-card,
+       --shadow-soft et --border restent portés par #journal-panel (.panel),
+       ce wrapper ne gère que l'espacement interne. */
+    .journal-viewport-inner {
+      padding: var(--space-3);
+    }
+
+    /* Ancien padding/scroll de #journal-panel (pré-UX-005), pour mémoire :
+       max-width: 380px; min-height: 0; max-height: 560px; overflow-y: auto;
+       overflow-x: hidden; padding hérité de .panel (--space-3). Remplacé par
+       les règles ci-dessus — conservé en commentaire pour traçabilité
+       (Document 06 §8 : commentaires de provenance). */
+
+    /* Remplace le traitement "readonly-display" (boîte à bordure pleine) pour
+       les aperçus temps réel : une information secondaire n'a pas besoin du
+       même relief qu'un champ de saisie (Règle 3 — jamais un bloc à part
+       entière). Texte discret, sans bordure ni fond. */
+    .card-secondary {
+      margin: -4px 0 0;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .card-secondary-sep {
+      margin: 0 6px;
+      opacity: 0.6;
+    }
+
+    /* Validation UX-003A.1 : le Delta émotionnel reste l'information dominante
+       de la Carte ⑤ — distinct du simple readonly-display et du card-secondary
+       plus discret utilisé pour le rappel Théorique/Réel juste en dessous. */
+    .delta-highlight {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    /* Progressive Disclosure (Règle 6) : réutilise l'utilitaire .hidden déjà
+       défini globalement dans components.css (display:none !important) —
+       aucune redéfinition ici, cohérent avec la règle "jamais de code
+       dupliqué" (Document 06 §4). */
+    .wizard-progress {
+      height: 6px;
+      border-radius: var(--radius-pill);
+      background: var(--surface-3);
+      overflow: hidden;
+      margin-bottom: var(--space-2);
+    }
+
+    .wizard-progress-fill {
+      height: 100%;
+      width: 12.5%;
+      background: linear-gradient(135deg, var(--cosmos), var(--cosmos-gradient-end));
+      transition: width var(--motion) ease;
+    }
+
+    .wizard-card {
+      display: none;
+    }
+
+    /* Pixel-perfect pass : le rythme vertical entre TOUS les blocs de haut
+       niveau d'une carte (titre, chaque .field-group, le bouton de la Carte
+       ⑦...) est désormais une seule valeur mathématique — --space-2 (16px),
+       le même token que l'espacement titre/barre de progression (voir
+       .wizard-progress). Un seul point de vérité (`> * + *`), plus de gap de
+       grille cumulé avec des margin-bottom individuels. */
+    .wizard-card.active {
+      display: grid;
+      gap: 0;
+      animation: fadeSlide var(--motion) ease both;
+    }
+
+    .wizard-card.active > * + * {
+      margin-top: var(--space-2);
+    }
+
+    /* .card-content reste un pur conteneur de mise en page pour le contenu de
+       saisie (hors titre) — aucune propriété de scroll ici (UX-005 : le seul
+       propriétaire du scroll de tout le Wizard est #journal-panel, jamais un
+       conteneur intermédiaire — pas de scrollbar imbriquée). Le rythme
+       vertical (--space-2) reste appliqué entre chaque .field-group qu'il
+       contient. */
+    .card-content > * + * {
+      margin-top: var(--space-2);
+    }
+
+    /* Le formulaire lui-même (#trade-form.form-grid, gap hérité de
+       components.css) ne doit plus ajouter un second espacement avant la
+       barre de navigation Précédent/Suivant : cet espacement est repris
+       intégralement par .wizard-nav (margin-top + bordure), au même cran
+       --space-2 que le reste du rythme vertical. */
+    #trade-form.form-grid {
+      gap: 0;
+    }
+
+    .wizard-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: var(--space-2);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--border);
+    }
+
+    /* UX-003A.2 : .readonly-display (boîte à bordure pleine pour les aperçus
+       temps réel) est retiré ici — remplacé par .card-secondary/.delta-highlight
+       (voir plus bas), plus légers visuellement. Aucun autre fichier n'y référait
+       (vérifié).
+       UX-003A.4 (D-035 — Functional Controls) : la checklist n'est plus une
+       liste de cases à cocher visibles + libellé — c'est désormais une
+       bibliothèque de tags interactifs, au même gabarit visuel que .chip
+       (même famille de composant, uniforme entre Confluences [Carte ③],
+       Causes secondaires [Carte ⑤] et Tags [Carte ⑥, UX-004]). La case native
+       reste dans le DOM pour l'accessibilité et le comportement (aucun JS
+       touché — renderChecklist attache déjà son listener sur la checkbox
+       elle-même) mais n'est plus visible : l'état coché/décoché se lit
+       désormais sur le tag entier via :has(), exactement comme .chip.active
+       ailleurs dans l'application. */
+    .checklist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .checklist label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 20px;
+      padding: 0 7px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface-2);
+      color: var(--text-soft);
+      font-size: 10px;
+      cursor: pointer;
+      transition: background var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
+    }
+
+    .checklist label:has(input:checked) {
+      border-color: color-mix(in srgb, var(--cosmos) 45%, transparent);
+      background: color-mix(in srgb, var(--cosmos) 12%, transparent);
+      color: var(--cosmos-strong);
+    }
+
+    .checklist input[type="checkbox"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* UI-002 (Sprint 2, R2) : transition alignée sur celle de la famille .button
+       (voir même remarque que .chip dans components.css).
+       UX-003A.4 : hauteur/largeur resserrées (34px → 20px), même logique que
+       .checklist ci-dessus — la qualité du setup se scanne d'un coup d'œil,
+       elle n'a pas besoin d'un contrôle de la taille d'un bouton. */
+    .star-button {
+      min-height: 20px;
+      min-width: 20px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: 11px;
+      transition: transform var(--motion-fast), background var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
+    }
+
+    .star-button.active {
+      color: var(--warning);
+      border-color: color-mix(in srgb, var(--warning) 40%, transparent);
+      background: color-mix(in srgb, var(--warning) 10%, transparent);
+    }
+
+    /* ─────────────────────────────────────────────────────────────────────
+       UX-003A.3 — Functional Size & Compact Composition (D-030 à D-039)
+       ─────────────────────────────────────────────────────────────────────
+       Changement de philosophie : la taille d'un contrôle n'est plus dictée
+       par l'espace disponible dans son conteneur, mais par son usage réel
+       (D-030). Toutes les règles ci-dessous sont scopées à #trade-form :
+       c'est le Wizard qui sert de premier terrain d'application à cette
+       philosophie (D-039, "cockpit" plutôt que "formulaire") ; le reste de
+       l'application (Settings, historique, Analytics) suit la même famille
+       de classes (.chip, .button, .field) mais n'est volontairement pas
+       concerné à ce stade — la généralisation viendra dans un ticket dédié,
+       une fois cette première implémentation validée à l'usage. */
+
+    /* Rythme vertical label → contenu : valeur fixe universelle (D-034,
+       instruction "rythme et espacement uniforme"). Remplace l'ancien 4px
+       par un cran mathématique unique (8px, token --space-1) entre le nom
+       de chaque section et son contenu direct (champ, groupe de boutons,
+       étoiles) — ni trop collé, ni trop éloigné, partout identique. */
+    #trade-form .field {
+      gap: 8px;
+      justify-items: start;
+    }
+
+    #trade-form .field label {
+      font-size: 11px;
+    }
+
+    /* Inputs/selects/textarea : gabarit d'outil, pas de champ de formulaire
+       administratif (D-035). Padding légèrement resserré en UX-003A.4
+       (6px 10px → 5px 8px) — test des 15-20% : encore un peu de marge inutile
+       sans gain de lisibilité ni de confort de clic. */
+    #trade-form input,
+    #trade-form select {
+      min-height: 32px;
+      padding: 5px 8px;
+    }
+
+    /* UX-005 — Carte ⑥ (Notes) : hauteur par défaut du Commentaire réduite
+       (Intelligent Density) pour gagner de la densité verticale dans le
+       viewport. Aucun scroll interne ajouté : resize:vertical est déjà hérité
+       de .field textarea (components.css) — l'utilisateur agrandit le champ
+       manuellement via la poignée native du navigateur s'il a besoin de plus
+       de place, ce qui fait grandir la carte (et donc le contenu scrollable
+       du viewport), jamais un second scroll imbriqué dans le textarea lui-même. */
+    #trade-form textarea {
+      min-height: 56px;
+      padding: 8px 10px;
+    }
+
+    /* D-032/D-033 — Intelligent Width & Content Driven Layout : un champ
+       isolé (hors .field-row / .control-cluster) n'occupe que la largeur
+       dont il a besoin, jamais 100% de son bloc parent. Dans un .field-row,
+       la colonne EST le besoin du champ (Date/Heure/Heure) : elle continue
+       de remplir sa colonne, inchangé. .control-cluster gère son propre cas
+       (voir plus haut) : largeur de contenu, jamais de colonne forcée. */
+    #trade-form .field-group > .field input,
+    #trade-form .field-group > .field select {
+      width: auto;
+      min-width: 150px;
+    }
+
+    #trade-form .field-row .field input,
+    #trade-form .field-row .field select {
+      width: 100%;
+    }
+
+    /* Chips : gabarit de base, tag court et dense (D-035, D-036). Les
+       sections ci-dessous surchargent ce gabarit par cas d'usage précis
+       (Stratégie = élément central, Actif/Direction/Cause/Intervention =
+       légèrement plus aérés) — voir les règles scopées par ID juste après. */
+    #trade-form .chip {
+      min-height: 20px;
+      padding: 0 8px;
+      font-size: 10px;
+    }
+
+    #trade-form .segmented {
+      gap: 5px;
+      align-items: flex-start;
+    }
+
+    .checklist {
+      align-items: flex-start;
+    }
+
+    /* Rééquilibrage visuel — Section Stratégie (Carte ③) : devient l'élément
+       central de la carte, gabarit nettement plus affirmé que les autres
+       chips du Wizard. */
+    #trade-form #strategy-options .chip {
+      min-height: 30px;
+      padding: 0 14px;
+      font-size: 14px;
+    }
+
+    /* Allègement — HTF / LTF (Carte ③) : masse visuelle réduite, ils
+       accompagnent la Stratégie plutôt que de rivaliser avec elle. */
+    #htf-select,
+    #timeframe-select {
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+
+    /* Adoucissement Date & Heure (Carte ②) : même traitement que HTF/LTF —
+       masse visuelle réduite, ces trois champs accompagnent le reste de la
+       carte plutôt que de dominer visuellement. */
+    #trade-date,
+    #entry-time,
+    #exit-time {
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+
+    /* Optimisation chips — Actif / Direction (Carte ②) et Cause principale /
+       Intervention manuelle (Carte ⑤) : même traitement, légèrement plus
+       aéré et premium que le gabarit de base (10px/20px). */
+    #trade-form #asset-options .chip,
+    #trade-form #direction-options .chip,
+    #trade-form #emotional-cause-options .chip,
+    #trade-form #manual-intervention-options .chip {
+      min-height: 24px;
+      padding: 0 11px;
+      font-size: 12px;
+    }
+
+    /* Causes secondaires (Carte ⑤) : même famille visuelle que .checklist
+       (Confluences), mais aligné sur le même gabarit que les chips ci-dessus
+       pour rester cohérent avec le reste de la Carte ⑤. */
+    #emotional-causes-secondary-options.checklist label {
+      min-height: 24px;
+      padding: 0 11px;
+      font-size: 12px;
+    }
+
+    /* Boutons de navigation du Wizard : plus courts, esprit outil (D-035,
+       D-036). Le bouton primaire de validation (Carte ⑦, "Enregistrer le
+       trade") est volontairement exclu de cette réduction : Visual Gravity
+       (D-037) veut que l'action qui conclut le cockpit reste la plus
+       affirmée visuellement de tout le Wizard, jamais aussi discrète qu'un
+       chip ou qu'un bouton "Précédent". */
+    #trade-form .wizard-nav .button {
+      min-height: 28px;
+      padding: 0 10px;
+      font-size: 11px;
+    }
+
+    /* UX-003A (Sprint 3, Livraison 2A — D-017) : le panneau entier se replie, pas
+       seulement la liste. history-toggle-bar devient la seule zone visible à l'état
+       fermé — réutilise le padding du .panel parent (aucun double-padding), en pleine
+       largeur/cliquable. */
+    /* UX-003A (Sprint 3) : à l'état fermé, l'Historique ne doit plus avoir le
+       même poids visuel qu'un panel de premier rang comme le Wizard — sinon
+       l'utilisateur perçoit deux panneaux qui se disputent l'écran, exactement
+       ce que cette refonte cherche à éliminer (voir addendum d'architecture
+       produit UX-003A). L'ombre Cosmos Surface (--shadow-soft, héritée de
+       .panel) n'est donc affichée qu'une fois le contenu déployé ; fermé, seul
+       un bandeau discret à bordure légère reste visible. */
+    .history-panel-collapsible {
+      padding: 0;
+      overflow: hidden;
+      box-shadow: none;
+    }
+
+    .history-panel-collapsible:has(.history-collapsible.open) {
+      box-shadow: var(--shadow-soft);
+    }
+
+    .history-toggle-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: transparent;
+      border: 0;
+      text-align: left;
+      color: var(--text);
+    }
+
+    .history-toggle-title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* UX-003A (Sprint 3, Livraison 2A — D-025, refactorisation) : le panneau
+       repliable est un accordéon à deux niveaux (piste grid 0fr↔1fr + wrapper
+       interne), et AUCUN des deux niveaux de la piste ne doit porter de padding
+       propre. Un padding porté par un élément fait partie de sa boîte de rendu :
+       il n'est jamais "clippé" par son propre overflow:hidden, contrairement au
+       contenu qui déborde. C'est ce qui empêchait la piste de tomber à 0px
+       (voir DECISIONS_LOG.md, D-025). Le padding visuel nécessaire en état ouvert
+       est donc entièrement reporté sur les éléments de CONTENU (.section-header,
+       #trade-list, ci-dessous), qui sont des descendants — leur propre boîte
+       disparaît avec leur ancêtre quand la piste se referme, quel que soit leur
+       padding. Ce même principe (padding déporté sur un wrapper interne plutôt
+       que porté par le conteneur de scroll) est repris pour #journal-panel /
+       .journal-viewport-inner en UX-005, ci-dessus. */
+    .history-collapsible {
+      display: grid;
+      grid-template-rows: 0fr;
+      overflow: hidden;
+      transition: grid-template-rows var(--motion) ease;
+    }
+
+    .history-collapsible.open {
+      grid-template-rows: 1fr;
+    }
+
+    .history-collapsible-inner {
+      overflow: hidden;
+      min-height: 0;
+      /* Volontairement aucun padding ici (voir commentaire ci-dessus, D-025). */
+    }
+
+    /* Padding reporté ici depuis .history-collapsible-inner (D-025). Scoping par
+       ID pour ne jamais affecter .section-header ailleurs dans l'app (Dashboard,
+       Analytics, Insights, Settings, modales) — ce n'est pas une règle générique
+       du composant .section-header, seulement la mise en page propre au panneau
+       Historique. Reprend exactement l'espacement horizontal de l'ancien padding
+       groupé (var(--space-3) gauche/droite), sans espace au-dessus (le bandeau
+       toggle porte déjà son propre padding-bottom via .history-toggle-bar). */
+    #history-collapsible .section-header {
+      padding: 0 var(--space-3);
+    }
+
+    /* Idem pour la liste de trades : reprend l'espacement horizontal + le
+       padding-bottom de l'ancien wrapper groupé. Scoping par ID pour ne jamais
+       affecter .trade-list générique (Analytics utilise #analytics-trade-list,
+       Insights ses propres conteneurs — aucun conflit possible). min-height:0
+       conservé ici (nécessaire pour que #trade-list ne résiste pas non plus à
+       la compression via .empty-state { min-height:230px }). */
+    #history-collapsible #trade-list {
+      padding: 0 var(--space-3) var(--space-3);
+      min-height: 0;
+    }
+
+    #history-toggle-icon {
+      display: inline-block;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      transition: transform var(--motion-fast) ease;
+    }
+
+    #history-toggle[aria-expanded="true"] #history-toggle-icon {
+      transform: rotate(90deg);
+    }
+
+    /* Mode Focus (Document 03) : le registre s'efface légèrement pendant la saisie active. */
+    #history-panel.wizard-focus-dim {
+      opacity: 0.4;
+      filter: blur(1px) saturate(0.7);
+      pointer-events: none;
+      transition: opacity var(--motion) ease, filter var(--motion) ease;
+    }
+@media (max-width: 640px) {
+  /* Milestone 5A : la navigation wizard doit rester sur une seule ligne, moitié/moitié,
+     plutôt que de laisser .button { width:100% } écraser la mise en page flex. */
+  .wizard-nav .button {
+    width: auto;
+    flex: 1;
+  }
+
+  /* UX-003A.2 : le regroupement par famille cognitive (Règle 1) suppose un
+     espace suffisant par champ. Sous 640px, mieux vaut revenir à l'empilement
+     vertical simple que de compresser chaque colonne au point de nuire à la
+     lisibilité (Document 03 : la compréhension prime sur la compacité). */
+  .field-row--2,
+  .field-row--3 {
+    grid-template-columns: 1fr;
+  }
+}
+/* MEDIA-001 (Livraison C) — Cartes de capture (Carte ⑥ du Wizard).
+   Ajouter ce bloc à la fin de styles/journal.css.
+
+   Respecte les règles de gouvernance de DESIGN_SYSTEM_JOURNAL.md :
+   - largeur de référence du Wizard : 380px (jamais une largeur ad hoc) ;
+   - rythme vertical à deux crans uniquement : --space-2 (macro) / --space-1 (micro) ;
+   - verrou d'alignement gauche (margin-left/padding-left: 0) ;
+   - traitement "Utility" (opacité réduite) déjà utilisé pour .field-row--utility
+     (captures liens, ancien système) — repris ici à l'identique, cohérence avec
+     le principe déjà établi que les captures restent secondaires dans le Wizard. */
+
+.capture-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.capture-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  opacity: 0.92; /* même esprit que .field-row--utility : présent mais jamais dominant */
+}
+
+.capture-slot-label {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 650;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.capture-slot-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Zone d'import vide — consomme Cosmos Surface en pointillés, même variante que
+   .empty-state (bordure en tirets, sans fond ni ombre), à une échelle Wizard. */
+.capture-dropzone {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-field);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 10px;
+  transition: border-color var(--motion-fast), color var(--motion-fast), background var(--motion-fast);
+}
+
+.capture-dropzone:hover {
+  border-color: color-mix(in srgb, var(--cosmos) 40%, transparent);
+  color: var(--cosmos-strong);
+  background: color-mix(in srgb, var(--cosmos) 6%, transparent);
+}
+
+.capture-dropzone-icon {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* Vignette une fois une capture ajoutée — bordure pleine (Cosmos Surface),
+   jamais en pointillés (signale visuellement "rempli" vs "vide"). */
+.capture-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-field);
+  overflow: hidden;
+  background: var(--surface-2);
+  cursor: zoom-in;
+}
+
+.capture-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity var(--motion) ease, filter var(--motion) ease;
+}
+
+/* État Loading (STATE_MODEL.md — premier déclenchement réel, D-014) : même
+   traitement visuel que wizard-focus-dim, jamais un spinner générique. */
+.capture-thumb.capture-loading img {
+  opacity: 0.4;
+  filter: blur(2px);
+}
+
+.capture-slot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.capture-slot-actions .button {
+  min-height: 22px;
+  padding: 0 8px;
+  font-size: 10px;
+  flex: 1;
+}
+
+.capture-legacy-link {
+  display: block;
+  font-size: 11px;
+  color: var(--cosmos-strong);
+  text-decoration: none;
+  padding: 6px 0;
+}
+
+.capture-legacy-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .capture-slots {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* MEDIA-001 (Livraison D) — état visuel du drag & drop, sur dropzone vide et
+   vignette existante (remplacement). Même token --cosmos que le hover existant
+   de .capture-dropzone : le drag est une intensification du même état, pas un
+   5e gabarit visuel. */
+.capture-dropzone.dragover,
+.capture-thumb.dragover {
+  border-color: var(--cosmos);
+  background: color-mix(in srgb, var(--cosmos) 10%, transparent);
+}
+
+.capture-thumb.dragover {
+  border-width: 1px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--cosmos) 30%, transparent);
+}
+
+/* MEDIA-001 (Livraison D) — Visionneuse. Réutilise .modal-backdrop (flou,
+   fermeture ESC/clic extérieur déjà gérés par components.js/main.js) ; seul le
+   panel interne est spécifique : pas de padding standard (l'image doit pouvoir
+   toucher les bords), largeur/hauteur bornées à la fenêtre. */
+.capture-viewer {
+  position: relative;
+  padding: 0;
+  max-width: min(90vw, 900px);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.capture-viewer img {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.capture-viewer-close {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  z-index: 1;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(6px);
+}

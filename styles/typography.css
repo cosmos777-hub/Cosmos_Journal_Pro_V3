@@ -1,0 +1,30 @@
+/* ARCH-002 (Sprint 1, Livraison 2) — Hiérarchie typographique.
+   Titres, paragraphes, labels, textes secondaires. Dépend de variables.css. */
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--cosmos-strong);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h2, h3, p {
+      margin-top: 0;
+    }
+
+    h2 {
+      margin-bottom: 4px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 4px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+    .muted {
+      color: var(--text-muted);
+      font-size: 13px;
+    }

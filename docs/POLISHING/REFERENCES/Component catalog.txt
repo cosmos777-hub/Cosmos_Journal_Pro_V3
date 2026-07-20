@@ -1,0 +1,347 @@
+# COMPONENT_CATALOG.md
+
+**Cosmos Journal Pro V3 — Design System**
+Version : 1.2
+Statut : Officiel (issu d'ARCH-003, validé lors d'ARCH-004, enrichi lors d'UI-002 et UI-003)
+
+---
+
+## 1. Contexte
+
+Ce catalogue documente le Design System de Cosmos Journal Pro, organisé en
+**deux niveaux** depuis UI-003 :
+
+- **Design Primitives** : les briques visuelles fondamentales, non
+  utilisables seules par l'utilisateur final, mais réutilisées par tous les
+  composants.
+- **Components** : les éléments d'interface concrets (JS ou CSS), qui
+  combinent une ou plusieurs primitives avec une structure et un rôle
+  propres.
+
+Cette séparation évite de confondre "deux composants qui se ressemblent"
+avec "un même primitif utilisé par deux composants différents" — distinction
+clarifiée lors de l'audit UI-003 (voir §2.1 et `DECISIONS_LOG.md`, D-009).
+
+### Statut d'un composant
+
+Depuis UI-002, chaque composant du catalogue porte un **statut** indiquant
+son niveau de maturité :
+
+| Statut | Signification |
+|---|---|
+| 🟢 **Stable** | Utilisé en production, comportement figé, aucune évolution prévue à court terme |
+| 🔵 **Reserved** | Défini et stylé, **volontairement non utilisé actuellement**, en attente d'un besoin futur identifié |
+| 🟡 **Experimental** | *(réservé pour un futur composant en cours de validation)* |
+| ⚪ **Deprecated** | *(réservé pour un futur composant destiné à être retiré)* |
+
+### Vue d'ensemble
+
+| Élément | Niveau | Type | Statut |
+|---|---|---|---|
+| Cosmos Surface | Primitive | CSS | 🟢 Stable |
+| Design Tokens | Primitive | CSS (`variables.css`) | 🟢 Stable |
+| Motion | Primitive | — | 🔵 Reserved |
+| Typography | Primitive | — | 🔵 Reserved |
+| `.panel` | Composant | CSS | 🟢 Stable |
+| `.card.kpi` | Composant | CSS | 🟢 Stable |
+| `tradeRow()` | Composant | JS (`components.js`) | 🟢 Stable |
+| `badge()` | Composant | JS (`components.js`) | 🟢 Stable |
+| `emptyState()` | Composant | JS (`components.js`) | 🟢 Stable |
+| `.button` (Secondaire) | Composant | CSS | 🟢 Stable |
+| `.button.primary` (Primaire) | Composant | CSS | 🟢 Stable |
+| `.button.ghost` (Tertiaire) | Composant | CSS | 🟢 Stable |
+| `.button.danger` | Composant | CSS | 🟢 Stable |
+| `.nav-button` | Composant | CSS | 🟢 Stable |
+| `.chip` | Composant | CSS | 🟢 Stable |
+| `.star-button` | Composant | CSS | 🟢 Stable |
+| `.icon-button` | Composant | CSS | 🔵 Reserved |
+
+---
+
+## 2. Design Primitives
+
+Briques visuelles fondamentales. Une primitive n'est jamais utilisée
+directement dans le HTML — elle est toujours consommée via un composant.
+
+### 2.1 — Cosmos Surface 🟢 Stable
+
+**Définition** (introduite lors d'UI-003) : le primitif visuel commun à tout
+conteneur "surélevé" de l'interface, composé de quatre propriétés :
+- un **fond** (`background`, uni ou `color-mix()`) ;
+- une **bordure** (`border: 1px solid var(--border)`) ;
+- un **radius** (`var(--radius-card)`, 16px) ;
+- une **ombre** *(optionnelle selon le rôle du composant)*.
+
+**Pourquoi cette notion existe** : l'audit UI-003 a établi que `.panel` et
+`.card` ne sont **pas deux composants concurrents**, mais deux usages du même
+primitif Cosmos Surface, avec un seul paramètre qui diffère (le padding).
+Les fusionner en un seul sélecteur CSS n'apporterait rien (ils jouent des
+rôles produit différents — voir §3.1) ; les traiter comme deux composants
+non liés ferait perdre cette parenté. Cosmos Surface nomme explicitement ce
+qu'ils ont en commun.
+
+**Composants qui consomment cette primitive** : `.panel`, `.card`,
+`.trade-row` (variante flate, sans ombre), `.empty-state` (variante en
+tirets, sans fond).
+
+### 2.2 — Design Tokens 🟢 Stable
+
+L'ensemble des variables CSS de `variables.css` (couleurs, espacements,
+radius, ombres, transitions) — auditées et consolidées lors d'UI-001. Voir la
+section "Design Tokens — État actuel" dans `DECISIONS_LOG.md` pour le compte
+à jour.
+
+### 2.3 — Motion 🔵 Reserved
+
+Regroupera à terme les règles de mouvement de l'interface (durées, easings,
+règles d'entrée/sortie), aujourd'hui dispersées mais déjà tokenisées
+(`--motion`, `--motion-fast`, `@keyframes fadeSlide`/`fadeIn`/`toastIn` dans
+`animations.css`). Pas d'action requise avant qu'un ticket dédié à
+l'animation ne le justifie.
+
+### 2.4 — Typography 🔵 Reserved
+
+Regroupera à terme l'échelle typographique (11 à 34px), aujourd'hui cohérente
+en usage mais non formalisée en tokens `--font-size-*` (constat de l'audit
+UI-001, jugé non prioritaire à ce stade — voir `DECISIONS_LOG.md`, exceptions
+UI-001). Pas d'action requise avant qu'un ticket dédié à la typographie ne le
+justifie.
+
+---
+
+## 3. Components
+
+### 3.1 — Conteneurs (Cosmos Surface)
+
+#### `.panel` 🟢 Stable
+**Rôle** : conteneur de **section** — Dashboard, Journal, Analytics,
+Insights, modales (Paramètres, Export, Import). 10 usages dans l'application,
+toujours en tant que conteneur racine d'un bloc fonctionnel.
+**Padding** : `var(--space-3)` (24px).
+**Structure interne** : suit en général le pattern **Header → Titre →
+Description → Contenu → Actions** du Document 03, via la classe
+`.section-header` (bloc texte à gauche + badge/action optionnelle à droite).
+
+**Variante sans `.section-header`** — le panel `.mission` (aside "Architecture V3") :
+empile directement `eyebrow` → `h2` → `muted` → contenu, sans le conteneur
+flex `.section-header`. **C'est une variante volontaire**, réservée aux
+panels qui n'ont ni badge ni action à afficher à droite du titre — pas un
+oubli. Un futur panel dans le même cas peut réutiliser ce pattern sans passer
+par `.section-header`.
+
+#### `.card.kpi` 🟢 Stable
+**Rôle** : statistique atomique (label → grande valeur → note), conforme au
+pattern "Les statistiques" du Document 03 — distinct du pattern "carte" à
+Header/Titre/Description/Contenu/Actions.
+**Padding** : `var(--space-2)` (16px).
+**Important** : `.card` seul (sans `.kpi`) n'est **jamais utilisé** dans
+l'application — les 22 occurrences sont systématiquement `class="card kpi"`.
+Il n'existe donc pas de "carte générique" en pratique ; `.card` sert
+exclusivement de socle visuel à cette variante KPI.
+
+#### `tradeRow()` 🟢 Stable
+Voir §3.3 (composant JS). Variante "row" de Cosmos Surface : fond plat
+(`var(--surface-2)`, pas de `color-mix()`), **sans ombre** (répété de
+nombreuses fois dans une liste, une ombre par ligne serait excessive —
+cohérent avec Document 03 : *"le but n'est pas de créer du relief, seulement
+de séparer les couches"*).
+**Padding** : `var(--space-2)` (16px) — aligné sur `.card` depuis UI-003
+(auparavant 14px codé en dur, seule valeur non tokenisée de toute la famille
+Cosmos Surface ; voir `DECISIONS_LOG.md`, D-010).
+
+#### `.empty-state` 🟢 Stable
+Variante en tirets de Cosmos Surface (`border: 1px dashed var(--border-strong)`),
+sans fond ni ombre. Voir aussi `emptyState()` (§3.3) pour la version générée en JS.
+
+---
+
+### 3.2 — `.wizard-card` : un faux-ami terminologique ⚠️
+
+**`.wizard-card` ne fait pas partie du Card System.** Il ne consomme **pas**
+la primitive Cosmos Surface : pas de bordure, pas de radius, pas de fond, pas
+d'ombre propres. C'est un pur mécanisme d'affichage (`display: none` ↔
+`display: grid`) pour faire apparaître/disparaître une étape du formulaire à
+8 cartes.
+
+Le mot "carte" vient ici du **vocabulaire produit** (Document 02 : "① Compte
+② Trade..."), pas de la famille CSS `.card`/`.panel`. L'apparence visuelle de
+carte que perçoit l'utilisateur est en réalité héritée du `.panel` parent
+(`#journal-panel`) qui englobe tout le wizard — `.wizard-card` lui-même est
+invisible en tant que conteneur.
+
+**Pourquoi documenter ce cas** : sans cette précision, un futur audit
+pourrait supposer à tort que `.wizard-card` devrait consommer Cosmos Surface
+comme les autres éléments "carte" — ce qui casserait la mise en page du
+wizard (le panel parent fournit déjà la surface, en ajouter une seconde
+imbriquée créerait une double bordure).
+
+---
+
+### 3.3 — Composants JavaScript (`src/ui/components.js`)
+
+Accessibles via `this.xxx(...)` (depuis n'importe quelle méthode fusionnée
+dans l'objet `ui`) ou `ui.xxx(...)` depuis l'extérieur.
+
+#### `badge(toneClass, label)` 🟢 Stable
+**Retour** : `string` (HTML)
+**Rôle** : pastille colorée utilisée pour afficher une valeur avec une teinte
+sémantique.
+**Paramètres** :
+- `toneClass` : `"positive"` | `"negative"` | `"neutral"` — généralement obtenu via `utils.tone(valeur)`.
+- `label` : texte affiché dans le badge.
+
+**Exemple** :
+```js
+this.badge(utils.tone(5), "+5.00R")
+// → <span class="badge positive">+5.00R</span>
+```
+
+**Utilisé par** : `journal.js` (historique des trades), `analytics.js` (liste filtrée), `dashboard.js` (Feature Registry, via un balisage similaire).
+
+#### `emptyState(title, message)` 🟢 Stable
+**Retour** : `string` (HTML)
+**Rôle** : état vide standard (titre + message), conforme au principe
+Document 03 : *"le Dashboard ne doit jamais être vide"*, avec un message qui
+oriente l'utilisateur plutôt qu'un simple "0".
+
+**Exemple** :
+```js
+container.innerHTML = this.emptyState("Aucun trade", "Ajoutez-en un.")
+```
+
+**Utilisé par** : `journal.js` (historique vide), `analytics.js` (aucun trade filtré).
+*(La vue Insights a son propre état vide dédié — `insights-empty-state` —
+car il nécessite un compteur d'échantillon minimum, Document 05 §7 — ce n'est
+pas ce composant générique.)*
+
+#### `tradeRow({ title, meta, notes?, badges?, actions? })` 🟢 Stable
+**Retour** : `string` (HTML)
+**Rôle** : carte de ligne bordée représentant un trade (variante "row" de
+Cosmos Surface, voir §3.1).
+**Paramètres** :
+- `title`, `meta` : chaînes déjà échappées par l'appelant (`utils.escape`).
+- `notes` *(optionnel)* : ligne supplémentaire si non vide.
+- `badges` *(optionnel)* : tableau de `{ tone, label }`, un `badge()` généré par élément.
+- `actions` *(optionnel)* : HTML additionnel (ex. boutons Modifier/Supprimer).
+
+**Exemple** :
+```js
+this.tradeRow({
+  title: "EUR/USD · Strat 1",
+  meta: "12/07/2026 · Londres · Daily → M5",
+  badges: [{ tone: "positive", label: "+2.00R" }]
+})
+```
+
+**Utilisé par** :
+- `journal.js` : historique complet (titre + méta + notes + 3 badges + actions Modifier/Supprimer).
+- `analytics.js` : liste filtrée (titre + méta + 1 badge, sans actions).
+
+**Non utilisé par `insights.js`** : la vue Insights affiche une seule colonne
+de texte par observation (pas de méta, pas de badge). L'y forcer en aurait
+fait un composant "fourre-tout" — c'est une décision d'architecture
+assumée, pas un oubli.
+
+---
+
+### 3.4 — Système de boutons (Button System — UI-002)
+
+Formalisé lors du ticket UI-002. Trois niveaux d'action (Document 03) +
+deux familles de contrôles de sélection, partageant un langage
+d'interaction commun (transitions, hover, active). Ne consomme **pas**
+Cosmos Surface (registre visuel différent : contrôle interactif, pas
+conteneur de contenu).
+
+#### `.button` — niveau **Secondaire** 🟢 Stable
+Bouton par défaut, sans modificateur. Fond `var(--surface-2)`.
+**Aucune classe `.button.secondary` n'existe** : l'absence de modificateur
+*est* le niveau Secondaire. C'est un choix assumé (voir `DECISIONS_LOG.md`,
+D-007) plutôt qu'un renommage mécanique du CSS pour un gain purement
+cosmétique.
+**Utilisé par** : "Paramètres", "Importer JSON", "Exporter JSON".
+
+#### `.button.primary` — niveau **Primaire** 🟢 Stable
+Dégradé `var(--cosmos)` → `var(--cosmos-gradient-end)` (voir DECISIONS_LOG.md D-005).
+**Utilisé par** : actions de validation — Enregistrer le trade, Créer le compte, Ajouter (paramètres).
+
+#### `.button.ghost` — niveau **Tertiaire** 🟢 Stable
+Fond transparent, texte `var(--text-soft)`.
+**Utilisé par** : Thème, Modifier, Annuler la modification.
+
+#### `.button.danger` — variante sémantique 🟢 Stable
+Rouge (`var(--danger)`), en plus des 3 niveaux du Document 03 : nécessaire
+pour les actions destructives, qui ne sont ni Primaire ni Secondaire ni
+Tertiaire au sens hiérarchique, mais un registre à part (risque/danger).
+**Utilisé par** : Réinitialiser, Supprimer un trade.
+
+#### `.nav-button` 🟢 Stable
+Navigation principale (Dashboard/Journal/Analytics/Insights). Classe
+indépendante de `.button`, mais partage sa base structurelle (hauteur,
+radius, transitions) via un sélecteur combiné dans `components.css`.
+
+#### `.chip` 🟢 Stable
+Contrôle de sélection (actif, stratégie, direction, causes émotionnelles...).
+Depuis UI-002, partage le même hover/active `scale()` que `.button` (R2) —
+avant ce ticket, son feedback était instantané, ce qui créait une rupture
+avec le reste de l'interface.
+
+#### `.star-button` 🟢 Stable
+Notation étoilée (qualité du setup, Carte 3 du wizard). Même traitement
+hover/active/transition que `.chip` depuis UI-002 (R2).
+
+#### `.icon-button` 🔵 **Reserved**
+**Non utilisé actuellement, nulle part dans l'application.** Stylé dans
+`components.css` (base : hauteur, radius, transition) et `animations.css`
+(hover/active), mais aucun élément du DOM ne porte cette classe à ce jour.
+
+**Décision (UI-002)** : conservé volontairement plutôt que supprimé. Le
+Document 03 prévoit un futur système d'icônes minimal ("une seule
+bibliothèque, même épaisseur partout"), qui n'existe pas encore dans
+l'application (les indicateurs actuels sont du texte/émoji : ✓, ⭐, ⚙). Ce
+composant est donc une **fondation volontaire posée en avance**, pas du code
+mort. Il devra être revu (ou activé) lorsque le système d'icônes sera
+introduit — voir `DECISIONS_LOG.md` D-008.
+
+#### État `disabled` (tous niveaux, UI-002 R1)
+`.button`, `.nav-button` et `.icon-button` disposent désormais d'un état
+`:disabled` cohérent (opacité réduite, curseur `not-allowed`, interactions
+désactivées). Aucun bouton de l'application ne l'utilise à ce jour — c'est,
+comme `.icon-button`, une fondation posée avant le besoin fonctionnel
+(voir `DECISIONS_LOG.md` D-008). **Périmètre volontairement limité aux
+boutons d'action** : `.chip` et `.star-button` sont des sélecteurs de valeur,
+pas des actions déclenchables, et n'ont pas d'état désactivé.
+
+---
+
+## 4. Composants non génériques (spécifiques à une vue)
+
+Ces éléments ne sont **pas** dans ce catalogue en tant que composants
+réutilisables, car ils sont propres à un seul écran et n'ont pas de vocation
+à être réutilisés :
+
+| Élément | Fichier | Raison |
+|---|---|---|
+| Tableau de performance par dimension (`breakdown-table`) | `analytics.js` | Structure spécifique aux Analytics (colonnes fixes : Winrate, Profit Factor, etc.) |
+| Graphique du Jumeau Numérique (SVG fait main) | `dashboard.js` | Rendu graphique unique, non réutilisé ailleurs |
+| Étoiles de qualité de setup | `journal.js` | Propre au formulaire 8 cartes (Carte 3) |
+| Pills de paramètres (`setting-pill`) | `settings.js` | Propre au centre de personnalisation |
+
+Si l'un de ces éléments devient nécessaire ailleurs à l'avenir, il devra être
+extrait vers `components.js` selon le même principe que `badge`/`emptyState`/`tradeRow`.
+
+---
+
+## 5. Règle pour l'ajout d'un nouveau composant
+
+Un élément d'interface mérite d'être extrait dans ce catalogue lorsque :
+1. Il apparaît de façon identique dans **au moins deux vues différentes** ;
+2. Son API peut rester simple (peu de paramètres, responsabilité unique) ;
+3. L'extraire ne nécessite pas de complexifier son usage dans les vues qui l'utilisent déjà correctement telles quelles.
+
+Une ressemblance partielle ne suffit pas : forcer un composant générique sur
+un cas structurellement différent (cf. `insights.js` ci-dessus) crée plus de
+complexité qu'il n'en retire.
+
+**Avant de créer un nouveau composant "conteneur"**, vérifier s'il peut
+simplement consommer la primitive **Cosmos Surface** (§2.1) plutôt que de
+redéfinir bordure/radius/fond/ombre depuis zéro.

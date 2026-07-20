@@ -1,0 +1,141 @@
+# NAMING_CONVENTIONS.md
+
+**Cosmos Journal Pro V3**
+Version : 1.0
+Statut : Officiel (validé lors d'ARCH-004, issu de CODE-001)
+
+---
+
+## 1. Principe général
+
+Conformément au Document 04 §15 :
+
+> Des noms explicites, jamais d'abréviations obscures.
+
+Ces conventions ont été observées dans la base de code existante lors de
+l'audit CODE-001/ARCH-004 ; ce document les **fige** pour tous les
+développements futurs.
+
+---
+
+## 2. Fichiers
+
+| Type | Convention | Exemple |
+|---|---|---|
+| Modules JS | `camelCase.js`, un nom = un rôle | `calculations.js`, `migrations.js`, `dashboard.js` |
+| Modules CSS | `camelCase.css`, nommé d'après la vue ou la fonction qu'il stylise | `dashboard.css`, `animations.css` |
+| Documents projet | `SCREAMING_SNAKE_CASE.md` pour la documentation officielle | `PROJECT_STRUCTURE.md`, `POLISHING_MASTER_PLAN.md` |
+
+Un fichier `ui/xxx.js` porte toujours le nom de la vue qu'il rend
+(`dashboard.js` → vue Dashboard). Un fichier `core/xxx.js` porte le nom de sa
+responsabilité métier (`storage.js` → stockage, jamais `data.js` ou `db.js`).
+
+---
+
+## 3. Variables et propriétés d'état
+
+- **camelCase** systématique : `riskAmount`, `emotionalDeltaR`, `currentCapital`.
+- Les propriétés dérivées du Delta Émotionnel suivent toujours le suffixe
+  explicite de leur unité : `emotionalDeltaR` (en R), `emotionalDeltaCurrency`
+  (en devise) — jamais de nom ambigu comme `delta` seul dans les objets trade.
+- Les sélections en cours du formulaire (wizard) sont préfixées `selected` dans
+  `state.js` : `selectedAsset`, `selectedStrategy`, `selectedSetupQuality`.
+- Les valeurs de champs DOM miroir (input hidden) utilisent le suffixe
+  `-value` en HTML (`asset-value`, `direction-value`) pour les distinguer des
+  éléments d'affichage.
+
+---
+
+## 4. Fonctions
+
+### Fonctions de calcul (`core/calculations.js`)
+Verbe ou nom d'action explicite, jamais d'abréviation :
+```
+calculateRiskAmount()     → écrit riskAmount()
+calculateEmotionalDelta() → écrit emotionalDeltaFull()
+generateInsights()
+generateMission()
+buildEquityCurve()
+buildTradeMetricsV3Cards()
+```
+Le préfixe `build` est utilisé quand la fonction assemble un objet composite
+à partir de plusieurs valeurs ; `generate` quand le résultat contient une
+part d'analyse (Insights, Mission) ; le nom seul (`riskAmount`, `winrate`,
+`expectancy`) quand la fonction retourne directement la grandeur nommée.
+
+### Fonctions de rendu (`ui/*.js`)
+Préfixe `render` pour tout ce qui régénère du HTML, `update` pour tout ce qui
+rafraîchit un affichage déjà existant sans le reconstruire entièrement :
+```
+renderDashboard(), renderTrades(), renderSettings()
+updateAnalyticsView(), updateResultPreviews(), updateDurationPreview()
+```
+
+### Fonctions utilitaires pures (`utils/`)
+Nom court mais non ambigu : `uid`, `clone`, `escape`, `formatR`, `formatPercent`, `tone`.
+
+---
+
+## 5. Constantes
+
+**SCREAMING_SNAKE_CASE**, définies uniquement dans `utils/constants.js` :
+```
+APP_VERSION
+STORAGE_KEY
+LEGACY_TRADES_KEY
+LEGACY_PREFS_KEY
+HISTORY_DISPLAY_LIMIT
+RISK_LEVELS_BY_ACCOUNT_TYPE
+```
+Aucune constante métier ne doit être redéfinie ailleurs — `constants.js` est
+la source unique de vérité (Document 04 §11 : *"aucun élément ne doit être
+codé en dur"*).
+
+---
+
+## 6. Modules ES
+
+- **Exports nommés uniquement** (`export const`, `export function`) —
+  **jamais de `export default`**. Convention établie dès ARCH-001 et
+  respectée dans tous les fichiers `src/`.
+- Chaque module exporte un seul objet principal portant le nom du fichier :
+  `calculations.js` → `export const calculations`, `storage.js` →
+  `export const storage` (+ `featureRegistry` en export secondaire, car
+  intrinsèquement lié au stockage).
+- Les modules `ui/*.js` exportent un objet suffixé `Ui` :
+  `dashboardUi`, `journalUi`, `analyticsUi`, `insightsUi`, `settingsUi`,
+  `componentsUi` — fusionnés ensuite dans `main.js` en un seul objet `ui`.
+
+---
+
+## 7. Attributs HTML / data-*
+
+- Actions cliquables génériques : `data-action="nom-action"` (ex.
+  `data-action="open-settings"`, `data-action="export-json"`).
+- Actions liées à une entité précise : `data-{verbe}-{entité}="id"` (ex.
+  `data-edit-trade="trade-123"`, `data-delete-trade="trade-123"`,
+  `data-remove-setting="assets"`).
+- Formulaires dynamiques : `data-add-{entité}` (ex. `data-add-account`,
+  `data-add-setting="assets"`).
+- Navigation : `data-view="dashboard"`, `data-settings-category="accounts"`.
+
+Cette convention permet une délégation d'événements centralisée dans
+`main.js` (`document.addEventListener("click", ...)`) sans jamais attacher de
+gestionnaire `onclick` individuel (interdit depuis le Milestone 1, Document 08).
+
+---
+
+## 8. Commentaires de traçabilité
+
+Chaque bloc de code significatif porte un commentaire de provenance au format :
+```
+// Milestone X[lettre] (Document 0Y §Z) : description courte.
+```
+ou pour le Polishing :
+```
+// Sprint N — TICKET-NNN (Livraison X) : description courte.
+```
+Cette convention permet de retracer, pour n'importe quelle fonction, la
+spécification produit ou le ticket technique qui l'a introduite — essentiel
+pour respecter la règle Document 06 §2 : *"ne jamais modifier une
+fonctionnalité de manière isolée"*.

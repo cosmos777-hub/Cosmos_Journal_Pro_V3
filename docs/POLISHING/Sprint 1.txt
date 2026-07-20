@@ -1,0 +1,161 @@
+Sprint 1
+
+⸻
+ 
+🪐 SPRINT 1 — STABILISATION DE L’ARCHITECTURE
+Nom officiel :
+Sprint 1 — Architecture Stabilization
+Objectif global :
+Transformer l’architecture actuelle en une base logicielle robuste, modulaire et évolutive, sans modifier le comportement fonctionnel de l’application.
+ 
+⸻
+ 
+📋 Objectifs du Sprint
+À la fin du Sprint 1, l’utilisateur ne devra remarquer aucune différence visuelle ou fonctionnelle.
+En revanche, le code devra être :
+	•	plus lisible ;
+	•	plus modulaire ;
+	•	plus facile à maintenir ;
+	•	plus facile à tester ;
+	•	plus simple à faire évoluer.
+Le Sprint 1 est exclusivement un sprint de refactoring sécurisé.
+Aucune nouvelle fonctionnalité ne sera ajoutée.
+ 
+⸻
+ 
+📦 Les tickets du Sprint 1
+Je propose les tickets suivants :
+Ticket	Priorité	Livraisons
+🔴 ARCH-001	Modulariser app.js	3
+🔴 ARCH-002	Modulariser style.css	3
+🔴 ARCH-003	Créer une architecture de composants UI	2
+🔴 ARCH-004	Réorganiser l’arborescence du projet	2
+🟠 CODE-001	Éliminer les duplications	2
+🟠 CODE-002	Uniformiser les conventions de code	2
+ 
+⸻
+ 
+⸻
+ 
+📄 ARCH-001 — Modularisation de 
+app.js
+Objectif
+Découper le fichier app.js en plusieurs modules spécialisés sans modifier le moindre comportement de l’application.
+ 
+⸻
+ 
+Vision
+Le code actuel fonctionne.
+Il ne doit pas être réécrit.
+Il doit être réorganisé.
+Le comportement utilisateur doit rester strictement identique.
+ 
+⸻
+ 
+Résultat attendu
+Passer progressivement de :
+app.js
+à :
+src/
+
+main.js
+
+core/
+    state.js
+    storage.js
+    calculations.js
+    analytics.js
+    insights.js
+    missions.js
+
+ui/
+    dashboard.js
+    journal.js
+    analytics.js
+    settings.js
+    components.js
+
+utils/
+    helpers.js
+    formatters.js
+    constants.js
+Cette structure est une cible. Les noms pourront être adaptés si ton IA identifie une organisation plus cohérente, mais elle devra rester simple et homogène.
+ 
+⸻
+ 
+📦 Livraison 1 — Mise en place de la structure
+Objectif
+Créer la nouvelle architecture des dossiers et déplacer uniquement les éléments les plus indépendants.
+Tâches
+	•	Créer les dossiers src/, core/, ui/ et utils/.
+	•	Déplacer les fonctions utilitaires (helpers, formatters, constantes, fonctions pures).
+	•	Configurer les imports/exports nécessaires.
+	•	Vérifier que l’application fonctionne exactement comme avant.
+Interdictions
+	•	Ne modifier aucun calcul.
+	•	Ne modifier aucune interface.
+	•	Ne modifier aucun flux utilisateur.
+Validation
+	•	L’application démarre.
+	•	Aucun message d’erreur dans la console.
+	•	Toutes les fonctionnalités existantes restent opérationnelles.
+ 
+⸻
+ 
+📦 Livraison 2 — Extraction du cœur métier
+Objectif
+Isoler la logique métier.
+Tâches
+Déplacer dans core/ :
+	•	gestion de l’état ;
+	•	stockage JSON ;
+	•	migrations ;
+	•	moteur de calcul ;
+	•	Analytics ;
+	•	Delta Émotionnel ;
+	•	Jumeau Numérique.
+Validation
+Tous les KPI doivent produire exactement les mêmes résultats qu’avant.
+ 
+⸻
+ 
+📦 Livraison 3 — Extraction de l’interface
+Objectif
+Isoler la couche UI.
+Tâches
+Créer les modules :
+	•	Dashboard ;
+	•	Journal ;
+	•	Analytics ;
+	•	Insights ;
+	•	Settings ;
+	•	Composants communs.
+Validation
+L’application doit être visuellement identique à la version précédente.
+ 
+⸻
+ 
+🧪 Tests de non-régression
+Avant de considérer le ticket comme terminé, l’IA devra vérifier au minimum :
+	•	Ouverture de l’application sans erreur.
+	•	Navigation entre Dashboard, Journal, Analytics et Insights.
+	•	Ajout d’un trade.
+	•	Modification des paramètres.
+	•	Import JSON.
+	•	Export JSON.
+	•	Calcul des KPI.
+	•	Calcul du Delta Émotionnel.
+	•	Calcul du Jumeau Numérique.
+	•	Persistance des données après rechargement.
+ 
+⸻
+ 
+✅ Définition de terminé
+Le ticket ARCH-001 est considéré comme terminé uniquement si :
+	•	aucune fonctionnalité n’a été ajoutée ;
+	•	aucune fonctionnalité n’a été supprimée ;
+	•	aucune régression fonctionnelle n’est observée ;
+	•	aucune régression visuelle n’est observée ;
+	•	le code est organisé en modules cohérents et documentés.
+ 
+⸻

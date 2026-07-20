@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!-- saved from url=(0084)file:///C:/Users/HP/Documents/Cosmos%20Journal%20Pro%20V3/cosmos_journal_pro_v2.html -->
 <html lang="fr" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
@@ -26,9 +25,10 @@
 
       <div class="header-actions">
         <button class="button ghost" type="button" data-action="toggle-theme">Thème</button>
-        <button class="button" type="button" data-action="open-settings">Paramètres</button>
+        <button class="button" type="button" data-action="export-json">Exporter</button>
+        <button class="button" type="button" data-action="export-json-captures">Exporter avec captures</button>
         <button class="button" type="button" data-action="import-json">Importer JSON</button>
-        <button class="button" type="button" data-action="export-json">Exporter JSON</button>
+        
       </div>
     </header>
 
@@ -145,216 +145,325 @@
       </div>
 
       <div class="view" id="view-journal">
-      <section class="workspace-grid" aria-label="Journal actuel">
+      <!-- UX-003A (Sprint 3) : "journal-layout" remplace l'ancien "workspace-grid".
+           Ce n'est plus une grille à deux colonnes de poids égal (Wizard / Historique)
+           mais un empilement vertical où le Wizard est la zone principale et
+           l'Historique une bande secondaire, repliée par défaut, sous le Wizard
+           (jamais à côté). Voir DECISIONS_LOG.md, D-026 (Intelligent Density) et
+           l'addendum d'architecture produit UX-003A. -->
+      <section class="journal-layout" aria-label="Journal actuel">
+        <!-- UX-005 (Wizard Viewport & Layout Refinement) — Architecture "Double Fond" :
+             #journal-panel est désormais le CADRE (hauteur apparente fixe, seul
+             responsable du scroll). .journal-viewport-inner est la CARTE réelle
+             (hauteur naturelle, jamais contrainte) : Mode Focus, progression et
+             formulaire en forment un seul bloc scrollable d'un seul tenant. Le
+             padding du panel est descendu sur ce wrapper interne (même principe
+             déjà validé sur #history-collapsible, voir DECISIONS_LOG.md D-025) afin
+             que le titre et les boutons Précédent/Suivant respirent toujours, même
+             en haut/bas de scroll. Voir journal.css pour les valeurs exactes. -->
         <div class="panel" id="journal-panel">
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Mode Focus</p>
-              <h2>Nouveau trade</h2>
-              <p class="muted" id="wizard-step-label">Carte 1 / 8 — Compte</p>
+          <div class="journal-viewport-inner">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Mode Focus</p>
+                <h2>Nouveau trade</h2>
+                <p class="muted" id="wizard-step-label">Carte 1 / 8 — Compte</p>
+              </div>
             </div>
+
+            <div class="wizard-progress"><div class="wizard-progress-fill" id="wizard-progress-fill"></div></div>
+
+            <form class="form-grid wizard" id="trade-form">
+
+              <!-- CARTE 1 — COMPTE (Document 02) -->
+              <section class="wizard-card wizard-card--compact active" data-card="1">
+                <h3>① Compte</h3>
+                <div class="card-content">
+  <div class="field-group">
+                  <div class="field">
+                    <label for="account-select">Compte utilisé</label>
+                    <select id="account-select" required>
+                      <option value="acc-personal-40">Compte Perso 40$ · USD</option>
+                    </select>
+                  </div>
+                  <p class="card-secondary hidden" id="account-type-preview"></p>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label for="risk-select">Risque</label>
+                    <select id="risk-select" required>
+                      <option value="0.25">0.25%</option>
+                      <option value="0.5">0.50%</option>
+                      <option value="0.75">0.75%</option>
+                      <option value="1">1.00%</option>
+                    </select>
+                  </div>
+                  <p class="card-secondary hidden" id="risk-amount-preview"></p>
+                </div>
+                </div>
+              </section>
+
+              <!-- CARTE 2 — CONTEXTE DU TRADE (Document 02) -->
+              <section class="wizard-card" data-card="2">
+                <h3>② Trade</h3>
+                <div class="card-content">
+  <!-- Pixel-perfect pass — Carte ② : Date / Heure entrée / Heure sortie
+                     sur une même ligne, chacune ~33% de la largeur (field-row--3),
+                     avec un gabarit allégé (voir #trade-date/#entry-time/#exit-time
+                     dans journal.css). -->
+                <div class="field-group">
+                  <div class="field-row field-row--3">
+                    <div class="field">
+                      <label for="trade-date">Date</label>
+                      <input type="date" id="trade-date">
+                    </div>
+                    <div class="field">
+                      <label for="entry-time">Heure d'entrée</label>
+                      <input type="time" id="entry-time">
+                    </div>
+                    <div class="field">
+                      <label for="exit-time">Heure de sortie</label>
+                      <input type="time" id="exit-time">
+                    </div>
+                  </div>
+                  <p class="card-secondary hidden" id="duration-preview">Durée : —</p>
+                </div>
+
+                <!-- Bloc "Contexte" (D-034) : Session / Actif / Direction. Visual
+                     Gravity (D-037) : Actif est l'élément dominant du bloc, Direction
+                     l'accompagne juste en dessous avec un poids inférieur. -->
+                <div class="field-group">
+                  <div class="field">
+                    <label for="session-select">Session</label>
+                    <select id="session-select" required><option>Asie</option><option>Londres</option><option>New York</option></select>
+                  </div>
+                  <div class="field">
+                    <label>Actif</label>
+                    <div class="segmented" id="asset-options"><button type="button" class="chip">EUR/USD</button><button type="button" class="chip">GBP/USD</button><button type="button" class="chip">XAU/USD</button><button type="button" class="chip">BTC/USD</button></div>
+                    <input type="hidden" id="asset-value" required>
+                  </div>
+                  <div class="field">
+                    <label>Direction</label>
+                    <div class="segmented" id="direction-options">
+                      <button type="button" class="chip active">Buy</button>
+                      <button type="button" class="chip">Sell</button>
+                    </div>
+                    <input type="hidden" id="direction-value" value="Buy">
+                  </div>
+                </div>
+                </div>
+              </section>
+
+              <!-- CARTE 3 — ANALYSE (Document 02) -->
+              <section class="wizard-card" data-card="3">
+                <h3>③ Analyse</h3>
+                <div class="card-content">
+  <div class="field-group">
+                  <div class="field">
+                    <label>Stratégie</label>
+                    <div class="segmented" id="strategy-options"><button type="button" class="chip">Strat 1 - OB/BPR</button><button type="button" class="chip">Strat 2 - OB/POC/LIQ</button></div>
+                    <input type="hidden" id="strategy-value" required>
+                  </div>
+                </div>
+                <!-- UX-003A.4 (D-032/D-033) : HTF/LTF ne forcent plus une largeur de
+                     colonne égale (field-row) — ce sont des sélecteurs à contenu très
+                     court (ex. "H4", "M15"), ils s'alignent désormais sur une seule
+                     ligne à leur largeur réelle (.control-cluster), sans occuper la
+                     moitié de la carte chacun.
+                     Pixel-perfect pass : chaque champ (HTF, LTF) est en plus enveloppé
+                     en colonne flex indépendante (.timeframe-cluster .field) pour
+                     garantir que le label et le select partagent exactement le même
+                     bord gauche, sans dérive de quelques pixels liée au comportement
+                     par défaut de la grille de .field. -->
+                <div class="field-group">
+                  <div class="control-cluster timeframe-cluster">
+                    <div class="field">
+                      <label for="htf-select">HTF</label>
+                      <select id="htf-select"><option>Weekly</option><option>Daily</option><option>H4</option><option>H1</option></select>
+                    </div>
+                    <div class="field">
+                      <label for="timeframe-select">LTF</label>
+                      <select id="timeframe-select" required><option>M15</option><option>M5</option><option>M1</option></select>
+                    </div>
+                  </div>
+                  <p class="card-secondary hidden" id="combo-preview">Combinaison : —</p>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label>Qualité du setup</label>
+                    <div class="segmented" id="setup-quality-stars"></div>
+                    <input type="hidden" id="setup-quality-value" value="0">
+                  </div>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label>Confluences</label>
+                    <div class="checklist" id="confluences-options"></div>
+                  </div>
+                </div>
+                </div>
+              </section>
+
+              <!-- CARTE 4 — GESTION & RÉSULTAT (UX-003A.4 : fusion des anciennes
+                   cartes ④ Gestion et ⑤ Résultat — une seule continuité mentale
+                   une fois le RR prévu renseigné, l'utilisateur passe directement
+                   au résultat. Reste compacte (wizard-card--compact) : le volume
+                   visuel cible est celui de l'ancienne carte ⑤ seule, pas la
+                   somme des deux anciennes cartes. -->
+              <section class="wizard-card wizard-card--compact" data-card="4">
+                <h3>④ Gestion &amp; Résultat</h3>
+                <div class="card-content">
+  <div class="field-group">
+                  <!-- Règle : le rappel du risque est un contexte hérité de la Carte ①,
+                       pas une nouvelle action — traité en secondaire, pas en .field. -->
+                  <p class="card-secondary" id="gestion-risk-summary">Risque : —</p>
+                  <!-- RR prévu + Respect du plan : contrôles courts (nombre, mot
+                       unique), passés en control-cluster plutôt qu'en field-row
+                       à colonnes égales (UX-003A.4, D-032/D-033) — inutile de
+                       leur donner la moitié de la carte chacun. -->
+                  <div class="control-cluster">
+                    <div class="field">
+                      <label for="rr-planned">RR prévu</label>
+                      <input type="number" id="rr-planned" step="0.1" min="0" placeholder="ex : 2">
+                    </div>
+                    <div class="field">
+                      <label for="plan-respect-select">Respect du plan</label>
+                      <select id="plan-respect-select">
+                        <option value="Oui">Oui</option>
+                        <option value="Partiellement">Partiellement</option>
+                        <option value="Non">Non</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label for="result-currency-input">Résultat (devise du compte)</label>
+                    <input type="number" id="result-currency-input" step="0.01" placeholder="ex : 40 ou -20">
+                  </div>
+                  <!-- Progressive Disclosure : n'apparaît qu'une fois un résultat saisi. -->
+                  <p class="card-secondary hidden" id="result-percent-display">Résultat % : —</p>
+                  <p class="card-secondary hidden" id="trade-status-display">Trade : —</p>
+                  <p class="card-secondary hidden" id="rr-obtained-display">RR obtenu : —</p>
+                </div>
+                </div>
+              </section>
+
+              <!-- CARTE 5 — DELTA ÉMOTIONNEL (Document 02) -->
+              <section class="wizard-card" data-card="5">
+                <h3>⑤ Delta émotionnel</h3>
+                <div class="card-content">
+  <!-- Validation UX-003A.1 : le Delta reste l'information la plus
+                     importante de la carte — mis en avant visuellement, séparé du
+                     rappel Théorique/Réel qui redevient une simple ligne de contexte
+                     secondaire (pas une fusion à plat des trois lignes). -->
+                <div class="field-group">
+                  <p class="delta-highlight" id="emotional-delta-display">Delta émotionnel : —</p>
+                  <p class="card-secondary">
+                    <span id="theoretical-result-display">Théorique : —</span>
+                    <span class="card-secondary-sep">·</span>
+                    <span id="real-result-display">Réel : —</span>
+                  </p>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label>Cause principale</label>
+                    <div class="segmented" id="emotional-cause-options"></div>
+                    <input type="hidden" id="emotional-cause-value">
+                  </div>
+                  <!-- Progressive Disclosure : n'apparaît qu'après le choix d'une cause
+                       principale — avant, ce sont des options sans contexte. -->
+                  <div class="field hidden" id="emotional-causes-secondary-field">
+                    <label>Causes secondaires</label>
+                    <div class="checklist" id="emotional-causes-secondary-options"></div>
+                  </div>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label>Intervention manuelle ?</label>
+                    <div class="segmented" id="manual-intervention-options">
+                      <button type="button" class="chip">Oui</button>
+                      <button type="button" class="chip active">Non</button>
+                    </div>
+                    <input type="hidden" id="manual-intervention-value" value="Non">
+                  </div>
+                </div>
+                </div>
+              </section>
+
+              <!-- CARTE 6 — NOTES (Document 02) -->
+              <section class="wizard-card" data-card="6">
+                <h3>⑥ Notes</h3>
+                <div class="card-content">
+  <div class="field-group">
+                  <div class="field">
+                    <label for="notes">Commentaire</label>
+                    <textarea id="notes" placeholder="Ressenti, contexte, exécution..."></textarea>
+                  </div>
+                  <!-- UX-004 (Dynamic Tag Chips) : Paramètres → Tags devient la source
+                       unique de vérité, sélection multiple par chips (voir journal.js
+                       renderSelectors). Remplace l'ancien champ texte libre. -->
+                  <div class="field">
+                    <label>Tags</label>
+                    <div class="checklist" id="tags-options"></div>
+                  </div>
+                </div>
+                <!-- Traitement Utility (Validation UX-003A.1, §3) : les captures
+                     restent secondaires/optionnelles en bas de carte tant que
+                     MEDIA-001 n'a pas livré l'aperçu intégré. -->
+                <div class="field-group">
+    <div class="capture-slots" id="capture-slots"></div>
+  </div>
+                </div>
+              </section>
+
+              <!-- CARTE 7 — VALIDATION (Document 02) -->
+              <section class="wizard-card wizard-card--compact" data-card="7">
+                <h3>⑦ Validation</h3>
+                <div class="card-content">
+  <p class="muted" id="validation-summary"></p>
+                <button class="button primary" type="submit">Enregistrer le trade</button>
+                </div>
+              </section>
+
+              <div class="wizard-nav">
+                <button type="button" class="button ghost" id="wizard-prev">Précédent</button>
+                <button type="button" class="button primary" id="wizard-next">Suivant</button>
+              </div>
+            </form>
           </div>
-
-          <div class="wizard-progress"><div class="wizard-progress-fill" id="wizard-progress-fill"></div></div>
-
-          <form class="form-grid wizard" id="trade-form">
-
-            <!-- CARTE 1 — COMPTE (Document 02) -->
-            <section class="wizard-card active" data-card="1">
-              <h3>① Compte</h3>
-              <div class="field">
-                <label for="account-select">Compte utilisé</label>
-                <select id="account-select" required>
-                  <option value="acc-personal-40">Compte Perso 40$ · USD</option>
-                </select>
-              </div>
-              <p class="readonly-display" id="account-type-preview"></p>
-              <div class="field">
-                <label for="risk-select">Risque</label>
-                <select id="risk-select" required>
-                  <option value="0.25">0.25%</option>
-                  <option value="0.5">0.50%</option>
-                  <option value="0.75">0.75%</option>
-                  <option value="1">1.00%</option>
-                </select>
-                <p class="muted" id="risk-amount-preview"></p>
-              </div>
-            </section>
-
-            <!-- CARTE 2 — CONTEXTE DU TRADE (Document 02) -->
-            <section class="wizard-card" data-card="2">
-              <h3>② Trade</h3>
-              <div class="field">
-                <label for="trade-date">Date</label>
-                <input type="date" id="trade-date">
-              </div>
-              <div class="field">
-                <label for="entry-time">Heure d'entrée</label>
-                <input type="time" id="entry-time">
-              </div>
-              <div class="field">
-                <label for="exit-time">Heure de sortie</label>
-                <input type="time" id="exit-time">
-              </div>
-              <p class="readonly-display" id="duration-preview">Durée : —</p>
-              <div class="field">
-                <label for="session-select">Session</label>
-                <select id="session-select" required><option>Asie</option><option>Londres</option><option>New York</option></select>
-              </div>
-              <div class="field">
-                <label>Actif</label>
-                <div class="segmented" id="asset-options"><button type="button" class="chip">EUR/USD</button><button type="button" class="chip">GBP/USD</button><button type="button" class="chip">XAU/USD</button><button type="button" class="chip">BTC/USD</button></div>
-                <input type="hidden" id="asset-value" required>
-              </div>
-              <div class="field">
-                <label>Direction</label>
-                <div class="segmented" id="direction-options">
-                  <button type="button" class="chip active">Buy</button>
-                  <button type="button" class="chip">Sell</button>
-                </div>
-                <input type="hidden" id="direction-value" value="Buy">
-              </div>
-            </section>
-
-            <!-- CARTE 3 — ANALYSE (Document 02) -->
-            <section class="wizard-card" data-card="3">
-              <h3>③ Analyse</h3>
-              <div class="field">
-                <label for="htf-select">HTF</label>
-                <select id="htf-select"><option>Weekly</option><option>Daily</option><option>H4</option><option>H1</option></select>
-              </div>
-              <div class="field">
-                <label for="timeframe-select">LTF</label>
-                <select id="timeframe-select" required><option>M15</option><option>M5</option><option>M1</option></select>
-              </div>
-              <p class="readonly-display" id="combo-preview">Combinaison : —</p>
-              <div class="field">
-                <label>Stratégie</label>
-                <div class="segmented" id="strategy-options"><button type="button" class="chip">Strat 1 - OB/BPR</button><button type="button" class="chip">Strat 2 - OB/POC/LIQ</button></div>
-                <input type="hidden" id="strategy-value" required>
-              </div>
-              <div class="field">
-                <label>Qualité du setup</label>
-                <div class="segmented" id="setup-quality-stars"></div>
-                <input type="hidden" id="setup-quality-value" value="0">
-              </div>
-              <div class="field">
-                <label>Confluences</label>
-                <div class="checklist" id="confluences-options"></div>
-              </div>
-            </section>
-
-            <!-- CARTE 4 — GESTION (Document 02) -->
-            <section class="wizard-card" data-card="4">
-              <h3>④ Gestion</h3>
-              <p class="readonly-display" id="gestion-risk-summary">Risque : —</p>
-              <div class="field">
-                <label for="rr-planned">RR prévu</label>
-                <input type="number" id="rr-planned" step="0.1" min="0" placeholder="ex : 2">
-              </div>
-              <p class="readonly-display" id="rr-obtained-display">RR obtenu : à renseigner en Carte 5</p>
-              <div class="field">
-                <label for="plan-respect-select">Respect du plan</label>
-                <select id="plan-respect-select">
-                  <option value="Oui">Oui</option>
-                  <option value="Partiellement">Partiellement</option>
-                  <option value="Non">Non</option>
-                </select>
-              </div>
-            </section>
-
-            <!-- CARTE 5 — RÉSULTAT (Document 02) -->
-            <section class="wizard-card" data-card="5">
-              <h3>⑤ Résultat</h3>
-              <div class="field">
-                <label for="result-currency-input">Résultat (devise du compte)</label>
-                <input type="number" id="result-currency-input" step="0.01" placeholder="ex : 40 ou -20">
-              </div>
-              <p class="readonly-display" id="result-percent-display">Résultat % : —</p>
-              <p class="readonly-display" id="trade-status-display">Trade : —</p>
-            </section>
-
-            <!-- CARTE 6 — DELTA ÉMOTIONNEL (Document 02) -->
-            <section class="wizard-card" data-card="6">
-              <h3>⑥ Delta émotionnel</h3>
-              <p class="readonly-display" id="theoretical-result-display">Résultat théorique (plan) : —</p>
-              <p class="readonly-display" id="real-result-display">Résultat réel : —</p>
-              <p class="readonly-display" id="emotional-delta-display">Delta émotionnel : —</p>
-              <div class="field">
-                <label>Cause principale</label>
-                <div class="segmented" id="emotional-cause-options"></div>
-                <input type="hidden" id="emotional-cause-value">
-              </div>
-              <div class="field">
-                <label>Causes secondaires</label>
-                <div class="checklist" id="emotional-causes-secondary-options"></div>
-              </div>
-              <div class="field">
-                <label>Intervention manuelle ?</label>
-                <div class="segmented" id="manual-intervention-options">
-                  <button type="button" class="chip">Oui</button>
-                  <button type="button" class="chip active">Non</button>
-                </div>
-                <input type="hidden" id="manual-intervention-value" value="Non">
-              </div>
-            </section>
-
-            <!-- CARTE 7 — NOTES (Document 02) -->
-            <section class="wizard-card" data-card="7">
-              <h3>⑦ Notes</h3>
-              <div class="field">
-                <label for="notes">Commentaire</label>
-                <textarea id="notes" placeholder="Ressenti, contexte, exécution..."></textarea>
-              </div>
-              <div class="field">
-                <label for="tags-input">Tags (séparés par une virgule)</label>
-                <input type="text" id="tags-input" placeholder="Setup A+, À revoir">
-              </div>
-              <div class="field">
-                <label for="capture-htf-input">Capture HTF (lien)</label>
-                <input type="text" id="capture-htf-input" placeholder="https://...">
-              </div>
-              <div class="field">
-                <label for="capture-ltf-input">Capture LTF (lien)</label>
-                <input type="text" id="capture-ltf-input" placeholder="https://...">
-              </div>
-              <div class="field">
-                <label for="capture-result-input">Capture Résultat (lien)</label>
-                <input type="text" id="capture-result-input" placeholder="https://...">
-              </div>
-            </section>
-
-            <!-- CARTE 8 — VALIDATION (Document 02) -->
-            <section class="wizard-card" data-card="8">
-              <h3>⑧ Validation</h3>
-              <p class="muted" id="validation-summary"></p>
-              <button class="button primary" type="submit">Enregistrer le trade</button>
-            </section>
-
-            <div class="wizard-nav">
-              <button type="button" class="button ghost" id="wizard-prev">Précédent</button>
-              <button type="button" class="button primary" id="wizard-next">Suivant</button>
-            </div>
-          </form>
         </div>
 
-        <div class="panel" id="history-panel">
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Historique</p>
-              <h2>Registre comportemental</h2>
-              <p class="muted" id="history-subtitle">Aucun trade enregistré.</p>
-            </div>
-            <button class="button danger" type="button" data-action="clear-data">Réinitialiser</button>
-          </div>
-          <div class="trade-list" id="trade-list">
-              <div class="empty-state">
+        <div class="panel history-panel-collapsible" id="history-panel">
+          <!-- UX-003A (Sprint 3, Livraison 2A — D-017) : le repliage porte sur le panneau
+               ENTIER (description + contenu + padding interne), pas seulement sur la liste.
+               Seule cette barre d'en-tête reste visible/cliquable lorsque le panneau est
+               fermé. État persisté dans state.data.preferences.historyCollapsed. -->
+          <button class="history-toggle-bar" type="button" id="history-toggle" data-action="toggle-history" aria-expanded="false" aria-controls="history-collapsible">
+            <span class="history-toggle-title">
+              <span class="eyebrow" style="margin:0;">Historique</span>
+              <h2 style="margin:0;">Registre comportemental</h2>
+            </span>
+            <span id="history-toggle-icon" aria-hidden="true">▸</span>
+          </button>
+          <div class="history-collapsible" id="history-collapsible">
+            <div class="history-collapsible-inner">
+              <div class="section-header">
                 <div>
-                  <h3>Aucun trade enregistré</h3>
-                  <p class="muted">Ajoutez votre premier trade. Cosmos gardera la structure prête pour les Analytics V3.</p>
+                  <p class="muted" id="history-subtitle">Aucun trade enregistré.</p>
                 </div>
+                <button class="button danger" type="button" data-action="clear-data">Réinitialiser</button>
               </div>
+              <div class="trade-list" id="trade-list">
+                  <div class="empty-state">
+                    <div>
+                      <h3>Aucun trade enregistré</h3>
+                      <p class="muted">Ajoutez votre premier trade. Cosmos gardera la structure prête pour les Analytics V3.</p>
+                    </div>
+                  </div>
+                </div>
             </div>
+          </div>
         </div>
       </section>
       </div>
@@ -652,8 +761,17 @@
     </div>
   </div>
 
+   <!-- MEDIA-001 (Livraison D) : visionneuse simple, même gabarit .modal-backdrop
+       que Settings/Export/Import. Contenu généré dynamiquement (voir openCaptureViewer). -->
+  <div class="modal-backdrop" id="capture-viewer-modal" aria-hidden="true">
+    <div class="panel capture-viewer" role="dialog" aria-modal="true">
+      <button class="button ghost capture-viewer-close" type="button" data-action="close-capture-viewer">Fermer</button>
+      <img id="capture-viewer-image" alt="Capture agrandie">
+    </div>
+  </div> 
   <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
-<script src="app.js" defer></script>
+
+<script type="module" src="src/main.js"></script>
 
 </body></html>

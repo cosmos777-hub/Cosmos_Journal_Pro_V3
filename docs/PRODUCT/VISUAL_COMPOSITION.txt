@@ -1,0 +1,246 @@
+# Cosmos Journal Pro V3
+# Visual Composition
+
+Version : 1.0
+Statut : Référence Produit
+
+---
+
+# Objectif
+
+Ce document définit les règles de composition visuelle de Cosmos Journal Pro V3.
+
+Il complète `UX_PHILOSOPHY.md`.
+
+UX_PHILOSOPHY explique :
+
+Pourquoi concevoir l'interface.
+
+VISUAL_COMPOSITION explique :
+
+Comment organiser visuellement l'espace.
+
+---
+
+# Principe fondamental
+
+L'espace est une ressource.
+
+Il ne doit jamais être gaspillé.
+
+Mais il ne doit jamais être rempli artificiellement.
+
+L'objectif est d'obtenir une interface :
+
+- légère
+- équilibrée
+- premium
+- efficace
+
+Utiliser l'application avec le moins de défilement possible.
+---
+
+# Visual Balance
+
+Une fonctionnalité importante ne devient pas importante parce qu'elle est énorme.
+
+Elle devient importante grâce à :
+
+- sa position
+- sa hiérarchie
+- son contraste
+- son animation
+- son interaction
+- son contexte
+
+La taille est le dernier levier.
+
+---
+
+# Intelligent Density
+
+La densité est un objectif permanent.
+
+Elle concerne :
+
+- la hauteur
+- la largeur
+
+Tous les écrans.
+
+Toutes les cartes.
+
+Tous les panneaux.
+
+Tous les KPI.
+
+Le but est :
+
+Afficher davantage d'informations utiles sans augmenter la charge cognitive.
+
+---
+
+# Proportional Design
+
+Chaque composant doit occuper uniquement l'espace dont il a réellement besoin.
+
+Jamais plus.
+
+Exemples :
+
+Un KPI n'a pas besoin d'une grande carte.
+
+Une statistique simple n'a pas besoin d'un panneau immense.
+
+Une liste vide ne doit pas conserver une grande hauteur.
+
+Une carte contenant deux champs ne doit pas mesurer 500 px de haut.
+
+---
+
+# Hero Components
+
+Certains composants sont centraux.
+
+Exemple :
+
+Le Wizard.
+
+Ils peuvent bénéficier de davantage d'espace.
+
+Mais cette augmentation reste raisonnable.
+
+Un Hero Component ne doit jamais :
+
+- écraser les autres éléments
+- créer une sensation de lourdeur
+- monopoliser l'écran
+
+L'objectif est :
+
+Attirer naturellement le regard.
+
+Pas envahir l'interface.
+
+---
+
+# Secondary Components
+
+Les composants secondaires doivent rester discrets.
+
+Ils doivent être :
+
+- accessibles
+- visibles
+- immédiatement compréhensibles
+
+Mais ils ne doivent jamais rivaliser visuellement avec un Hero Component.
+
+Exemple :
+
+Historique des trades.
+
+---
+
+# White Space
+
+Les espaces blancs sont utiles.
+
+Ils servent à :
+
+- respirer
+- organiser
+- guider le regard
+
+Ils ne doivent jamais devenir de l'espace perdu.
+
+---
+
+# Large Screens
+
+Les grands écrans sont une opportunité.
+
+Ils ne doivent jamais être remplis avec des composants artificiellement agrandis.
+
+Ils doivent permettre :
+
+- plus d'informations visibles
+- moins de défilement
+- une meilleure organisation
+- une meilleure comparaison visuelle
+
+---
+
+# Cards
+
+Une carte ne possède pas une taille fixe.
+
+Sa taille dépend :
+
+- de son contenu
+- de son importance
+- de son rôle
+
+Une carte est dimensionnée par son besoin.
+
+Jamais par habitude.
+
+---
+
+# KPI
+
+Les KPI doivent être très compacts.
+
+Ils doivent permettre :
+
+- une lecture immédiate
+- une comparaison rapide
+
+Ils ne doivent pas consommer un espace disproportionné.
+
+---
+
+# Panels
+
+Les panneaux ne sont pas des conteneurs géants.
+
+Ils servent uniquement à regrouper des informations cohérentes.
+
+Leur taille doit être minimale.
+
+---
+
+# Wizard
+
+Le Wizard est un Hero Component.
+
+Sa priorité est exprimée par :
+
+- sa position
+- son animation
+- son focus
+- son ergonomie
+
+Pas uniquement par sa largeur.
+
+---
+
+# Dashboard
+
+Le Dashboard est une vue de synthèse.
+
+Son objectif est :
+
+Montrer le maximum d'informations pertinentes avec le minimum de défilement.
+
+---
+
+# Règle finale
+
+Avant d'augmenter la taille d'un composant, toujours se demander :
+
+Cette augmentation améliore-t-elle réellement l'expérience ?
+
+Si la réponse est non,
+
+il faut revoir la composition plutôt que les dimensions.

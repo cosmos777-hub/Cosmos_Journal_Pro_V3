@@ -1,0 +1,132 @@
+# PROJECT_STRUCTURE.md
+
+**Cosmos Journal Pro V3**
+Version : 1.0
+Statut : Officiel — architecture figée à l'issue du Sprint 1 (ARCH-004)
+
+---
+
+## 1. Vue d'ensemble
+
+Cette architecture est le résultat du Sprint 1 (Architecture Stabilization) :
+`app.js` (1 937 lignes) et `style.css` (758 lignes) ont été découpés sans
+modifier le comportement de l'application (ARCH-001, ARCH-002), suivis de la
+création d'un Design System minimal (ARCH-003) et de la consolidation des
+utilitaires dupliqués (CODE-001).
+
+Elle est désormais **considérée comme officielle et figée**. Tout ticket
+futur doit s'y conformer ; un changement de structure ne peut être justifié
+que par une nécessité exceptionnelle, documentée et validée explicitement.
+
+---
+
+## 2. Arborescence
+
+```
+Cosmos Journal Pro V3/
+├── index.html
+├── style.css                  → point d'entrée CSS (imports uniquement)
+├── styles/
+│   ├── variables.css          → couleurs, radius, spacing, thème
+│   ├── base.css                → reset, body, focus-visible
+│   ├── layout.css              → structure des vues, panels, grids
+│   ├── typography.css          → hiérarchie de texte
+│   ├── components.css          → composants réutilisables (boutons, KPI, cartes...)
+│   ├── dashboard.css           → styles spécifiques au Dashboard
+│   ├── journal.css             → wizard 8 cartes, Mode Focus
+│   ├── analytics.css           → tableau de performance par dimension
+│   ├── insights.css            → réservé (réutilise components.css pour l'instant)
+│   ├── settings.css            → modale de paramètres
+│   └── animations.css          → transitions, keyframes, hover/active
+│
+└── src/
+    ├── main.js                 → orchestration : actions, bindEvents, init
+    │
+    ├── core/                   → logique métier, aucun rendu DOM
+    │   ├── state.js             → conteneur d'état applicatif mutable
+    │   ├── defaults.js          → données par défaut (comptes, settings, préférences)
+    │   ├── calculations.js      → moteur de calcul complet (voir §4)
+    │   ├── migrations.js        → migration V2→V3, complétion des champs de calcul
+    │   └── storage.js           → lecture/écriture localStorage, Feature Registry
+    │
+    ├── ui/                      → rendu DOM, un module par vue/écran
+    │   ├── dom.js                → cache DOM partagé (référence mutable unique)
+    │   ├── components.js         → orchestration (cache/render), composants génériques
+    │   ├── dashboard.js          → KPI, Jumeau Numérique, Centre de Mission
+    │   ├── journal.js            → wizard 8 cartes, historique, aperçus temps réel
+    │   ├── analytics.js          → filtres, KPI filtrés, tableau de performance
+    │   ├── insights.js           → Forces/Faiblesses/Opportunités/Recommandations
+    │   └── settings.js           → centre de paramètres (catégories + rendu)
+    │
+    └── utils/                  → fonctions pures, sans état ni dépendance métier
+        ├── constants.js          → APP_VERSION, clés de stockage, limites d'affichage
+        ├── helpers.js            → uid, clone, escape
+        ├── formatters.js         → formatPercent, formatR, tone
+        └── index.js              → point d'assemblage unique de l'objet `utils`
+```
+
+---
+
+## 3. Rôle de chaque dossier
+
+### `core/`
+Contient toute la logique métier, **jamais de manipulation du DOM**.
+- `state.js` : état partagé (données chargées, sélections en cours du wizard, vue active). Objet mutable, muté directement par les autres modules.
+- `defaults.js` : valeurs par défaut utilisées à la première ouverture et lors des migrations.
+- `calculations.js` : toutes les formules (Document 05) — risque, R, Delta Émotionnel, moteur d'analyse agrégé, Insights, Jumeau Numérique, Centre de Mission. Fonctions pures (même entrée → même sortie).
+- `migrations.js` : normalise et complète un trade quelle que soit son origine (legacy V2, fondations V3, V3 8-cartes), sans jamais écraser une donnée déjà présente.
+- `storage.js` : unique point de lecture/écriture du `localStorage`. Aucun autre module ne doit y accéder directement. Porte aussi le Feature Registry (Document 04).
+
+### `ui/`
+Contient tout le rendu DOM, un module par écran/vue de l'application.
+- `dom.js` : cache des éléments DOM, peuplé une fois par `components.cache()`.
+- `components.js` : point d'assemblage (`cache()`, `render()`), navigation entre vues, et les 3 composants génériques du Design System (voir `COMPONENT_CATALOG.md`).
+- `dashboard.js`, `journal.js`, `analytics.js`, `insights.js`, `settings.js` : un module par vue, responsable uniquement de son propre rendu.
+
+### `utils/`
+Fonctions strictement pures, sans état, réutilisables par tout le reste de l'application.
+- `index.js` est le **seul** point d'assemblage de l'objet `utils` (consolidé lors de CODE-001, qui a éliminé une duplication du même shim répétée dans 8 fichiers).
+
+### `main.js`
+Point d'entrée. Assemble l'objet `ui` par fusion des modules `ui/*`, définit les `actions` (logique des événements : sauvegarde d'un trade, import/export, etc.), lie les événements DOM et initialise l'application. Contient volontairement peu de logique métier propre — il orchestre `core/` et `ui/`.
+
+---
+
+## 4. Décisions d'architecture assumées
+
+Ces choix ont été validés par le Product Management et ne doivent pas être
+remis en cause sans justification explicite :
+
+1. **`calculations.js` reste un fichier unique.** Les fonctions internes
+   (`generateInsights`, `generateMission`, `buildTradeMetricsV3Cards`...)
+   s'appellent entre elles via `this`. Les séparer en plusieurs fichiers
+   exigerait de réécrire ces appels internes sans bénéfice réel, et casserait
+   la garantie qu'aucune formule n'est dupliquée entre Analytics, Insights et
+   Missions.
+
+2. **L'objet `ui` est reconstruit par fusion (`{ ...componentsUi, ...dashboardUi, ... }`) dans `main.js`.**
+   Les méthodes qui s'appellent via `this.xxx()` continuent de fonctionner
+   correctement car `this` se résout sur l'objet fusionné au moment de
+   l'appel, peu importe le fichier d'origine de chaque méthode.
+
+3. **`settings.js` exporte deux objets distincts** : `settingsCategories`
+   (données + rendu par catégorie) et `settingsUi` (orchestration de la
+   modale). Seul `settingsUi` est fusionné dans l'objet `ui` de `main.js` ;
+   `settingsCategories` est appelé directement (`settingsCategories.categories()`,
+   `settingsCategories.renderCategory()`). Ce n'est pas une incohérence : les
+   deux objets sont toujours utilisés ensemble mais n'ont pas la même nature
+   (données de configuration vs. méthodes d'orchestration liées à `this`).
+
+4. **Une légère duplication est acceptée quand elle évite une complexité
+   inutile** (ex. `.card` et `.panel` dans `components.css`/`layout.css`
+   partagent les mêmes propriétés CSS, dupliquées volontairement pour
+   préserver la frontière entre les deux fichiers).
+
+---
+
+## 5. Ce qui ne doit jamais être modifié sans validation explicite
+
+- Le découpage `core/` / `ui/` / `utils/`.
+- L'unicité de `calculations.js`.
+- L'unicité du point d'accès au stockage (`storage.js`).
+- Le calcul du Delta Émotionnel (cœur du produit, Document 01 et 05).

@@ -1,0 +1,4 @@
+/* ARCH-002 (Sprint 1, Livraison 3) — Styles spécifiques aux Insights.
+   Aucun style dédié pour l'instant : la vue Insights réutilise entièrement
+   les composants communs (.trade-list, .empty-state, .badge) définis dans
+   components.css. Fichier prêt si des styles propres à cette vue apparaissent.

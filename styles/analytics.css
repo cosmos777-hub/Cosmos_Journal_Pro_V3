@@ -1,0 +1,34 @@
+/* ARCH-002 (Sprint 1, Livraison 3) — Styles spécifiques à la vue Analytics.
+   Tableau de performance par dimension. Dépend de variables.css. */
+
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .breakdown-table th,
+    .breakdown-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-table th {
+      color: var(--text-muted);
+      font-weight: 650;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    .breakdown-table tbody tr:hover {
+      background: var(--surface-2);
+    }
+
+@media (max-width: 640px) {
+  #breakdown-table {
+    overflow-x: auto;
+  }
+  .breakdown-table {
+    min-width: 560px;
+  }
+}
