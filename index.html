@@ -1,10 +1,14 @@
 <!-- saved from url=(0084)file:///C:/Users/HP/Documents/Cosmos%20Journal%20Pro%20V3/cosmos_journal_pro_v2.html -->
-<html lang="fr" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosmos Journal Pro V3 - Trading Intelligence Platform</title>
- <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="app-shell">
     <header class="app-header">
@@ -25,134 +29,111 @@
 
       <div class="header-actions">
         <button class="button ghost" type="button" data-action="toggle-theme">Thème</button>
+        <button class="button" type="button" data-action="open-settings">Paramètres</button>
         <button class="button" type="button" data-action="export-json">Exporter</button>
         <button class="button" type="button" data-action="export-json-captures">Exporter avec captures</button>
         <button class="button" type="button" data-action="import-json">Importer JSON</button>
-        
+
       </div>
     </header>
 
     <main class="main">
+      <!-- DASH-001 (Phase 2 — Dashboard Architecture Foundation) : nouvelle
+           architecture du Dashboard, conforme à la décision finale du ticket
+           (voir DECISIONS_LOG.md, D-048). Changements :
+           - le panneau autrefois "Architecture V3" (Feature Registry, badge
+             "Data v3.0") est entièrement retiré et devient un panneau de
+             pilotage (Delta Émotionnel + Winrate) ;
+           - la colonne de gauche passe de 12 à 4 KPI de premier niveau
+             (P&L réel, RR moyen, Drawdown max, Jumeau Numérique) ;
+           - le Jumeau Numérique quitte le bas de page et devient un KPI à
+             part entière, avec un gabarit dédié (.kpi--digital-twin) ;
+           - Mission du moment n'est pas touchée par ce ticket (réorganisation
+             prévue séparément, cf. échanges DASH-001 Q4).
+           Aucun calcul, aucune donnée, aucun stockage n'est modifié : uniquement
+           la disposition et la présence/absence des éléments à l'écran. -->
       <div class="view active" id="view-dashboard">
-      <section class="hero-grid" aria-label="Synthèse">
-        <div class="panel">
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Mission du moment</p>
-              <h2 id="mission-title">Construire une base statistique fiable</h2>
-              <p class="muted" id="mission-copy">Ajoutez vos premiers trades pour permettre à Cosmos de comparer le résultat réel, le résultat théorique et le Delta émotionnel.</p>
+        <section class="hero-grid" aria-label="Synthèse">
+          <div class="panel">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Mission du moment</p>
+                <h2 id="mission-title">Construire une base statistique fiable</h2>
+                <p class="muted" id="mission-copy">Ajoutez vos premiers trades pour permettre à Cosmos de comparer le
+                  résultat réel, le résultat théorique et le Delta émotionnel.</p>
+              </div>
             </div>
-            <span class="badge" id="data-version">Data v3.0</span>
-          </div>
-          <div class="kpi-grid">
-            <article class="card kpi">
-              <span class="kpi-label">P&amp;L réel</span>
-              <strong class="kpi-value neutral" id="kpi-real">+0.00%</strong>
-              <p class="kpi-note">Résultat enregistré.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">P&amp;L théorique</span>
-              <strong class="kpi-value neutral" id="kpi-theoretical">+0.00%</strong>
-              <p class="kpi-note">Exécution idéale V2 migrée.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Delta émotionnel</span>
-              <strong class="kpi-value neutral" id="kpi-delta">+0.00%</strong>
-              <p class="kpi-note" id="delta-note">Ajoutez un trade pour mesurer le coût réel de l'exécution.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Trades</span>
-              <strong class="kpi-value neutral" id="kpi-count">0</strong>
-              <p class="kpi-note">Base locale versionnée.</p>
-            </article>
-          </div>
-
-          <!-- Milestone 3A : KPI enrichis (Document 05 §9), calculés via le moteur d'analyse
-               agrégé déjà prêt depuis le Milestone 2A (winrate, profitFactor, expectancy...). -->
-          <div class="kpi-grid" style="margin-top:16px;">
-            <article class="card kpi">
-              <span class="kpi-label">Capital actuel</span>
-              <strong class="kpi-value neutral" id="kpi-capital">0.00</strong>
-              <p class="kpi-note">Tous comptes actifs confondus.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Winrate</span>
-              <strong class="kpi-value neutral" id="kpi-winrate">—</strong>
-              <p class="kpi-note">% de trades gagnants.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Profit Factor</span>
-              <strong class="kpi-value neutral" id="kpi-profit-factor">—</strong>
-              <p class="kpi-note">Gains ÷ pertes.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Expectancy</span>
-              <strong class="kpi-value neutral" id="kpi-expectancy">—</strong>
-              <p class="kpi-note">Espérance de gain par trade (R).</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Drawdown max</span>
-              <strong class="kpi-value neutral" id="kpi-drawdown">—</strong>
-              <p class="kpi-note">Pire recul depuis un sommet.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">RR moyen</span>
-              <strong class="kpi-value neutral" id="kpi-avg-rr">—</strong>
-              <p class="kpi-note">Risque/Récompense obtenu, en moyenne.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Durée moyenne</span>
-              <strong class="kpi-value neutral" id="kpi-avg-duration">—</strong>
-              <p class="kpi-note">Basée sur les trades avec heures saisies.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Respect du plan</span>
-              <strong class="kpi-value neutral" id="kpi-plan-respect">—</strong>
-              <p class="kpi-note">% de trades "Oui".</p>
-            </article>
-          </div>
-        </div>
-
-        <aside class="panel mission">
-          <p class="eyebrow">Architecture V3</p>
-          <h2>Une base solide pour évoluer sereinement</h2>
-          <p class="muted">Le stockage, les paramètres, les calculs et l'interface sont organisés en modules internes pour évoluer sans réécriture majeure.</p>
-          <div class="segmented" id="feature-registry">
-            <span class="badge">Multi-comptes · active</span>
-          
-            <span class="badge">Paramètres dynamiques · active</span>
-          
-            <span class="badge">Analytics · active</span>
-          
-            <span class="badge">Insights & Jumeau Numérique · active</span>
-          </div>
-        </aside>
-      </section>
-
-      <!-- Milestone 4 (Document 05 §8) : Jumeau Numérique — courbe réelle vs courbe théorique. -->
-      <section class="hero-grid" aria-label="Jumeau Numérique" style="margin-top:24px;">
-        <div class="panel" style="grid-column: 1 / -1;">
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Jumeau Numérique</p>
-              <h2>Résultat réel vs résultat théorique</h2>
-              <p class="muted" id="digital-twin-gap">Ajoutez des trades pour comparer votre exécution réelle à une exécution parfaite du plan.</p>
+            <div class="kpi-grid kpi-grid--primary">
+              <article class="card kpi">
+                <span class="kpi-label">P&amp;L réel</span>
+                <strong class="kpi-value neutral" id="kpi-real">+0.00%</strong>
+                <p class="kpi-note">Résultat enregistré.</p>
+              </article>
+              <article class="card kpi">
+                <span class="kpi-label">P&amp;L théorique</span>
+                <strong class="kpi-value neutral" id="kpi-theoretical">+0.00%</strong>
+                <p class="kpi-note">Résultat attendu par le plan.</p>
+              </article>
+              <article class="card kpi">
+                <span class="kpi-label">Respect du plan</span>
+                <strong class="kpi-value neutral" id="kpi-plan-respect">—</strong>
+                <p class="kpi-note">% de trades "Oui".</p>
+              </article>
             </div>
-          </div>
-          <div id="digital-twin-chart"></div>
-        </div>
-      </section>
+
+            <!-- DASH-001 (correction) : rangée pleine largeur, même hauteur qu'une carte
+     KPI standard (héritée de .kpi, jamais redéfinie ici — voir dashboard.css).
+     2 colonnes internes : commentaires/légende à gauche, graphique à droite. -->
+            <article class="card kpi kpi--digital-twin">
+  <div class="digital-twin-col digital-twin-col--info">
+    <span class="kpi-label">Jumeau Numérique</span>
+    <p class="kpi-note" id="digital-twin-gap">Ajoutez des trades pour comparer votre exécution réelle à une exécution parfaite du plan.</p>
+    <div class="digital-twin-legend" id="digital-twin-legend"></div>
+  </div>
+  <div class="digital-twin-col digital-twin-col--chart" id="digital-twin-chart"></div>
+</article>
+        
       </div>
+      <!-- DASH-001 : ancien panneau "Architecture V3" (Feature Registry +
+             badge "Data v3.0") entièrement retiré (application de D-018).
+             Ce panneau devient le panneau de pilotage du trader : Delta
+             Émotionnel + Winrate uniquement, aucune information technique.
+             Nom "Pilotage" provisoire — à raffiner lors d'un futur ticket de
+             polissage visuel (voir DECISIONS_LOG.md D-048). -->
+      <aside class="panel dashboard-pilot" id="dashboard-pilot-panel">
+        <p class="eyebrow">Pilotage</p>
+        <h2>Discipline &amp; régularité</h2>
+        <div style="display:grid; gap:var(--space-2);">
+          <article class="card kpi">
+            <span class="kpi-label">Delta émotionnel</span>
+            <strong class="kpi-value neutral" id="kpi-delta">+0.00%</strong>
+            <p class="kpi-note" id="delta-note">Ajoutez un trade pour mesurer le coût réel de l'exécution.</p>
+          </article>
+          <article class="card kpi">
+            <span class="kpi-label">Winrate</span>
+            <strong class="kpi-value neutral" id="kpi-winrate">—</strong>
+            <p class="kpi-note">% de trades gagnants.</p>
+          </article>
+          <!-- DASH-001 (correction) : Capital actuel rejoint le panneau de pilotage -->
+          <article class="card kpi">
+            <span class="kpi-label">Capital actuel</span>
+            <strong class="kpi-value neutral" id="kpi-capital">0.00</strong>
+            <p class="kpi-note">Comptes actifs.</p>
+          </article>
+        </div>
+      </aside>
+      </section>
+  </div>
 
-      <div class="view" id="view-journal">
-      <!-- UX-003A (Sprint 3) : "journal-layout" remplace l'ancien "workspace-grid".
+  <div class="view" id="view-journal">
+    <!-- UX-003A (Sprint 3) : "journal-layout" remplace l'ancien "workspace-grid".
            Ce n'est plus une grille à deux colonnes de poids égal (Wizard / Historique)
            mais un empilement vertical où le Wizard est la zone principale et
            l'Historique une bande secondaire, repliée par défaut, sous le Wizard
            (jamais à côté). Voir DECISIONS_LOG.md, D-026 (Intelligent Density) et
            l'addendum d'architecture produit UX-003A. -->
-      <section class="journal-layout" aria-label="Journal actuel">
-        <!-- UX-005 (Wizard Viewport & Layout Refinement) — Architecture "Double Fond" :
+    <section class="journal-layout" aria-label="Journal actuel">
+      <!-- UX-005 (Wizard Viewport & Layout Refinement) — Architecture "Double Fond" :
              #journal-panel est désormais le CADRE (hauteur apparente fixe, seul
              responsable du scroll). .journal-viewport-inner est la CARTE réelle
              (hauteur naturelle, jamais contrainte) : Mode Focus, progression et
@@ -161,25 +142,27 @@
              déjà validé sur #history-collapsible, voir DECISIONS_LOG.md D-025) afin
              que le titre et les boutons Précédent/Suivant respirent toujours, même
              en haut/bas de scroll. Voir journal.css pour les valeurs exactes. -->
-        <div class="panel" id="journal-panel">
-          <div class="journal-viewport-inner">
-            <div class="section-header">
-              <div>
-                <p class="eyebrow">Mode Focus</p>
-                <h2>Nouveau trade</h2>
-                <p class="muted" id="wizard-step-label">Carte 1 / 8 — Compte</p>
-              </div>
+      <div class="panel" id="journal-panel">
+        <div class="journal-viewport-inner">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Mode Focus</p>
+              <h2>Nouveau trade</h2>
+              <p class="muted" id="wizard-step-label">Carte 1 / 8 — Compte</p>
             </div>
+          </div>
 
-            <div class="wizard-progress"><div class="wizard-progress-fill" id="wizard-progress-fill"></div></div>
+          <div class="wizard-progress">
+            <div class="wizard-progress-fill" id="wizard-progress-fill"></div>
+          </div>
 
-            <form class="form-grid wizard" id="trade-form">
+          <form class="form-grid wizard" id="trade-form">
 
-              <!-- CARTE 1 — COMPTE (Document 02) -->
-              <section class="wizard-card wizard-card--compact active" data-card="1">
-                <h3>① Compte</h3>
-                <div class="card-content">
-  <div class="field-group">
+            <!-- CARTE 1 — COMPTE (Document 02) -->
+            <section class="wizard-card wizard-card--compact active" data-card="1">
+              <h3>① Compte</h3>
+              <div class="card-content">
+                <div class="field-group">
                   <div class="field">
                     <label for="account-select">Compte utilisé</label>
                     <select id="account-select" required>
@@ -200,14 +183,14 @@
                   </div>
                   <p class="card-secondary hidden" id="risk-amount-preview"></p>
                 </div>
-                </div>
-              </section>
+              </div>
+            </section>
 
-              <!-- CARTE 2 — CONTEXTE DU TRADE (Document 02) -->
-              <section class="wizard-card" data-card="2">
-                <h3>② Trade</h3>
-                <div class="card-content">
-  <!-- Pixel-perfect pass — Carte ② : Date / Heure entrée / Heure sortie
+            <!-- CARTE 2 — CONTEXTE DU TRADE (Document 02) -->
+            <section class="wizard-card" data-card="2">
+              <h3>② Trade</h3>
+              <div class="card-content">
+                <!-- Pixel-perfect pass — Carte ② : Date / Heure entrée / Heure sortie
                      sur une même ligne, chacune ~33% de la largeur (field-row--3),
                      avec un gabarit allégé (voir #trade-date/#entry-time/#exit-time
                      dans journal.css). -->
@@ -235,11 +218,17 @@
                 <div class="field-group">
                   <div class="field">
                     <label for="session-select">Session</label>
-                    <select id="session-select" required><option>Asie</option><option>Londres</option><option>New York</option></select>
+                    <select id="session-select" required>
+                      <option>Asie</option>
+                      <option>Londres</option>
+                      <option>New York</option>
+                    </select>
                   </div>
                   <div class="field">
                     <label>Actif</label>
-                    <div class="segmented" id="asset-options"><button type="button" class="chip">EUR/USD</button><button type="button" class="chip">GBP/USD</button><button type="button" class="chip">XAU/USD</button><button type="button" class="chip">BTC/USD</button></div>
+                    <div class="segmented" id="asset-options"><button type="button" class="chip">EUR/USD</button><button
+                        type="button" class="chip">GBP/USD</button><button type="button"
+                        class="chip">XAU/USD</button><button type="button" class="chip">BTC/USD</button></div>
                     <input type="hidden" id="asset-value" required>
                   </div>
                   <div class="field">
@@ -251,17 +240,18 @@
                     <input type="hidden" id="direction-value" value="Buy">
                   </div>
                 </div>
-                </div>
-              </section>
+              </div>
+            </section>
 
-              <!-- CARTE 3 — ANALYSE (Document 02) -->
-              <section class="wizard-card" data-card="3">
-                <h3>③ Analyse</h3>
-                <div class="card-content">
-  <div class="field-group">
+            <!-- CARTE 3 — ANALYSE (Document 02) -->
+            <section class="wizard-card" data-card="3">
+              <h3>③ Analyse</h3>
+              <div class="card-content">
+                <div class="field-group">
                   <div class="field">
                     <label>Stratégie</label>
-                    <div class="segmented" id="strategy-options"><button type="button" class="chip">Strat 1 - OB/BPR</button><button type="button" class="chip">Strat 2 - OB/POC/LIQ</button></div>
+                    <div class="segmented" id="strategy-options"><button type="button" class="chip">Strat 1 -
+                        OB/BPR</button><button type="button" class="chip">Strat 2 - OB/POC/LIQ</button></div>
                     <input type="hidden" id="strategy-value" required>
                   </div>
                 </div>
@@ -279,11 +269,20 @@
                   <div class="control-cluster timeframe-cluster">
                     <div class="field">
                       <label for="htf-select">HTF</label>
-                      <select id="htf-select"><option>Weekly</option><option>Daily</option><option>H4</option><option>H1</option></select>
+                      <select id="htf-select">
+                        <option>Weekly</option>
+                        <option>Daily</option>
+                        <option>H4</option>
+                        <option>H1</option>
+                      </select>
                     </div>
                     <div class="field">
                       <label for="timeframe-select">LTF</label>
-                      <select id="timeframe-select" required><option>M15</option><option>M5</option><option>M1</option></select>
+                      <select id="timeframe-select" required>
+                        <option>M15</option>
+                        <option>M5</option>
+                        <option>M1</option>
+                      </select>
                     </div>
                   </div>
                   <p class="card-secondary hidden" id="combo-preview">Combinaison : —</p>
@@ -301,19 +300,19 @@
                     <div class="checklist" id="confluences-options"></div>
                   </div>
                 </div>
-                </div>
-              </section>
+              </div>
+            </section>
 
-              <!-- CARTE 4 — GESTION & RÉSULTAT (UX-003A.4 : fusion des anciennes
+            <!-- CARTE 4 — GESTION & RÉSULTAT (UX-003A.4 : fusion des anciennes
                    cartes ④ Gestion et ⑤ Résultat — une seule continuité mentale
                    une fois le RR prévu renseigné, l'utilisateur passe directement
                    au résultat. Reste compacte (wizard-card--compact) : le volume
                    visuel cible est celui de l'ancienne carte ⑤ seule, pas la
                    somme des deux anciennes cartes. -->
-              <section class="wizard-card wizard-card--compact" data-card="4">
-                <h3>④ Gestion &amp; Résultat</h3>
-                <div class="card-content">
-  <div class="field-group">
+            <section class="wizard-card wizard-card--compact" data-card="4">
+              <h3>④ Gestion &amp; Résultat</h3>
+              <div class="card-content">
+                <div class="field-group">
                   <!-- Règle : le rappel du risque est un contexte hérité de la Carte ①,
                        pas une nouvelle action — traité en secondaire, pas en .field. -->
                   <p class="card-secondary" id="gestion-risk-summary">Risque : —</p>
@@ -346,14 +345,14 @@
                   <p class="card-secondary hidden" id="trade-status-display">Trade : —</p>
                   <p class="card-secondary hidden" id="rr-obtained-display">RR obtenu : —</p>
                 </div>
-                </div>
-              </section>
+              </div>
+            </section>
 
-              <!-- CARTE 5 — DELTA ÉMOTIONNEL (Document 02) -->
-              <section class="wizard-card" data-card="5">
-                <h3>⑤ Delta émotionnel</h3>
-                <div class="card-content">
-  <!-- Validation UX-003A.1 : le Delta reste l'information la plus
+            <!-- CARTE 5 — DELTA ÉMOTIONNEL (Document 02) -->
+            <section class="wizard-card" data-card="5">
+              <h3>⑤ Delta émotionnel</h3>
+              <div class="card-content">
+                <!-- Validation UX-003A.1 : le Delta reste l'information la plus
                      importante de la carte — mis en avant visuellement, séparé du
                      rappel Théorique/Réel qui redevient une simple ligne de contexte
                      secondaire (pas une fusion à plat des trois lignes). -->
@@ -388,14 +387,14 @@
                     <input type="hidden" id="manual-intervention-value" value="Non">
                   </div>
                 </div>
-                </div>
-              </section>
+              </div>
+            </section>
 
-              <!-- CARTE 6 — NOTES (Document 02) -->
-              <section class="wizard-card" data-card="6">
-                <h3>⑥ Notes</h3>
-                <div class="card-content">
-  <div class="field-group">
+            <!-- CARTE 6 — NOTES (Document 02) -->
+            <section class="wizard-card" data-card="6">
+              <h3>⑥ Notes</h3>
+              <div class="card-content">
+                <div class="field-group">
                   <div class="field">
                     <label for="notes">Commentaire</label>
                     <textarea id="notes" placeholder="Ressenti, contexte, exécution..."></textarea>
@@ -412,272 +411,411 @@
                      restent secondaires/optionnelles en bas de carte tant que
                      MEDIA-001 n'a pas livré l'aperçu intégré. -->
                 <div class="field-group">
-    <div class="capture-slots" id="capture-slots"></div>
-  </div>
+                  <div class="capture-slots" id="capture-slots"></div>
                 </div>
-              </section>
-
-              <!-- CARTE 7 — VALIDATION (Document 02) -->
-              <section class="wizard-card wizard-card--compact" data-card="7">
-                <h3>⑦ Validation</h3>
-                <div class="card-content">
-  <p class="muted" id="validation-summary"></p>
-                <button class="button primary" type="submit">Enregistrer le trade</button>
-                </div>
-              </section>
-
-              <div class="wizard-nav">
-                <button type="button" class="button ghost" id="wizard-prev">Précédent</button>
-                <button type="button" class="button primary" id="wizard-next">Suivant</button>
               </div>
-            </form>
-          </div>
-        </div>
+            </section>
 
-        <div class="panel history-panel-collapsible" id="history-panel">
-          <!-- UX-003A (Sprint 3, Livraison 2A — D-017) : le repliage porte sur le panneau
+            <!-- CARTE 7 — VALIDATION (Document 02) -->
+            <section class="wizard-card wizard-card--compact" data-card="7">
+              <h3>⑦ Validation</h3>
+              <div class="card-content">
+                <p class="muted" id="validation-summary"></p>
+                <button class="button primary" type="submit">Enregistrer le trade</button>
+              </div>
+            </section>
+
+            <div class="wizard-nav">
+              <button type="button" class="button ghost" id="wizard-prev">Précédent</button>
+              <button type="button" class="button primary" id="wizard-next">Suivant</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel history-panel-collapsible" id="history-panel">
+        <!-- UX-003A (Sprint 3, Livraison 2A — D-017) : le repliage porte sur le panneau
                ENTIER (description + contenu + padding interne), pas seulement sur la liste.
                Seule cette barre d'en-tête reste visible/cliquable lorsque le panneau est
                fermé. État persisté dans state.data.preferences.historyCollapsed. -->
-          <button class="history-toggle-bar" type="button" id="history-toggle" data-action="toggle-history" aria-expanded="false" aria-controls="history-collapsible">
-            <span class="history-toggle-title">
-              <span class="eyebrow" style="margin:0;">Historique</span>
-              <h2 style="margin:0;">Registre comportemental</h2>
-            </span>
-            <span id="history-toggle-icon" aria-hidden="true">▸</span>
-          </button>
-          <div class="history-collapsible" id="history-collapsible">
-            <div class="history-collapsible-inner">
-              <div class="section-header">
-                <div>
-                  <p class="muted" id="history-subtitle">Aucun trade enregistré.</p>
-                </div>
-                <button class="button danger" type="button" data-action="clear-data">Réinitialiser</button>
+        <button class="history-toggle-bar" type="button" id="history-toggle" data-action="toggle-history"
+          aria-expanded="false" aria-controls="history-collapsible">
+          <span class="history-toggle-title">
+            <span class="eyebrow" style="margin:0;">Historique</span>
+            <h2 style="margin:0;">Registre comportemental</h2>
+          </span>
+          <span id="history-toggle-icon" aria-hidden="true">▸</span>
+        </button>
+        <div class="history-collapsible" id="history-collapsible">
+          <div class="history-collapsible-inner">
+            <div class="section-header">
+              <div>
+                <p class="muted" id="history-subtitle">Aucun trade enregistré.</p>
               </div>
-              <div class="trade-list" id="trade-list">
-                  <div class="empty-state">
-                    <div>
-                      <h3>Aucun trade enregistré</h3>
-                      <p class="muted">Ajoutez votre premier trade. Cosmos gardera la structure prête pour les Analytics V3.</p>
-                    </div>
-                  </div>
+              <button class="button danger" type="button" data-action="clear-data">Réinitialiser</button>
+            </div>
+            <div class="trade-list" id="trade-list">
+              <div class="empty-state">
+                <div>
+                  <h3>Aucun trade enregistré</h3>
+                  <p class="muted">Ajoutez votre premier trade. Cosmos gardera la structure prête pour les Analytics V3.
+                  </p>
                 </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      </div>
-
-      <div class="view" id="view-analytics">
-        <div class="panel">
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Le laboratoire</p>
-              <h2>Analytics</h2>
-              <p class="muted">Les statistiques se recalculent immédiatement dès que tu changes un filtre.</p>
-            </div>
-            <button class="button ghost" type="button" id="analytics-filter-reset">Réinitialiser les filtres</button>
-          </div>
-
-          <div class="form-grid" id="analytics-filters" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); display:grid; gap:16px;">
-            <div class="field">
-              <label for="analytics-filter-account">Compte</label>
-              <select id="analytics-filter-account"><option value="">Tous</option></select>
-            </div>
-            <div class="field">
-              <label for="analytics-filter-asset">Actif</label>
-              <select id="analytics-filter-asset"><option value="">Tous</option></select>
-            </div>
-            <div class="field">
-              <label for="analytics-filter-session">Session</label>
-              <select id="analytics-filter-session"><option value="">Toutes</option></select>
-            </div>
-            <div class="field">
-              <label for="analytics-filter-htf">HTF</label>
-              <select id="analytics-filter-htf"><option value="">Tous</option></select>
-            </div>
-            <div class="field">
-              <label for="analytics-filter-ltf">LTF</label>
-              <select id="analytics-filter-ltf"><option value="">Tous</option></select>
-            </div>
-            <div class="field">
-              <label for="analytics-filter-strategy">Stratégie</label>
-              <select id="analytics-filter-strategy"><option value="">Toutes</option></select>
-            </div>
-            <div class="field">
-              <label for="analytics-filter-date-from">Du</label>
-              <input type="date" id="analytics-filter-date-from">
-            </div>
-            <div class="field">
-              <label for="analytics-filter-date-to">Au</label>
-              <input type="date" id="analytics-filter-date-to">
-            </div>
-          </div>
-          <p class="muted" id="analytics-filter-note" style="margin-top:8px;"></p>
-
-          <div class="kpi-grid" style="margin-top:24px;">
-            <article class="card kpi">
-              <span class="kpi-label">Trades filtrés</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-count">0</strong>
-              <p class="kpi-note">Sur le total enregistré.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">P&amp;L réel</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-real">+0.00%</strong>
-              <p class="kpi-note">Somme sur la sélection.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">P&amp;L théorique</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-theoretical">+0.00%</strong>
-              <p class="kpi-note">Somme sur la sélection.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Delta émotionnel</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-delta">+0.00%</strong>
-              <p class="kpi-note">Réel − théorique.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Winrate</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-winrate">—</strong>
-              <p class="kpi-note">% de trades gagnants.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Profit Factor</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-profit-factor">—</strong>
-              <p class="kpi-note">Gains ÷ pertes.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Expectancy</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-expectancy">—</strong>
-              <p class="kpi-note">Espérance par trade (R).</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">RR moyen</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-avg-rr">—</strong>
-              <p class="kpi-note">Sur la sélection.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Durée moyenne</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-avg-duration">—</strong>
-              <p class="kpi-note">Trades avec heures saisies.</p>
-            </article>
-            <article class="card kpi">
-              <span class="kpi-label">Respect du plan</span>
-              <strong class="kpi-value neutral" id="analytics-kpi-plan-respect">—</strong>
-              <p class="kpi-note">% de trades "Oui".</p>
-            </article>
-          </div>
-
-          <div class="trade-list" id="analytics-trade-list" style="margin-top:24px;"></div>
-
-          <!-- Milestone 3C (Document 02, section ANALYTICS) : tableaux de performance par dimension. -->
-          <div class="section-header" style="margin-top:32px;">
-            <div>
-              <p class="eyebrow">Comparaison</p>
-              <h2>Performance par dimension</h2>
-              <p class="muted">Calculée sur les trades actuellement filtrés ci-dessus.</p>
-            </div>
-            <div class="field" style="min-width:220px;">
-              <label for="breakdown-dimension">Regrouper par</label>
-              <select id="breakdown-dimension">
-                <option value="account">Compte</option>
-                <option value="asset">Actif</option>
-                <option value="strategy">Stratégie</option>
-                <option value="session">Session</option>
-                <option value="htf">HTF</option>
-                <option value="ltf">LTF</option>
-                <option value="combination">Combinaison HTF → LTF</option>
-                <option value="risk">Risque</option>
-                <option value="duration">Durée</option>
-                <option value="setupQuality">Qualité du setup</option>
-                <option value="planRespect">Respect du plan</option>
-                <option value="manualIntervention">Intervention manuelle</option>
-              </select>
-            </div>
-          </div>
-          <div id="breakdown-table"></div>
-        </div>
-      </div>
-
-      <div class="view" id="view-insights">
-        <div class="panel">
-          <p class="eyebrow">Insights IA</p>
-          <h2>Ce que Cosmos observe</h2>
-          <p class="muted">Généré uniquement à partir de données statistiquement pertinentes — jamais de conclusion inventée sur un échantillon trop faible.</p>
-
-          <div id="insights-empty-state" class="empty-state hidden" style="margin-top:16px;">
-            <div>
-              <h3>Pas assez de données</h3>
-              <p class="muted" id="insights-empty-copy">Ajoutez encore des trades pour obtenir une analyse fiable.</p>
-            </div>
-          </div>
-
-          <div id="insights-content" class="hidden" style="margin-top:16px; display:grid; gap:20px;">
-            <div>
-              <h3>🟢 Les forces</h3>
-              <div id="insights-forces" class="trade-list"></div>
-            </div>
-            <div>
-              <h3>🔴 Les faiblesses</h3>
-              <div id="insights-faiblesses" class="trade-list"></div>
-            </div>
-            <div>
-              <h3>🔵 Les opportunités</h3>
-              <div id="insights-opportunites" class="trade-list"></div>
-            </div>
-            <div>
-              <h3>⭐ Les recommandations</h3>
-              <div id="insights-recommandations" class="trade-list"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </section>
+  </div>
+
+  <div class="view" id="view-analytics">
+  <div class="analytics-layout">
+
+    <!-- ═══════════════════════════════════════════════════════
+         BLOC ① — CONTEXTE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="panel analytics-context-panel">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Le laboratoire</p>
+          <h2>Analytics</h2>
+          <p class="muted">Les statistiques se recalculent immédiatement dès que tu changes un filtre.</p>
+        </div>
+        <button class="button ghost" type="button" id="analytics-filter-reset">Réinitialiser les filtres</button>
+      </div>
+
+      <div class="control-cluster analytics-filters" id="analytics-filters">
+        <div class="field">
+          <label for="analytics-filter-account">Compte</label>
+          <select id="analytics-filter-account">
+            <option value="">Tous</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="analytics-filter-asset">Actif</label>
+          <select id="analytics-filter-asset">
+            <option value="">Tous</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="analytics-filter-session">Session</label>
+          <select id="analytics-filter-session">
+            <option value="">Toutes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="analytics-filter-htf">HTF</label>
+          <select id="analytics-filter-htf">
+            <option value="">Tous</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="analytics-filter-ltf">LTF</label>
+          <select id="analytics-filter-ltf">
+            <option value="">Tous</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="analytics-filter-strategy">Stratégie</label>
+          <select id="analytics-filter-strategy">
+            <option value="">Toutes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="analytics-filter-date-from">Du</label>
+          <input type="date" id="analytics-filter-date-from">
+        </div>
+        <div class="field">
+          <label for="analytics-filter-date-to">Au</label>
+          <input type="date" id="analytics-filter-date-to">
+        </div>
+      </div>
+      <p class="muted" id="analytics-filter-note" style="margin-top:8px;"></p>
+
+      <!-- ANALYTICS-002 : Profit Factor et Expectancy quittent l'affichage
+           principal — ils restent calculés à l'identique et disponibles dans
+           le Bloc ③ "Comprendre vos indicateurs" › Indicateurs avancés. Les
+           deux cartes restent dans le DOM (classe .hidden) pour ne jamais
+           casser analytics.js (Guide de développement §4 : jamais de
+           suppression de fonctionnalité sans remplacement / sans duplication
+           de logique JS pour un simple changement d'affichage). -->
+      <div class="kpi-grid kpi-grid--analytics-compact" style="margin-top:16px;">
+        <article class="card kpi">
+          <span class="kpi-label">Trades filtrés</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-count">0</strong>
+          <p class="kpi-note">Sur le total enregistré.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">P&amp;L réel</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-real">+0.00%</strong>
+          <p class="kpi-note">Somme sur la sélection.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">P&amp;L théorique</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-theoretical">+0.00%</strong>
+          <p class="kpi-note">Somme sur la sélection.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">Delta émotionnel</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-delta">+0.00%</strong>
+          <p class="kpi-note">Réel − théorique.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">Winrate</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-winrate">—</strong>
+          <p class="kpi-note">% de trades gagnants.</p>
+        </article>
+        <article class="card kpi hidden">
+          <span class="kpi-label">Profit Factor</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-profit-factor">—</strong>
+          <p class="kpi-note">Gains ÷ pertes.</p>
+        </article>
+        <article class="card kpi hidden">
+          <span class="kpi-label">Expectancy</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-expectancy">—</strong>
+          <p class="kpi-note">Espérance par trade (R).</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">RR moyen</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-avg-rr">—</strong>
+          <p class="kpi-note">Sur la sélection.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">Durée moyenne</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-avg-duration">—</strong>
+          <p class="kpi-note">Trades avec heures saisies.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">Respect du plan</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-plan-respect">—</strong>
+          <p class="kpi-note">% de trades "Oui".</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">Capital actuel</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-capital">0.00</strong>
+          <p class="kpi-note">Comptes actifs, ou compte filtré.</p>
+        </article>
+        <article class="card kpi">
+          <span class="kpi-label">Drawdown max</span>
+          <strong class="kpi-value neutral" id="analytics-kpi-drawdown">—</strong>
+          <p class="kpi-note">Sur la sélection filtrée.</p>
+        </article>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         BLOC ② — LABORATOIRE D'EXPLORATION (centre de gravité)
+         ═══════════════════════════════════════════════════════ -->
+    <div class="panel analytics-workspace-panel">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Comparaison</p>
+          <h2>Performance par dimension</h2>
+          <p class="muted">Calculée sur les trades actuellement filtrés ci-dessus.</p>
+        </div>
+        <div class="field" style="min-width:220px;">
+          <label for="breakdown-dimension">Regrouper par</label>
+          <select id="breakdown-dimension">
+            <option value="account">Compte</option>
+            <option value="asset">Actif</option>
+            <option value="strategy">Stratégie</option>
+            <option value="session">Session</option>
+            <option value="htf">HTF</option>
+            <option value="ltf">LTF</option>
+            <option value="combination">Combinaison HTF → LTF</option>
+            <option value="risk">Risque</option>
+            <option value="duration">Durée</option>
+            <option value="setupQuality">Qualité du setup</option>
+            <option value="planRespect">Respect du plan</option>
+            <option value="manualIntervention">Intervention manuelle</option>
+          </select>
+        </div>
+      </div>
+      <div id="analytics-workspace-viewport">
+        <div id="breakdown-table"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         BLOC ③ — COMPRENDRE VOS INDICATEURS (nouveau)
+         Aide contextuelle très courte, repliée par défaut. Contenu
+         statique — aucun calcul, aucune dépendance à analytics.js.
+         ═══════════════════════════════════════════════════════ -->
+    <div class="panel history-panel-collapsible" id="analytics-help-panel">
+      <button class="history-toggle-bar" type="button" id="analytics-help-toggle"
+        data-action="toggle-analytics-help" aria-expanded="false"
+        aria-controls="analytics-help-collapsible">
+        <span class="history-toggle-title">
+          <span class="eyebrow" style="margin:0;">Aide contextuelle</span>
+          <h2 style="margin:0;">Comprendre vos indicateurs</h2>
+        </span>
+        <span id="analytics-help-toggle-icon" aria-hidden="true">▸</span>
+      </button>
+      <div class="history-collapsible" id="analytics-help-collapsible">
+        <div class="history-collapsible-inner">
+          <div class="kpi-explainer">
+            <div class="kpi-explainer-group">
+              <h4>Winrate</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> le pourcentage de trades gagnants.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> utile, mais ne garantit pas seul la rentabilité : à lire avec le ratio risque/rendement.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>P&amp;L Réel</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> le résultat réellement obtenu sur vos trades.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> reflète votre performance effective après exécution de votre plan.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>P&amp;L Théorique</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> le résultat que vous auriez obtenu en respectant parfaitement votre plan.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> plus l'écart avec le P&amp;L réel est faible, plus votre exécution est disciplinée.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>Respect du plan</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> votre niveau de discipline pendant l'exécution.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> un pourcentage élevé signifie des décisions fidèles à votre stratégie.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>Capital actuel</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> la valeur actuelle de votre capital après les résultats enregistrés.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> représente votre situation réelle à cet instant.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>Drawdown maximal</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> la plus forte baisse de votre capital avant une reprise.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> un Drawdown important indique que la stratégie ou la gestion du risque mérite une attention particulière.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>Ratio Risque / Rendement (RR moyen)</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> le gain moyen obtenu par rapport au risque pris sur chaque trade.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> plus ce ratio est élevé, moins un fort Winrate est nécessaire pour rester rentable.</p>
+            </div>
+            <div class="kpi-explainer-group">
+              <h4>Delta émotionnel</h4>
+              <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> l'écart entre le résultat théorique de votre plan et le résultat réellement obtenu.</p>
+              <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> un Delta important peut révéler une pression psychologique ou un manque de maîtrise émotionnelle.</p>
+            </div>
+
+            <div class="kpi-explainer-advanced">
+              <p>Les indicateurs avancés — retirés de l'affichage principal, ils restent disponibles ici pour qui veut approfondir son analyse.</p>
+              <div class="kpi-explainer-group">
+                <h4>Profit Factor</h4>
+                <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> le rapport entre tous vos gains et toutes vos pertes.</p>
+                <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> au-dessus de 1, la stratégie génère plus de gains que de pertes ; plus la valeur augmente, plus elle est rentable.</p>
+              </div>
+              <div class="kpi-explainer-group">
+                <h4>Expectancy</h4>
+                <p class="kpi-explainer-line"><strong>Ce que cela mesure —</strong> le gain moyen attendu pour chaque trade sur le long terme.</p>
+                <p class="kpi-explainer-line"><strong>Comment l'interpréter —</strong> positive, la stratégie possède un avantage statistique ; négative, elle perd de l'argent sur la durée.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         BLOC ④ — PREUVES
+         ═══════════════════════════════════════════════════════ -->
+    <div class="panel history-panel-collapsible" id="analytics-proof-panel">
+      <button class="history-toggle-bar" type="button" id="analytics-proof-toggle"
+        data-action="toggle-analytics-proof" aria-expanded="false"
+        aria-controls="analytics-proof-collapsible">
+        <span class="history-toggle-title">
+          <span class="eyebrow" style="margin:0;">Preuves</span>
+          <h2 style="margin:0;">Trades correspondants</h2>
+        </span>
+        <span id="analytics-proof-toggle-icon" aria-hidden="true">▸</span>
+      </button>
+      <div class="history-collapsible" id="analytics-proof-collapsible">
+        <div class="history-collapsible-inner">
+          <div class="trade-list" id="analytics-trade-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+  <div class="view" id="view-insights">
+    <div class="panel">
+      <p class="eyebrow">Insights IA</p>
+      <h2>Ce que Cosmos observe</h2>
+      <p class="muted">Généré uniquement à partir de données statistiquement pertinentes — jamais de conclusion inventée
+        sur un échantillon trop faible.</p>
+
+      <div id="insights-empty-state" class="empty-state hidden" style="margin-top:16px;">
+        <div>
+          <h3>Pas assez de données</h3>
+          <p class="muted" id="insights-empty-copy">Ajoutez encore des trades pour obtenir une analyse fiable.</p>
+        </div>
+      </div>
+
+      <div id="insights-content" class="hidden" style="margin-top:16px; display:grid; gap:20px;">
+        <div>
+          <h3>🟢 Les forces</h3>
+          <div id="insights-forces" class="trade-list"></div>
+        </div>
+        <div>
+          <h3>🔴 Les faiblesses</h3>
+          <div id="insights-faiblesses" class="trade-list"></div>
+        </div>
+        <div>
+          <h3>🔵 Les opportunités</h3>
+          <div id="insights-opportunites" class="trade-list"></div>
+        </div>
+        <div>
+          <h3>⭐ Les recommandations</h3>
+          <div id="insights-recommandations" class="trade-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
   </div>
 
   <div class="modal-backdrop" id="settings-modal" aria-hidden="true">
     <div class="panel settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
       <aside class="settings-nav" id="settings-nav">
-            <button class="button settings-tab active" type="button" data-settings-category="accounts">
-              Comptes
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="assets">
-              Actifs
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="sessions">
-              Sessions
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="htf">
-              HTF
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="ltf">
-              LTF
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="strategies">
-              Stratégies
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="confluences">
-              Confluences
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="emotionalCauses">
-              Causes émotionnelles
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="tags">
-              Tags
-            </button>
-          
-            <button class="button settings-tab " type="button" data-settings-category="appearance">
-              Apparence
-            </button>
-          </aside>
+        <button class="button settings-tab active" type="button" data-settings-category="accounts">
+          Comptes
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="assets">
+          Actifs
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="sessions">
+          Sessions
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="htf">
+          HTF
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="ltf">
+          LTF
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="strategies">
+          Stratégies
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="confluences">
+          Confluences
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="emotionalCauses">
+          Causes émotionnelles
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="tags">
+          Tags
+        </button>
+
+        <button class="button settings-tab " type="button" data-settings-category="appearance">
+          Apparence
+        </button>
+      </aside>
       <section class="settings-body">
         <div class="section-header">
           <div>
@@ -688,36 +826,37 @@
           <button class="button ghost" type="button" data-action="close-settings">Fermer</button>
         </div>
         <div id="settings-content">
-            <h3>Comptes</h3>
-            <p class="muted">Chaque compte définit son type (Prop Firm ou Fonds propres), ce qui ajuste automatiquement les paliers de risque disponibles dans le formulaire.</p>
-            <div class="setting-items">
-              
-                <span class="setting-pill">Compte Perso 40$ · Fonds propres · USD</span>
-              
-            </div>
-            <form class="form-grid" data-add-account="">
-              <div class="field">
-                <label for="account-name">Nom</label>
-                <input id="account-name" name="name" required="" placeholder="Compte Perso 40$">
-              </div>
-              <div class="field">
-                <label for="account-type">Type</label>
-                <select id="account-type" name="type">
-                  <option>Fonds propres</option>
-                  <option>Prop Firm</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="account-capital">Capital</label>
-                <input id="account-capital" name="capital" type="number" min="0" step="0.01" required="">
-              </div>
-              <div class="field">
-                <label for="account-currency">Devise</label>
-                <input id="account-currency" name="currency" value="USD" maxlength="8" required="">
-              </div>
-              <button class="button primary" type="submit">Créer le compte</button>
-            </form>
+          <h3>Comptes</h3>
+          <p class="muted">Chaque compte définit son type (Prop Firm ou Fonds propres), ce qui ajuste automatiquement
+            les paliers de risque disponibles dans le formulaire.</p>
+          <div class="setting-items">
+
+            <span class="setting-pill">Compte Perso 40$ · Fonds propres · USD</span>
+
           </div>
+          <form class="form-grid" data-add-account="">
+            <div class="field">
+              <label for="account-name">Nom</label>
+              <input id="account-name" name="name" required="" placeholder="Compte Perso 40$">
+            </div>
+            <div class="field">
+              <label for="account-type">Type</label>
+              <select id="account-type" name="type">
+                <option>Fonds propres</option>
+                <option>Prop Firm</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="account-capital">Capital</label>
+              <input id="account-capital" name="capital" type="number" min="0" step="0.01" required="">
+            </div>
+            <div class="field">
+              <label for="account-currency">Devise</label>
+              <input id="account-currency" name="currency" value="USD" maxlength="8" required="">
+            </div>
+            <button class="button primary" type="submit">Créer le compte</button>
+          </form>
+        </div>
       </section>
     </div>
   </div>
@@ -732,7 +871,8 @@
         </div>
         <button class="button ghost" type="button" data-action="close-export">Fermer</button>
       </div>
-      <textarea id="export-output" readonly="" style="width:100%; min-height:360px; border-radius:12px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); padding:16px; font-family:ui-monospace, SFMono-Regular, Consolas, monospace;"></textarea>
+      <textarea id="export-output" readonly=""
+        style="width:100%; min-height:360px; border-radius:12px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); padding:16px; font-family:ui-monospace, SFMono-Regular, Consolas, monospace;"></textarea>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
         <button class="button primary" type="button" data-action="copy-export">Copier</button>
       </div>
@@ -745,7 +885,8 @@
         <div>
           <p class="eyebrow">Sauvegarde</p>
           <h2>Import JSON</h2>
-          <p class="muted">Collez une sauvegarde Cosmos (V2 ou V3) ou choisissez un fichier. Vos données actuelles seront remplacées après confirmation.</p>
+          <p class="muted">Collez une sauvegarde Cosmos (V2 ou V3) ou choisissez un fichier. Vos données actuelles
+            seront remplacées après confirmation.</p>
         </div>
         <button class="button ghost" type="button" data-action="close-import">Fermer</button>
       </div>
@@ -753,7 +894,8 @@
         <label for="import-file">Fichier .json</label>
         <input type="file" id="import-file" accept="application/json,.json">
       </div>
-      <textarea id="import-input" placeholder="Collez ici le contenu JSON exporté depuis Cosmos..." style="width:100%; min-height:300px; border-radius:12px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); padding:16px; font-family:ui-monospace, SFMono-Regular, Consolas, monospace;"></textarea>
+      <textarea id="import-input" placeholder="Collez ici le contenu JSON exporté depuis Cosmos..."
+        style="width:100%; min-height:300px; border-radius:12px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text); padding:16px; font-family:ui-monospace, SFMono-Regular, Consolas, monospace;"></textarea>
       <p class="muted" id="import-feedback" style="margin-top:8px;"></p>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
         <button class="button primary" type="button" data-action="run-import">Importer</button>
@@ -761,17 +903,19 @@
     </div>
   </div>
 
-   <!-- MEDIA-001 (Livraison D) : visionneuse simple, même gabarit .modal-backdrop
+  <!-- MEDIA-001 (Livraison D) : visionneuse simple, même gabarit .modal-backdrop
        que Settings/Export/Import. Contenu généré dynamiquement (voir openCaptureViewer). -->
   <div class="modal-backdrop" id="capture-viewer-modal" aria-hidden="true">
     <div class="panel capture-viewer" role="dialog" aria-modal="true">
       <button class="button ghost capture-viewer-close" type="button" data-action="close-capture-viewer">Fermer</button>
       <img id="capture-viewer-image" alt="Capture agrandie">
     </div>
-  </div> 
+  </div>
   <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
 
-<script type="module" src="src/main.js"></script>
+  <script type="module" src="src/main.js"></script>
 
-</body></html>
+</body>
+
+</html>

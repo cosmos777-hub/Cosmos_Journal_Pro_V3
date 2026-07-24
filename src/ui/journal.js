@@ -21,11 +21,13 @@ const WIZARD_CARD_LABELS = [
 // MEDIA-001 (Livraison C) : les 3 slots de capture d'un trade — forme figée par
 // calculations.js/migrations.js (trade.media.{htf,ltf,result}), jamais un 4e slot
 // sans mise à jour coordonnée de ces deux fichiers.
-const CAPTURE_SLOTS = [
+export const CAPTURE_SLOTS = [
   { key: "htf", label: "HTF" },
   { key: "ltf", label: "LTF" },
   { key: "result", label: "Résultat" }
 ];
+
+export const CAPTURE_SLOT_KEYS = CAPTURE_SLOTS.map(slot => slot.key);
 
 // Cache local des URLs d'aperçu (URL.createObjectURL) déjà générées pour les
 // vignettes affichées. Une URL objet doit être explicitement révoquée quand elle
@@ -61,10 +63,18 @@ function revokeCaptureUrl(tradeId, slotKey) {
 
 export const journalUi = {
         renderSelectors() {
-          const activeAccounts = state.data.accounts.filter(account => !account.archived);
-          dom["account-select"].innerHTML = activeAccounts.map(account => `
-            <option value="${utils.escape(account.id)}">${utils.escape(account.name)} · ${utils.escape(account.currency)}</option>
-          `).join("");
+          const previousAccountId = dom["account-select"] ? dom["account-select"].value : "";
+    const activeAccounts = state.data.accounts.filter(account => !account.archived);
+
+    if (dom["account-select"]) {
+      dom["account-select"].innerHTML = activeAccounts.map(account => `
+        <option value="${utils.escape(account.id)}"${account.id === previousAccountId ? " selected" : ""}>${utils.escape(account.name)} · ${utils.escape(account.currency)}</option>
+      `).join("");
+
+      if (!activeAccounts.some(account => account.id === previousAccountId) && activeAccounts[0]) {
+        dom["account-select"].value = activeAccounts[0].id;
+      }
+    }
 
           this.renderChips(dom["asset-options"], state.data.settings.assets, state.selectedAsset, value => {
             state.selectedAsset = value;
@@ -121,7 +131,6 @@ export const journalUi = {
 
           this.renderStars();
           this.renderRiskOptions();
-          this.renderCaptureSlots();
           this.updateComboPreview();
           this.updateDurationPreview();
           this.updateResultPreviews();

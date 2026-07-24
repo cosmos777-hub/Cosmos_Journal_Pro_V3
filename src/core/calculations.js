@@ -209,9 +209,9 @@ export const calculations = {
           const bucketOf = trade => {
             switch (dimension) {
               case "account": {
-                const account = accounts.find(a => a.id === trade.accountId);
-                return account ? account.name : "Compte inconnu";
-              }
+  const account = accounts.find(a => a.id === trade.accountId);
+  return account ? account.name : (trade.accountName || "Compte inconnu");
+}
               case "asset": return trade.asset || "Non défini";
               case "strategy": return trade.strategy || "Non définie";
               case "session": return trade.session || "Non définie";

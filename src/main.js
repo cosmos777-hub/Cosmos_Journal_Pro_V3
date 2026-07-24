@@ -2,10 +2,15 @@
     // (Livraison 2) et maintenant la couche UI complète (Livraison 3) sont extraits.
     // main.js ne garde plus que l'orchestration : actions (logique métier des
     // événements), bindEvents, init.
+    //
+    // Bug report post-DASH-001, #2A : ajout de actions.toggleAccountArchive() +
+    // délégation de clic sur [data-toggle-account-archive] — voir settings.js pour
+    // le bouton correspondant sur la pill de compte.
     import { utils } from "./utils/index.js";
     import { state } from "./core/state.js";
     import { calculations } from "./core/calculations.js";
     import { mediaStorage } from "./core/mediaStorage.js";
+    import { CAPTURE_SLOT_KEYS } from "./ui/journal.js";
     import { storage } from "./core/storage.js";
     import { isNativeCapture, isEncodedCapture } from "./core/migrations.js";
     import { dom } from "./ui/dom.js";
@@ -42,7 +47,7 @@
         const clone = utils.clone(data);
         for (const trade of clone.trades) {
           if (!trade.media) continue;
-          for (const slotKey of ["htf", "ltf", "result"]) {
+          for (const slotKey of CAPTURE_SLOT_KEYS) {
             const value = trade.media[slotKey];
             if (!isNativeCapture(value)) continue;
             try {
@@ -63,7 +68,7 @@
         if (!Array.isArray(parsed.trades)) return parsed;
         for (const trade of parsed.trades) {
           if (!trade.media || !trade.id) continue;
-          for (const slotKey of ["htf", "ltf", "result"]) {
+          for (const slotKey of CAPTURE_SLOT_KEYS) {
             const value = trade.media[slotKey];
             if (!isEncodedCapture(value)) continue;
             try {
@@ -154,6 +159,7 @@
              const trade = {
       id: state.draftTradeId || utils.uid("trade"),
       accountId,
+      accountName: account ? account.name : "Compte inconnu",
       ...fields,
       media: { ...state.draftMedia },
      
@@ -208,6 +214,7 @@
 
           Object.assign(trade, {
             accountId,
+            accountName: account ? account.name : trade.accountName,
             ...fields,
             riskPercent: risk,
             riskCapitalSnapshot,
@@ -231,6 +238,13 @@
             account.currentCapital = +((Number(account.currentCapital) || 0) + metrics.resultCurrency).toFixed(2);
           }
 
+          // MEDIA-001 (Livraison G — A2, correction) : révocation faite ICI, pas dans
+          // resetTradeForm() — à ce point, editingTradeId (= tradeId, paramètre de la
+          // fonction) est encore valide, et resetTradeForm() sera appelée juste après
+          // par saveTrade() alors qu'il sera déjà nul. Le nouveau brouillon (draft) créé
+          // ensuite par resetTradeForm() régénère de toute façon des slots vides —
+          // aucune image affichée ne référence plus ces URLs après ce point.
+          ui.revokeCaptureUrlsForTrade(tradeId);
           state.editingTradeId = null;
           ui.toast("Trade mis à jour.", "positive");
         },
@@ -290,6 +304,13 @@
         },
 
         resetTradeForm() {
+          // MEDIA-001 (Livraison G — A2, correction) : capturé AVANT la mise à null
+          // ci-dessous. Couvre le cas "annulation d'une édition" (cancelEditTrade →
+          // resetTradeForm, où editingTradeId est encore renseigné à cet instant).
+          // Le cas "sauvegarde réussie après édition" est couvert séparément dans
+          // updateTrade() (voir point 2 ci-dessous), car à ce stade updateTrade() a
+          // déjà nullifié editingTradeId avant que resetTradeForm() ne soit appelée.
+          const previousEditingTradeId = state.editingTradeId;
           state.editingTradeId = null;
           dom["trade-form"].reset();
           state.selectedAsset = "";
@@ -315,12 +336,29 @@
     // dans IndexedDB sans aucun trade pour les référencer — nettoyage explicite
     // pour ne jamais laisser de données orphelines (cohérent avec la suppression
     // en cascade de deleteTrade ci-dessous).
-    if (state.draftTradeId) {
-      mediaStorage.deleteAllForTrade(state.draftTradeId).catch(() => {});
-      ui.revokeCaptureUrlsForTrade(state.draftTradeId);
-    }
-    state.draftTradeId = null;
-    state.draftMedia = { htf: null, ltf: null, result: null };
+    // MEDIA-001 (Livraison C) : si l'utilisateur a ajouté des captures sans
+          // jamais enregistrer le trade (abandon, annulation), elles restent seules
+          // dans IndexedDB sans aucun trade pour les référencer — nettoyage explicite
+          // pour ne jamais laisser de données orphelines (cohérent avec la suppression
+          // en cascade de deleteTrade ci-dessous).
+          if (state.draftTradeId) {
+            mediaStorage.deleteAllForTrade(state.draftTradeId).catch(() => {});
+            ui.revokeCaptureUrlsForTrade(state.draftTradeId);
+          }
+          // MEDIA-001 (Livraison G — A2) : en mode édition, les captures du trade sont
+          // hydratées (URL.createObjectURL) mais NE DOIVENT JAMAIS être supprimées
+          // d'IndexedDB ici — le trade existe toujours, seule la session d'édition se
+          // termine. Seule l'URL objet temporaire (mémoire de la page, pas la donnée
+          // elle-même) doit être révoquée. C'était le trou identifié par l'audit : cette
+          // révocation n'existait pour aucun des deux chemins de sortie d'édition
+          // (validation du formulaire ou annulation), seul le chemin "draft abandonné"
+          // ci-dessus était couvert.
+          if (previousEditingTradeId) {
+            ui.revokeCaptureUrlsForTrade(previousEditingTradeId);
+          }
+          state.draftTradeId = null;
+          state.draftMedia = { htf: null, ltf: null, result: null };
+
           ui.setFormEditingMode(false);
           ui.goToWizardCard(1);
         },
@@ -511,6 +549,18 @@ async runImport() {
           storage.save();
           ui.renderHistoryToggle();
         },
+        // ANALYTICS-001 (Bloc ④ Preuves) : miroir exact de toggleHistory().
+        toggleAnalyticsProof() {
+          state.data.preferences.analyticsProofCollapsed = !(state.data.preferences.analyticsProofCollapsed !== false);
+          storage.save();
+          ui.renderAnalyticsProofToggle();
+        },
+        // ANALYTICS-002 (Bloc ③ Comprendre vos indicateurs) : même pattern.
+        toggleAnalyticsHelp() {
+          state.data.preferences.analyticsHelpCollapsed = !(state.data.preferences.analyticsHelpCollapsed !== false);
+          storage.save();
+          ui.renderAnalyticsHelpToggle();
+        },
         addSetting(event, key) {
           event.preventDefault();
           const input = event.target.elements.value;
@@ -551,7 +601,35 @@ async runImport() {
           storage.save();
           ui.render();
           ui.toast("Compte créé.", "positive");
-        }
+        },
+        deleteAccount(accountId) {
+      if (state.data.accounts.length <= 1) {
+        ui.toast("Gardez au moins un compte.", "negative");
+        return;
+      }
+
+      const account = state.data.accounts.find(a => a.id === accountId);
+      if (!account) return;
+
+      const confirmed = confirm(`Supprimer définitivement le compte "${account.name}" ? Les trades déjà enregistrés seront conservés avec leur nom de compte d'origine.`);
+      if (!confirmed) return;
+
+      state.data.accounts = state.data.accounts.filter(a => a.id !== accountId);
+
+      // Remet un compte valide par défaut dans le formulaire si le compte actif est supprimé
+      if (dom["account-select"] && dom["account-select"].value === accountId) {
+        dom["account-select"].value = state.data.accounts[0].id;
+      }
+
+      // Réinitialise le filtre Analytics sur "Tous" si le compte filtré est supprimé
+      if (dom["analytics-filter-account"] && dom["analytics-filter-account"].value === accountId) {
+        dom["analytics-filter-account"].value = "";
+      }
+
+      storage.save();
+      ui.render();
+      ui.toast("Compte supprimé.", "positive");
+    }
       };
 
       function bindEvents() {
@@ -643,6 +721,8 @@ async runImport() {
           if (action === "run-import") actions.runImport();
           if (action === "toggle-theme") actions.toggleTheme();
           if (action === "toggle-history") actions.toggleHistory();
+          if (action === "toggle-analytics-proof") actions.toggleAnalyticsProof();
+          if (action === "toggle-analytics-help") actions.toggleAnalyticsHelp();
           if (action === "clear-data") actions.clearData();
 
           const categoryButton = event.target.closest("[data-settings-category]");
@@ -656,6 +736,11 @@ async runImport() {
           if (removeButton) {
             actions.removeSetting(removeButton.dataset.removeSetting, Number(removeButton.dataset.index));
           }
+
+          const deleteAccountButton = event.target.closest("[data-delete-account]");
+if (deleteAccountButton) {
+  actions.deleteAccount(deleteAccountButton.dataset.deleteAccount);
+}
 
           const themeChoice = event.target.closest("[data-theme-choice]");
           if (themeChoice) {

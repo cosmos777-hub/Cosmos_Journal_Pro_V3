@@ -32,3 +32,216 @@
     min-width: 560px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   ANALYTICS-001 / ANALYTICS-002 — Layout Blueprint (4 blocs)
+   Contexte → Laboratoire d'exploration → Comprendre vos indicateurs → Preuves
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ANALYTICS-002 : hauteur rapprochée du gabarit du Wizard
+     (--journal-viewport-height, 400px) — le Workspace ne doit jamais
+     changer de taille selon le volume de données, seul son contenu
+     défile (principe "Double Fond", D-041). */
+  --analytics-workspace-height: 400px;
+}
+
+.analytics-layout {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* ── Bloc ① Contexte ─────────────────────────────────────────────────── */
+
+/* Filtres : réutilisation du gabarit .control-cluster (Wizard Journal),
+   voir journal.css pour les règles de largeur — aucune redéfinition ici. */
+.analytics-filters {
+  margin-top: var(--space-2);
+}
+
+/* ANALYTICS-002 : les cartes KPI n'occupent plus une colonne de grille de
+   largeur arbitraire — chacune épouse la largeur de son propre contenu
+   (Functional Size / Content Driven Layout). La hauteur (min-height) reste
+   inchangée par rapport à la version précédente, validée par le test. */
+#view-analytics .kpi-grid--analytics-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+#view-analytics .kpi-grid--analytics-compact .kpi {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 76px;
+  padding: 10px 16px;
+}
+
+#view-analytics .kpi-grid--analytics-compact .kpi-label {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+#view-analytics .kpi-grid--analytics-compact .kpi-value {
+  margin-top: 6px;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+#view-analytics .kpi-grid--analytics-compact .kpi-note {
+  margin-top: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  /* Sous 640px, la largeur "content-driven" ferait déborder la ligne en
+     une cascade de petites cartes — on repasse en pleine largeur pour
+     rester lisible (même logique que .kpi-grid standard). */
+  #view-analytics .kpi-grid--analytics-compact .kpi {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── Bloc ② Laboratoire d'exploration (Workspace) ────────────────────── */
+
+/* Cadre stable : hauteur FIXE (jamais max-height) — même piège/solution
+   que #journal-panel (D-041, "Double Fond") : le Workspace ne doit jamais
+   changer de taille selon le volume de données, seul son contenu défile. */
+#analytics-workspace-viewport {
+  height: var(--analytics-workspace-height);
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: var(--space-2);
+}
+
+#analytics-workspace-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+#analytics-workspace-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+#analytics-workspace-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+#analytics-workspace-viewport::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* ── Bloc ③ Comprendre vos indicateurs (aide contextuelle) ───────────── */
+/* Réutilise .history-panel-collapsible / .history-toggle-bar /
+   .history-collapsible / .history-collapsible-inner (components.css /
+   journal.css) — mêmes classes génériques que le Bloc Preuves ci-dessous,
+   aucune redéfinition. Contenu statique et volontairement court (D-quatre :
+   "un coach assis à côté du trader", jamais un dictionnaire). */
+.kpi-explainer {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.kpi-explainer-group {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.kpi-explainer-group h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.kpi-explainer-line {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.kpi-explainer-line strong {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.kpi-explainer-advanced {
+  margin-top: var(--space-1);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.kpi-explainer-advanced > p:first-child {
+  margin: 0 0 var(--space-1);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── Bloc ④ Preuves ──────────────────────────────────────────────────── */
+/* ANALYTICS-002 : gabarit resserré (hauteur + densité des lignes), pour ne
+   plus dominer visuellement le bas du module. Cadre scrollable interne
+   (même logique que le Workspace ci-dessus) plutôt qu'un panneau qui
+   grandit avec le nombre de trades. */
+#analytics-proof-collapsible .trade-list {
+  padding: 0 var(--space-3) var(--space-3);
+  min-height: 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+#analytics-proof-collapsible .trade-list::-webkit-scrollbar {
+  width: 6px;
+}
+#analytics-proof-collapsible .trade-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+#analytics-proof-collapsible .trade-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+#analytics-proof-collapsible .trade-row {
+  padding: 10px 12px;
+  gap: 10px;
+}
+
+#analytics-proof-collapsible .trade-title {
+  font-size: 13px;
+}
+
+#analytics-proof-collapsible .trade-meta {
+  font-size: 11px;
+}
+
+/* ── Toggles Bloc ③ / Bloc ④ (icône + rotation) ──────────────────────── */
+#analytics-proof-toggle-icon,
+#analytics-help-toggle-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform var(--motion-fast) ease;
+}
+
+#analytics-proof-toggle[aria-expanded="true"] #analytics-proof-toggle-icon,
+#analytics-help-toggle[aria-expanded="true"] #analytics-help-toggle-icon {
+  transform: rotate(90deg);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANALYTICS-002 — Identité visuelle propre au module
+   Scoping strict à #view-analytics (même principe que le Dashboard,
+   DECISIONS_LOG.md D-052) : jamais de règle .positive/.negative globale
+   modifiée. Vert néon pour le positif, dégradé Coral → Saumon pour le
+   négatif — jamais le bleu Cosmos du Dashboard comme couleur dominante.
+   ═══════════════════════════════════════════════════════════ */
+#view-analytics .positive {
+  color: var(--analytics-positive-glow);
+  text-shadow: 0 0 12px var(--analytics-positive-glow-soft);
+}
+
+#view-analytics .negative {
+  background: linear-gradient(135deg, var(--coral-warm) 0%, var(--salmon) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px var(--coral-warm-soft));
+}

@@ -1,0 +1,448 @@
+# ANALYTICS_LAYOUT_BLUEPRINT V1.1.md
+
+# Analytics Layout Blueprint
+
+**Version :** 1.0
+**Statut :** Official Architecture Blueprint
+**Phase :** Premium Product Experience – Analytics Polishing
+
+---
+
+# Purpose
+
+Ce document définit l'architecture officielle du module **Analytics** avant toute implémentation.
+
+Il constitue la référence de conception UI pour l'ensemble du module.
+
+Son objectif est de figer définitivement :
+
+* l'organisation des blocs ;
+* la hiérarchie visuelle ;
+* la répartition de l'espace ;
+* les principes de densité ;
+* les règles de réutilisation des composants.
+
+Une fois ce Blueprint validé, aucune décision de design ne devra être prise pendant l'implémentation.
+
+L'implémentation devra uniquement traduire cette architecture dans le code.
+
+---
+
+# Product Intent
+
+Analytics n'est pas un Dashboard secondaire.
+
+Analytics est un laboratoire d'analyse décisionnelle.
+
+Sa mission n'est pas d'afficher davantage de statistiques.
+
+Sa mission est d'aider le trader à comprendre **pourquoi** il obtient ses résultats et d'identifier les facteurs qui influencent réellement ses performances.
+
+Chaque décision de Layout doit réduire la charge cognitive et favoriser l'exploration des données.
+
+---
+
+# Design Principles
+
+Le Layout d'Analytics applique les principes officiels de Cosmos.
+
+* Workflow First
+* Decision First
+* Understanding First
+* Invisible Excellence
+* Intelligent Density
+* Functional Size
+* Compact First
+* Content Driven Layout
+* Intelligent Width
+* Progressive Disclosure
+* Hierarchy Before Size
+* Content Hugging
+* Vertical Economy
+* Stable Workspace
+
+---
+
+# Core Philosophy
+
+L'importance d'un composant n'est jamais exprimée par sa taille.
+
+Elle est exprimée par :
+
+* son positionnement ;
+* sa hiérarchie visuelle ;
+* son contraste ;
+* son rôle dans le parcours de lecture.
+
+Une interface Cosmos ne cherche jamais à impressionner par de grands composants.
+
+Elle cherche à rendre l'information immédiatement compréhensible.
+
+---
+
+# Global Layout Architecture
+
+Le module Analytics est organisé en trois blocs principaux.
+
+```
+Analytics
+
+├── Bloc ① Contexte
+│
+├── Bloc ② Workspace d'Exploration
+│
+└── Bloc ③ Preuves
+```
+
+Chaque bloc possède une mission clairement définie.
+
+---
+
+# Component Responsibilities
+
+Chaque bloc possède une responsabilité clairement définie.
+
+Ces responsabilités ne doivent jamais évoluer pendant l'implémentation.
+
+## Bloc ① — Contexte
+
+Responsabilité :
+
+Définir précisément le périmètre de l'analyse.
+
+Le Bloc Contexte ne produit aucune conclusion.
+
+Il prépare uniquement les données qui seront étudiées.
+
+---
+
+## Bloc ② — Workspace d'Exploration
+
+Responsabilité :
+
+Présenter les résultats de l'exploration de manière comparative afin de faciliter la compréhension des performances.
+
+Le Workspace n'est pas limité à un tableau.
+
+Le tableau constitue simplement l'implémentation actuelle du Workspace.
+
+Le Layout doit rester suffisamment générique pour accueillir de futures représentations (comparaisons visuelles, graphiques, heatmaps, etc.) sans modifier son architecture.
+
+Le Workspace conserve une hauteur fixe.
+
+Lorsqu'un volume de données dépasse l'espace disponible, seul le contenu interne devient défilable.
+
+L'enveloppe du Workspace ne change jamais de taille.
+
+Ce comportement suit le même principe que l'architecture Double Fond du Journal.
+
+---
+
+Exploration Control
+
+Le sélecteur de dimension constitue le point d'entrée de toute exploration.
+
+Il appartient au Bloc Contexte.
+
+Sa hiérarchie visuelle doit refléter son rôle central.
+
+## Bloc ③ — Preuves
+
+Responsabilité :
+
+Afficher les trades correspondant exactement au contexte actuellement analysé.
+
+Les preuves servent uniquement à vérifier les observations produites par le Workspace.
+
+Elles ne produisent aucune nouvelle analyse.
+
+# Bloc ① — Contexte
+
+## Mission
+
+Répondre immédiatement à la question :
+
+> « Quel ensemble de données suis-je en train d'analyser ? »
+
+Le Bloc Contexte prépare l'analyse.
+
+Il ne doit jamais dominer visuellement l'écran.
+
+---
+
+## Composition
+
+Le bloc regroupe uniquement :
+
+* les filtres d'analyse ;
+* les KPI essentiels , Les KPI affichés dans le Bloc Contexte correspondent aux indicateurs synthétiques nécessaires pour interpréter immédiatement le périmètre analysé.
+
+La sélection définitive des KPI est figée par la Vision Produit d'Analytics.
+
+Leur nombre doit rester volontairement limité afin de préserver la densité et la lisibilité du module.
+
+---
+
+## Layout
+
+Le Bloc Contexte doit être :
+
+* compact ;
+* dense ;
+* rapide à lire ;
+* optimisé pour limiter le défilement.
+
+Les filtres utilisent exclusivement les composants du Design System déjà présents dans le Wizard du Journal.
+
+Aucun nouveau composant ne doit être créé.
+
+---
+
+## KPI
+
+Les KPI sont volontairement plus compacts que ceux du Dashboard.
+
+Leur rôle est d'offrir une vue synthétique.
+
+Ils ne constituent pas le centre de gravité du module.
+
+Leur importance provient de leur positionnement et non de leur taille.
+
+---
+
+# Bloc ② — Workspace d'Exploration
+
+## Mission
+
+Répondre à la question :
+
+> « Pourquoi ces résultats ? »
+
+Le Workspace constitue le cœur du module Analytics.
+
+Il reçoit naturellement la plus grande partie de l'espace disponible.
+
+---
+
+## Architecture interne
+
+Le Workspace suit une séquence cognitive simple :
+
+```
+Intention
+
+↓
+
+Constat
+
+↓
+
+Workspace
+
+↓
+
+Visualisation / Tableau
+```
+
+Cette organisation guide naturellement le regard de l'utilisateur.
+
+---
+
+## Workspace
+
+Le Workspace est un cadre de travail stable.
+
+Son gabarit reste identique quelle que soit la dimension explorée.
+
+Seules les données affichées changent.
+
+Le Workspace doit pouvoir accueillir, à terme :
+
+* tableaux comparatifs ;
+* visualisations ;
+* comparaisons avancées ;
+* futures extensions du module.
+
+Le Layout ne doit donc jamais dépendre d'un type de contenu particulier.
+
+---
+
+## Layout
+
+Le Workspace :
+
+* constitue le composant principal de l'écran ;
+* bénéficie de la majorité de l'espace disponible ;
+* privilégie la lisibilité plutôt que la quantité ;
+* favorise la comparaison entre groupes ;
+* évite toute surcharge visuelle.
+
+---
+
+# Bloc ③ — Preuves
+
+## Mission
+
+Permettre de vérifier les observations issues du Workspace.
+
+Les preuves complètent l'analyse.
+
+Elles ne doivent jamais monopoliser l'espace de travail.
+
+---
+
+## Comportement
+
+Le panneau des preuves est :
+
+* replié par défaut ;
+* identique au panneau Historique du Journal ;
+* basé sur les mêmes composants ;
+* basé sur les mêmes interactions ;
+* basé sur la même animation.
+
+Le comportement est entièrement réutilisé depuis le Journal.
+
+---
+
+# Space Allocation
+
+L'espace est distribué selon la valeur cognitive des blocs.
+
+Le composant principal reçoit naturellement la majorité de l'espace.
+
+Le Contexte reste compact.
+
+Les Preuves demeurent secondaires et restent masquées tant qu'elles ne sont pas sollicitées.
+
+---
+
+# Layout Rules
+
+## Hierarchy Before Size
+
+L'importance est exprimée par la hiérarchie.
+
+Jamais par des composants surdimensionnés.
+
+---
+
+## Content Hugging
+
+Chaque composant occupe uniquement l'espace nécessaire à son contenu.
+
+Les espaces artificiels sont supprimés.
+
+---
+
+## Vertical Economy
+
+La hauteur est une ressource précieuse.
+
+Chaque réduction de hauteur doit bénéficier au Workspace d'Exploration.
+
+---
+
+## Stable Workspace
+
+Le cadre principal ne change jamais de taille.
+
+Seul son contenu évolue.
+
+Cette stabilité réduit la charge cognitive.
+
+---
+
+## Progressive Disclosure
+
+Les informations secondaires restent masquées jusqu'à ce qu'elles deviennent utiles.
+
+Le panneau des Preuves en est l'application directe.
+
+---
+
+## Design System First
+
+Analytics privilégie systématiquement les composants existants.
+
+Les champs sélectifs réutilisent ceux du Wizard.
+
+Les comportements de panneaux repliables réutilisent ceux du Journal.
+
+Aucune nouvelle famille de composants ne doit être créée sans justification produit.
+
+---
+
+# Component Reuse Matrix
+
+Analytics privilégie systématiquement la réutilisation des composants existants.
+
+| Élément | Source de référence |
+|---------|----------------------|
+| Champs sélectifs | Wizard Journal |
+| Accordéon des Preuves | Historique Journal |
+| États vides | Design System |
+| Boutons | Component Catalog |
+| Cartes | Dashboard |
+| Badges | Design System |
+| Icônes | Design System |
+
+La création de nouveaux composants n'est autorisée que lorsqu'aucun composant existant ne répond au besoin produit.
+
+# Implementation Rules
+
+Pendant l'implémentation :
+
+* aucune décision de design ne devra être improvisée ;
+* aucune nouvelle hiérarchie ne devra être inventée ;
+* aucun composant ne devra être agrandi sans justification produit ;
+* aucune duplication de composants existants ne devra être introduite.
+
+Le Blueprint constitue la référence officielle.
+
+---
+
+# Component States
+
+Chaque composant du module Analytics doit être conçu pour fonctionner dans tous ses états.
+
+Le Layout doit rester stable dans chacun des cas.
+
+États à prendre en compte :
+
+- aucune donnée disponible ;
+- aucune analyse sélectionnée ;
+- une seule ligne de résultat ;
+- plusieurs groupes analysés ;
+- grand volume de données ;
+- panneau des preuves fermé ;
+- panneau des preuves ouvert.
+
+Aucun état ne doit provoquer de rupture de Layout.
+
+# Validation Checklist
+
+Analytics pourra être considéré comme conforme lorsque :
+
+* les informations essentielles sont visibles sans défilement inutile ;
+* le Bloc Contexte reste compact ;
+* les KPI sont synthétiques et proportionnés à leur rôle ;
+* le Workspace constitue clairement le centre de gravité de l'écran ;
+* les Preuves sont repliées par défaut ;
+* les composants du Journal sont réutilisés lorsque cela est possible ;
+* chaque élément possède une justification fonctionnelle ;
+* chaque pixel affiché contribue à la compréhension des performances.
+
+---
+
+# Design Intent
+
+Analytics n'est pas conçu pour impressionner par la quantité d'informations affichées.
+
+Il est conçu pour rendre les causes des performances immédiatement compréhensibles.
+
+La qualité de son interface se mesure à sa capacité à réduire la charge cognitive, limiter le défilement, guider naturellement le regard et offrir au trader un véritable espace d'exploration décisionnelle.
+
+Dans Cosmos, un module premium n'occupe pas plus d'espace.
+
+Il utilise mieux l'espace dont il dispose.

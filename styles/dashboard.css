@@ -1,18 +1,220 @@
 /* ARCH-002 (Sprint 1, Livraison 3) — Styles spécifiques au Dashboard.
    Panneau Mission (décor orbital). Dépend de variables.css. */
 
-    .mission {
-      position: relative;
-      overflow: hidden;
-      min-height: 100%;
-    }
+    /* D-051 : renommage .mission -> .dashboard-pilot */
+.dashboard-pilot {
+  position: relative;
+  overflow: hidden;
+  min-height: 100%;
+}
 
-    .mission::after {
-      content: "";
-      position: absolute;
-      inset: auto -20% -55% 12%;
-      height: 180px;
-      border: 1px solid color-mix(in srgb, var(--cosmos) 16%, transparent);
-      border-radius: 50%;
-      transform: rotate(-8deg);
-    }
+.dashboard-pilot::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -55% 12%;
+  height: 180px;
+  border: 1px solid color-mix(in srgb, var(--cosmos) 16%, transparent);
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+    /* DASH-001 (Phase 2, Dashboard Architecture Foundation) — voir DECISIONS_LOG.md
+       D-048. Ce fichier reste volontairement minimal : ce ticket est un travail
+       d'architecture (disposition, présence/absence des éléments), pas de polissage
+       visuel — les deux règles ci-dessous sont la quantité minimale de CSS
+       nécessaire pour que la nouvelle disposition fonctionne, pas un habillage. */
+
+    .kpi-grid--primary {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* DASH-001 (correction) : rangée indépendante, pleine largeur, en dessous de
+   la grille des 3 KPI. Hauteur strictement identique à un .kpi standard
+   (min-height:132px hérité de components.css, jamais redéfini ici — c'est la
+   contrainte explicite "ne pas augmenter la hauteur"). Layout interne à 2
+   colonnes : info (gauche) / graphique (droite). */
+/* DASH-001 : Correction du layout du Jumeau Numérique */
+.card.kpi--digital-twin {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 132px;
+  max-height: 132px;
+  padding: 12px 16px;
+  overflow: hidden;
+  margin-top: 16px; /* Rajoute l'espace suffisant pour stopper le chevauchement */
+}
+
+/* 1. Colonne de gauche : plus large et alignée en haut */
+.digital-twin-col--info {
+  flex: 0 0 270px;
+  min-width: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2px;
+  overflow: hidden;
+}
+
+/* 2. Style du texte explicatif (ajoute ce bloc ici) */
+.digital-twin-col--info .kpi-note {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  margin: 2px 0 4px 0;
+}
+
+/* 3. Colonne de droite : Graphique SVG */
+.digital-twin-col--chart {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digital-twin-col--chart svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 4. Légende (Réel / Théorique) */
+.digital-twin-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 980px) {
+  .kpi-grid--primary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpi-grid--primary {
+    grid-template-columns: 1fr;
+  }
+  /* Sous 640px, l'info et le graphique ne peuvent plus cohabiter sur une
+     largeur aussi contrainte sans dégrader la lisibilité du graphique —
+     on repasse en empilement vertical uniquement à ce point de rupture. */
+  .kpi--digital-twin {
+    flex-direction: column;
+  }
+  .digital-twin-col--info {
+    flex: 0 0 auto;
+  }
+}
+/* Compactage des cartes du panneau de pilotage */
+#dashboard-pilot-panel .card.kpi {
+  padding: 12px 16px;     /* Réduit l'espace interne (haut/bas) */
+  min-height: unset;       /* Supprime la hauteur minimale héritée */
+}
+
+#dashboard-pilot-panel .kpi-value {
+  font-size: 1.5rem;       /* Ajuste légèrement la taille du chiffre */
+  margin: 4px 0;          /* Rapproche le chiffre du titre et de la note */
+}
+
+#dashboard-pilot-panel .kpi-note {
+  margin-top: 2px;
+  font-size: 0.75rem;      /* Rend la note discrète et compacte */
+}
+/* ─────────────────────────────────────────────────────────────────────
+   DASH-001 — Premium Visual Polish (V2)
+   Scope strict : #view-dashboard uniquement.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* 1. Code couleur Cosmos & Dégradé Négatif */
+#view-dashboard .positive {
+  color: var(--cosmos-glow-bright);
+  text-shadow: 0 0 14px var(--cosmos-glow-soft);
+}
+
+#view-dashboard .negative {
+  background: linear-gradient(135deg, var(--neon-pink) 0%, var(--coral-warm) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px var(--coral-warm-soft));
+}
+
+/* 2. Style des Cartes & Hover */
+#view-dashboard .card.kpi {
+  border-color: color-mix(in srgb, var(--border) 80%, var(--cosmos-glow) 12%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, var(--shadow-soft);
+}
+#view-dashboard .card.kpi:hover {
+  border-color: color-mix(in srgb, var(--cosmos-glow) 30%, var(--border));
+}
+
+/* 3. Layout Winrate & Capital (Passe à droite sans impacter le gabarit) */
+.kpi-row-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%; /* S'adapte à la hauteur existante du KPI */
+}
+
+.winrate-ring-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Empêche tout décalage */
+}
+
+.winrate-ring-wrap svg {
+  width: 36px;  /* Ajusté pour rentrer dans l'espace existant */
+  height: 36px;
+  display: block;
+}
+
+.winrate-ring-track { 
+  stroke: rgba(255, 255, 255, 0.08); 
+  fill: none; 
+}
+
+.winrate-ring-value {
+  stroke: var(--cosmos-glow-bright);
+  fill: none;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px var(--cosmos-glow-soft));
+  transition: stroke-dasharray var(--motion) ease;
+}
+
+/* Badge Portefeuille / Capital (Format compact intégré) */
+.capital-badge-icon {
+  width: 34px;  /* Ajusté pour s'aligner exactement sur la hauteur de l'anneau */
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cosmos-glow-bright);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.15);
+  flex-shrink: 0;
+}
+
+/* 4. Jumeau Numérique */
+#digital-twin-chart svg polyline:nth-child(1) {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+  opacity: 0.7;
+}
+#digital-twin-chart svg polyline:nth-child(2) {
+  stroke: var(--cosmos-glow-bright);
+  stroke-width: 2.25;
+  filter: drop-shadow(0 0 6px var(--cosmos-glow-soft));
+}
+.digital-twin-legend span:first-child span {
+  background: var(--cosmos-glow-bright) !important;
+  box-shadow: 0 0 8px var(--cosmos-glow-soft);
+}

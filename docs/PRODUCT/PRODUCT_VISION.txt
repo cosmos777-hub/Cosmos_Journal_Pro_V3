@@ -1,0 +1,171 @@
+# PRODUCT_VISION.md
+
+> Project: Cosmos Journal Pro V3
+> Version: 2.0
+> Status: Official
+> Last Updated: End of Phase 1 – Journal Reference Module
+
+---
+
+# Vision
+
+Cosmos Journal Pro V3 n'est pas simplement un journal de trading.
+
+C'est un cockpit personnel de performance conçu pour accompagner un trader dans chacune des étapes de son évolution.
+
+Son objectif n'est pas uniquement de stocker des informations, mais d'aider son utilisateur à :
+
+- prendre de meilleures décisions ;
+- mieux comprendre son comportement ;
+- mesurer objectivement sa progression ;
+- construire une discipline durable.
+
+Le produit privilégie toujours la qualité de l'expérience plutôt que la quantité de fonctionnalités.
+
+---
+
+# Mission
+
+Transformer chaque trade en une opportunité d'apprentissage.
+
+Le Journal ne doit jamais être perçu comme une contrainte administrative.
+
+Il doit devenir un réflexe naturel intégré au workflow du trader.
+
+---
+
+# Positionnement
+
+Cosmos Journal Pro V3 est un produit :
+
+• Premium
+
+• Moderne
+
+• Minimaliste
+
+• Rapide
+
+• Intelligent
+
+• Orienté performance
+
+Le projet refuse volontairement les interfaces surchargées.
+
+Chaque élément affiché doit avoir une utilité réelle.
+
+---
+
+# Public cible
+
+Le produit est conçu avant tout pour des traders actifs :
+
+- Prop Firms
+- Comptes personnels
+- Swing Traders
+- Day Traders
+- Scalpers
+
+Le système doit rester suffisamment flexible pour évoluer vers d'autres profils sans remettre en cause son architecture.
+
+---
+
+# Philosophie Produit
+
+Trois principes gouvernent toutes les décisions.
+
+## 1. Workflow First
+
+Le workflow passe avant tout.
+
+Une belle interface qui ralentit l'utilisateur est considérée comme un mauvais design.
+
+---
+
+## 2. Data With Purpose
+
+Aucune donnée n'est collectée sans objectif précis.
+
+Chaque champ doit apporter une valeur réelle :
+
+- analyse
+- statistiques
+- amélioration des performances
+
+---
+
+## 3. Premium Simplicity
+
+Le produit recherche une simplicité haut de gamme.
+
+Simple ne signifie pas pauvre.
+
+Simple signifie :
+
+- clair
+- fluide
+- intuitif
+- élégant
+
+---
+
+# Product Pillars
+
+Les quatre piliers du produit sont :
+
+## Journal
+
+Capturer rapidement un trade.
+
+---
+
+## Dashboard
+
+Visualiser immédiatement l'état global du trading.
+
+---
+
+## Analytics
+
+Comprendre les performances.
+Les KPI du Bloc ① sont définis dans PRODUCT_VISION.md.
+---
+
+## Insights
+
+Découvrir automatiquement les axes d'amélioration.
+
+---
+
+# Long-Term Vision
+
+À terme, Cosmos Journal Pro V3 doit devenir un véritable système personnel d'analyse de performance.
+
+Le Journal représente la fondation.
+
+Les futurs modules viendront enrichir cette fondation sans jamais casser sa simplicité.
+
+---
+
+# Product Standards
+
+Toutes les évolutions devront respecter les critères suivants :
+
+- rapidité avant complexité ;
+- lisibilité avant densité ;
+- cohérence avant originalité ;
+- qualité avant quantité.
+
+Une fonctionnalité qui ne respecte pas ces principes ne doit pas être intégrée.
+
+---
+
+# Reference Module
+
+Le module Journal constitue désormais la référence officielle du produit.
+
+Le Dashboard, Analytics, Insights et Settings devront atteindre le même niveau de qualité avant d'être considérés comme terminés.
+
+---
+
+End of Document

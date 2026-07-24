@@ -4,6 +4,16 @@
 // openModal/closeModal/toast sont des helpers réutilisés par Dashboard, Journal,
 // Analytics, Insights et Settings.
 //
+// DASH-001 (Phase 2) : le Feature Registry et le badge de version ne sont plus
+// rendus (panneau "Architecture V3" retiré du Dashboard, voir DECISIONS_LOG.md
+// D-048 — application de D-018). L'appel à renderFeatureRegistry() est retiré de
+// render() ; les ids DOM correspondants ("feature-registry", "data-version")
+// ainsi que les anciens KPI Dashboard désormais absents du DOM ("kpi-theoretical",
+// "kpi-count", "kpi-capital", "kpi-profit-factor", "kpi-expectancy",
+// "kpi-avg-duration", "kpi-plan-respect") sont retirés de cache(). Deux nouveaux
+// ids Analytics ("analytics-kpi-capital", "analytics-kpi-drawdown") sont ajoutés,
+// ces KPI ayant rejoint la vue Analytics (D-048).
+//
 // ─────────────────────────────────────────────────────────────────────────────
 // Sprint 1 — ARCH-003 : Catalogue des composants génériques (Design System)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,157 +45,189 @@ import { state } from "../core/state.js";
 import { utils } from "../utils/index.js";
 
 export const componentsUi = {
-        cache() {
-          [
-            "account-select", "account-type-preview", "asset-options", "strategy-options",
-            "session-select", "timeframe-select", "htf-select", "combo-preview",
-            "risk-select", "risk-amount-preview", "gestion-risk-summary",
-            "trade-date", "entry-time", "exit-time", "duration-preview",
-            "direction-options", "direction-value",
-            "setup-quality-stars", "setup-quality-value", "confluences-options",
-            "rr-planned", "rr-obtained-display", "plan-respect-select",
-            "result-currency-input", "result-percent-display", "trade-status-display",
-            "theoretical-result-display", "real-result-display", "emotional-delta-display",
-            "emotional-cause-options", "emotional-cause-value", "emotional-causes-secondary-options",
-            "manual-intervention-options", "manual-intervention-value",
-            "notes", "tags-options", "capture-slots",
-            "validation-summary", "wizard-prev", "wizard-next", "wizard-progress-fill", "wizard-step-label",
-            "trade-form", "journal-panel", "history-panel",
-            // UX-003 (Sprint 3, Livraison 2A) : historique repliable.
-            "history-toggle", "history-toggle-icon", "history-collapsible",
-            "trade-list", "history-subtitle", "kpi-real", "kpi-theoretical", "kpi-delta",
-            "kpi-count", "delta-note", "settings-modal", "settings-nav", "settings-content",
-            "export-modal", "export-output", "import-modal", "import-input", "import-file", "import-feedback",
-            "toast-stack", "feature-registry", "data-version",
-            "capture-viewer-modal", "capture-viewer-image",
-            // Milestone 3A : KPI enrichis + navigation multi-vues.
-            "kpi-capital", "kpi-winrate", "kpi-profit-factor", "kpi-expectancy", "kpi-drawdown",
-            "kpi-avg-rr", "kpi-avg-duration", "kpi-plan-respect",
-            "view-dashboard", "view-journal", "view-analytics", "view-insights",
-            // Milestone 3B : filtres et KPI de la vue Analytics.
-            "analytics-filter-account", "analytics-filter-asset", "analytics-filter-session",
-            "analytics-filter-htf", "analytics-filter-ltf", "analytics-filter-strategy",
-            "analytics-filter-date-from", "analytics-filter-date-to", "analytics-filter-reset", "analytics-filter-note",
-            "analytics-kpi-count", "analytics-kpi-real", "analytics-kpi-theoretical", "analytics-kpi-delta",
-            "analytics-kpi-winrate", "analytics-kpi-profit-factor", "analytics-kpi-expectancy",
-            "analytics-kpi-avg-rr", "analytics-kpi-avg-duration", "analytics-kpi-plan-respect",
-            "analytics-trade-list", "breakdown-dimension", "breakdown-table",
-            "insights-empty-state", "insights-empty-copy", "insights-content",
-            "insights-forces", "insights-faiblesses", "insights-opportunites", "insights-recommandations",
-            "digital-twin-chart", "digital-twin-gap", "mission-title", "mission-copy"
-          ].forEach(id => {
-            dom[id] = document.getElementById(id);
-          });
-        },
-        render() {
-          document.documentElement.dataset.theme = state.data.preferences.theme === "light" ? "light" : "dark";
-          dom["data-version"].textContent = `Data v${state.data.version}`;
-          this.renderFeatureRegistry();
-          this.renderSelectors();
-          this.renderDashboard();
-          this.renderTrades();
-          this.renderSettings();
-          this.renderAnalyticsFilters();
-          this.updateAnalyticsView();
-          this.renderInsights();
-        },
-        renderChips(container, items, activeValue, onSelect) {
-          container.innerHTML = "";
-          items.forEach(item => {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = `chip${item === activeValue ? " active" : ""}`;
-            button.textContent = item;
-            button.addEventListener("click", () => onSelect(item));
-            container.appendChild(button);
-          });
-        },
-        // Milestone 2C : liste à sélection multiple (confluences, causes secondaires du Delta Émotionnel).
-        renderChecklist(container, items, activeValues, onToggle) {
-          if (!container) return;
-          container.innerHTML = "";
-          items.forEach(item => {
-            const label = document.createElement("label");
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = activeValues.includes(item);
-            checkbox.addEventListener("change", () => onToggle(item));
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(item));
-            container.appendChild(label);
-          });
-        },
-        // Milestone 2C : qualité du setup en 5 étoiles (Document 02, Carte 3).
-        setKpi(element, value) {
-          element.textContent = utils.formatPercent(value);
-          element.className = `kpi-value ${utils.tone(value)}`;
-        },
-        // Milestone 3A : navigation entre les 4 vues (Document 03). Ne détruit jamais le
-        // contenu des vues non actives — bascule uniquement une classe CSS.
-        switchView(viewName) {
-          const views = { dashboard: dom["view-dashboard"], journal: dom["view-journal"], analytics: dom["view-analytics"], insights: dom["view-insights"] };
-          if (!views[viewName]) return;
-          state.currentView = viewName;
+  cache() {
+    [
+      "account-select", "account-type-preview", "asset-options", "strategy-options",
+      "session-select", "timeframe-select", "htf-select", "combo-preview",
+      "risk-select", "risk-amount-preview", "gestion-risk-summary",
+      "trade-date", "entry-time", "exit-time", "duration-preview",
+      "direction-options", "direction-value",
+      "setup-quality-stars", "setup-quality-value", "confluences-options",
+      "rr-planned", "rr-obtained-display", "plan-respect-select",
+      "result-currency-input", "result-percent-display", "trade-status-display",
+      "theoretical-result-display", "real-result-display", "emotional-delta-display",
+      "emotional-cause-options", "emotional-cause-value", "emotional-causes-secondary-options",
+      // Bug préexistant (indépendant de DASH-001) : cet id était lu par
+      // journal.js (renderSelectors, `if (dom["emotional-causes-secondary-field"])`)
+      // mais n'avait jamais été ajouté à cache() — la condition était donc
+      // toujours fausse et les Causes secondaires ne s'affichaient jamais.
+      "emotional-causes-secondary-field",
+      "manual-intervention-options", "manual-intervention-value",
+      "notes", "tags-options", "capture-slots",
+      "validation-summary", "wizard-prev", "wizard-next", "wizard-progress-fill", "wizard-step-label",
+      "trade-form", "journal-panel", "history-panel",
+      // UX-003 (Sprint 3, Livraison 2A) : historique repliable.
+      "history-toggle", "history-toggle-icon", "history-collapsible",
+      "trade-list", "history-subtitle", "kpi-real", "kpi-delta",
+      // Régression DASH-001 corrigée : "delta-note" avait été supprimé par erreur
+      // de cette liste lors du nettoyage des anciens ids Dashboard. L'élément
+      // existe toujours dans le DOM et dans dashboard.js (renderDashboard) —
+      // dom["delta-note"] valait donc `undefined`, d'où le crash
+      // "Cannot set properties of undefined (setting 'textContent')" qui
+      // interrompait le reste de render() (renderTrades, renderSettings,
+      // renderAnalyticsFilters, updateAnalyticsView, renderInsights) à chaque appel.
+      "delta-note",
+      "settings-modal", "settings-nav", "settings-content",
+      "export-modal", "export-output", "import-modal", "import-input", "import-file", "import-feedback",
+      "toast-stack",
+      "capture-viewer-modal", "capture-viewer-image",
+      // DASH-001 (complément de validation) : RR moyen / Drawdown max quittent le
+      // Dashboard (restent dans Analytics, ids "analytics-kpi-avg-rr"/"analytics-kpi-drawdown",
+      // déjà en cache plus bas — inchangés). P&L théorique, Respect du plan et Capital
+      // actuel rejoignent la colonne KPI principale du Dashboard.
+      "kpi-winrate", "kpi-theoretical", "kpi-plan-respect", "kpi-capital",
+      "view-dashboard", "view-journal", "view-analytics", "view-insights",
+      // Milestone 3B : filtres et KPI de la vue Analytics.
+      "analytics-filter-account", "analytics-filter-asset", "analytics-filter-session",
+      "analytics-filter-htf", "analytics-filter-ltf", "analytics-filter-strategy",
+      "analytics-filter-date-from", "analytics-filter-date-to", "analytics-filter-reset", "analytics-filter-note",
+      "analytics-kpi-count", "analytics-kpi-real", "analytics-kpi-theoretical", "analytics-kpi-delta",
+      "analytics-kpi-winrate", "analytics-kpi-profit-factor", "analytics-kpi-expectancy",
+      "analytics-kpi-avg-rr", "analytics-kpi-avg-duration", "analytics-kpi-plan-respect",
+      // DASH-001 : Capital actuel et Drawdown max rejoignent Analytics (D-048).
+      "analytics-kpi-capital", "analytics-kpi-drawdown",
+      "analytics-trade-list", "breakdown-dimension", "breakdown-table",
+      "analytics-proof-panel", "analytics-proof-toggle", "analytics-proof-toggle-icon", "analytics-proof-collapsible",
+      // ANALYTICS-002 (Bloc ③ Comprendre vos indicateurs) : même famille
+      // d'ids que le Bloc ④ Preuves ci-dessus.
+      "analytics-help-panel", "analytics-help-toggle", "analytics-help-toggle-icon", "analytics-help-collapsible",
+      "insights-empty-state", "insights-empty-copy", "insights-content",
+      "insights-forces", "insights-faiblesses", "insights-opportunites", "insights-recommandations",
+      "digital-twin-chart", "digital-twin-gap", "digital-twin-legend", "mission-title", "mission-copy"
+    ].forEach(id => {
+      dom[id] = document.getElementById(id);
+    });
+  },
+  render() {
+    document.documentElement.dataset.theme = state.data.preferences.theme === "light" ? "light" : "dark";
+    // DASH-001 : this.renderFeatureRegistry() et l'écriture de #data-version sont
+    // retirés — ces deux éléments n'existent plus dans le DOM Dashboard (voir
+    // DECISIONS_LOG.md D-048, application de D-018).
+    this.renderSelectors();
+    // MEDIA-001 (Livraison G — A1) : renderCaptureSlots() retiré de renderSelectors()
+    // (qui s'exécute à chaque clic de chip du Wizard, sans rapport avec les captures)
+    // et appelé ici une seule fois, au même niveau que les autres rendus de premier
+    // niveau. Les seuls autres déclencheurs légitimes restent explicites :
+    // actions.handleCaptureFile/removeCapture (main.js) et startEditTrade (main.js),
+    // qui appellent déjà this.renderCaptureSlots() directement — jamais via
+    // renderSelectors(). Le Wizard (sélection d'actif, stratégie, direction...) ne
+    // provoque donc plus aucune lecture IndexedDB.
+    this.renderCaptureSlots();
+    this.renderDashboard();
+    this.renderTrades();
+    this.renderSettings();
+    this.renderAnalyticsFilters();
+    this.updateAnalyticsView();
+    this.renderInsights();
+  },
 
-          Object.entries(views).forEach(([name, element]) => {
-            if (element) element.classList.toggle("active", name === viewName);
-          });
+  renderChips(container, items, activeValue, onSelect) {
+    container.innerHTML = "";
+    items.forEach(item => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `chip${item === activeValue ? " active" : ""}`;
+      button.textContent = item;
+      button.addEventListener("click", () => onSelect(item));
+      container.appendChild(button);
+    });
+  },
+  // Milestone 2C : liste à sélection multiple (confluences, causes secondaires du Delta Émotionnel).
+  renderChecklist(container, items, activeValues, onToggle) {
+    if (!container) return;
+    container.innerHTML = "";
+    items.forEach(item => {
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = activeValues.includes(item);
+      checkbox.addEventListener("change", () => onToggle(item));
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(item));
+      container.appendChild(label);
+    });
+  },
+  // Milestone 2C : qualité du setup en 5 étoiles (Document 02, Carte 3).
+  setKpi(element, value) {
+    element.textContent = utils.formatPercent(value);
+    element.className = `kpi-value ${utils.tone(value)}`;
+  },
+  // Milestone 3A : navigation entre les 4 vues (Document 03). Ne détruit jamais le
+  // contenu des vues non actives — bascule uniquement une classe CSS.
+  switchView(viewName) {
+    const views = { dashboard: dom["view-dashboard"], journal: dom["view-journal"], analytics: dom["view-analytics"], insights: dom["view-insights"] };
+    if (!views[viewName]) return;
+    state.currentView = viewName;
 
-          document.querySelectorAll("[data-view]").forEach(button => {
-            button.classList.toggle("active", button.dataset.view === viewName);
-          });
+    Object.entries(views).forEach(([name, element]) => {
+      if (element) element.classList.toggle("active", name === viewName);
+    });
 
-          if (viewName === "dashboard") this.renderDashboard();
-          if (viewName === "analytics") this.updateAnalyticsView();
-          if (viewName === "insights") this.renderInsights();
-        },
-        // Milestone 4 (Document 03) : état vide intelligent tant que l'échantillon est
-        // insuffisant (Document 05 §7), puis structure Forces/Faiblesses/Opportunités/Recommandations.
-        openModal(modal) {
-          modal.classList.add("open");
-          modal.setAttribute("aria-hidden", "false");
-        },
-        closeModal(modal) {
-          modal.classList.remove("open");
-          modal.setAttribute("aria-hidden", "true");
-        },
-        // UI-004 (Sprint 2, R1) : tone optionnel, rétrocompatible avec les appels
-        // existants ui.toast("message") qui restent neutres par défaut. Réutilise
-        // le même vocabulaire de teinte (positive/negative/neutral) déjà employé
-        // par badge()/kpi-value, plutôt que d'introduire un nouveau système.
-        toast(message, tone = "neutral") {
-          const toast = document.createElement("div");
-          toast.className = tone === "neutral" ? "toast" : `toast ${tone}`;
-          toast.textContent = message;
-          dom["toast-stack"].appendChild(toast);
-          setTimeout(() => toast.remove(), 3000);
-        },
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.classList.toggle("active", button.dataset.view === viewName);
+    });
 
-        // UI-004 (Sprint 2, R2) : même vocabulaire de teinte que toast() (Feedback
-        // State), appliqué cette fois à un texte de statut inline (ex. import-feedback)
-        // plutôt qu'à une notification flottante. Les classes .positive/.negative
-        // (components.css) et .muted (typography.css) coexistent déjà sans conflit :
-        // .muted fixe la taille de police, .positive/.negative/.neutral la couleur.
-        setFeedback(element, message, tone = "neutral") {
-          element.textContent = message;
-          element.className = tone === "neutral" ? "muted" : `muted ${tone}`;
-        },
+    if (viewName === "dashboard") this.renderDashboard();
+    if (viewName === "analytics") this.updateAnalyticsView();
+    if (viewName === "insights") this.renderInsights();
+  },
+  // Milestone 4 (Document 03) : état vide intelligent tant que l'échantillon est
+  // insuffisant (Document 05 §7), puis structure Forces/Faiblesses/Opportunités/Recommandations.
+  openModal(modal) {
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  },
+  closeModal(modal) {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+  },
+  // UI-004 (Sprint 2, R1) : tone optionnel, rétrocompatible avec les appels
+  // existants ui.toast("message") qui restent neutres par défaut. Réutilise
+  // le même vocabulaire de teinte (positive/negative/neutral) déjà employé
+  // par badge()/kpi-value, plutôt que d'introduire un nouveau système.
+  toast(message, tone = "neutral") {
+    const toast = document.createElement("div");
+    toast.className = tone === "neutral" ? "toast" : `toast ${tone}`;
+    toast.textContent = message;
+    dom["toast-stack"].appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  },
 
-        // Sprint 1 — ARCH-003 (Livraison 2) : composants génériques identifiés lors de
-        // l'audit (Livraison 1) comme dupliqués entre journal.js et analytics.js.
-        // API simple, responsabilité unique (Doc §6) — pas de logique métier ici,
-        // uniquement de l'assemblage de balisage.
+  // UI-004 (Sprint 2, R2) : même vocabulaire de teinte que toast() (Feedback
+  // State), appliqué cette fois à un texte de statut inline (ex. import-feedback)
+  // plutôt qu'à une notification flottante. Les classes .positive/.negative
+  // (components.css) et .muted (typography.css) coexistent déjà sans conflit :
+  // .muted fixe la taille de police, .positive/.negative/.neutral la couleur.
+  setFeedback(element, message, tone = "neutral") {
+    element.textContent = message;
+    element.className = tone === "neutral" ? "muted" : `muted ${tone}`;
+  },
 
-        // Badge à teinte dynamique (positive/negative/neutral). 5 occurrences identiques
-        // avant ce composant (journal.js ×3, analytics.js ×1, insights.js indirectement).
-        badge(toneClass, label) {
-          return `<span class="badge ${toneClass}">${label}</span>`;
-        },
+  // Sprint 1 — ARCH-003 (Livraison 2) : composants génériques identifiés lors de
+  // l'audit (Livraison 1) comme dupliqués entre journal.js et analytics.js.
+  // API simple, responsabilité unique (Doc §6) — pas de logique métier ici,
+  // uniquement de l'assemblage de balisage.
 
-        // État vide (titre + message). Structure strictement identique entre journal.js
-        // et analytics.js avant ce composant — seuls titre/message différaient.
-        emptyState(title, message) {
-          return `
+  // Badge à teinte dynamique (positive/negative/neutral). 5 occurrences identiques
+  // avant ce composant (journal.js ×3, analytics.js ×1, insights.js indirectement).
+  badge(toneClass, label) {
+    return `<span class="badge ${toneClass}">${label}</span>`;
+  },
+
+  // État vide (titre + message). Structure strictement identique entre journal.js
+  // et analytics.js avant ce composant — seuls titre/message différaient.
+  emptyState(title, message) {
+    return `
             <div class="empty-state">
               <div>
                 <h3>${title}</h3>
@@ -193,15 +235,15 @@ export const componentsUi = {
               </div>
             </div>
           `;
-        },
+  },
 
-        // Ligne de trade (carte bordée). Couvre les deux usages identiques en forme
-        // (journal.js : titre + méta + notes + 3 badges + actions ; analytics.js : titre +
-        // méta + 1 badge, sans actions). insights.js utilise une variante volontairement
-        // différente (une seule colonne, sans méta ni badge) et n'est pas concerné par ce
-        // composant — le forcer dedans en ferait un composant "fourre-tout" (Doc §6).
-        tradeRow({ title, meta, notes = "", badges = [], actions = "" }) {
-          return `
+  // Ligne de trade (carte bordée). Couvre les deux usages identiques en forme
+  // (journal.js : titre + méta + notes + 3 badges + actions ; analytics.js : titre +
+  // méta + 1 badge, sans actions). insights.js utilise une variante volontairement
+  // différente (une seule colonne, sans méta ni badge) et n'est pas concerné par ce
+  // composant — le forcer dedans en ferait un composant "fourre-tout" (Doc §6).
+  tradeRow({ title, meta, notes = "", badges = [], actions = "" }) {
+    return `
             <article class="trade-row">
               <div>
                 <p class="trade-title">${title}</p>
@@ -212,5 +254,5 @@ export const componentsUi = {
               ${actions}
             </article>
           `;
-        }
+  }
 };

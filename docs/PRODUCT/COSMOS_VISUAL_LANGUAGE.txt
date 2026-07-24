@@ -1,0 +1,247 @@
+# COSMOS_VISUAL_LANGUAGE.md
+
+## Philosophy
+
+Cosmos Journal Pro V3 ne cherche pas à reproduire les interfaces existantes du monde du trading.
+
+Notre objectif n'est pas de suivre les tendances.
+
+Notre objectif est de construire un langage visuel propriétaire, immédiatement identifiable.
+
+Une capture d'écran de Cosmos Journal doit être reconnaissable en quelques secondes, même sans logo ni nom de l'application.
+
+Chaque décision graphique doit renforcer cette identité.
+
+Le langage visuel est au service de la compréhension, de la concentration et de la prise de décision.
+
+---
+
+# Core Principle
+
+Le design ne cherche jamais à impressionner.
+
+Il cherche à inspirer confiance.
+
+L'utilisateur ne doit jamais avoir la sensation d'utiliser une interface démonstrative.
+
+Il doit avoir la sensation d'utiliser un véritable cockpit professionnel.
+
+---
+
+# Identity
+
+Le langage visuel Cosmos repose sur quatre piliers.
+
+## 1. Precision
+
+Chaque élément possède une fonction.
+
+Aucun élément décoratif n'est ajouté sans améliorer la compréhension.
+
+La qualité perçue provient de la précision d'exécution.
+
+Jamais de la quantité d'effets.
+
+---
+
+## 2. Restraint
+
+Le produit privilégie toujours la retenue.
+
+Les effets existent.
+
+Mais ils restent subtils.
+
+Une animation ne doit jamais détourner l'attention.
+
+Un glow ne doit jamais devenir un effet spectaculaire.
+
+Une ombre ne doit jamais remplacer une bonne hiérarchie visuelle.
+
+---
+
+## 3. Consistency
+
+Tous les modules doivent parler le même langage.
+
+Dashboard.
+
+Journal.
+
+Analytics.
+
+Insights.
+
+Settings.
+
+Chaque écran appartient à un seul et même produit.
+
+Les différences viennent de leur rôle fonctionnel.
+
+Jamais de leur identité visuelle.
+
+---
+
+## 4. Recognition
+
+L'identité Cosmos doit être reconnaissable.
+
+La reconnaissance visuelle est un objectif produit.
+
+Une personne familière avec Cosmos Journal doit reconnaître l'application sans lire son nom.
+
+---
+
+# Color Philosophy
+
+Les couleurs ne sont pas utilisées pour décorer.
+
+Elles transmettent une information.
+
+Chaque couleur possède un rôle.
+
+---
+
+## Cosmos Blue
+
+Le Bleu Cosmos est la signature graphique principale du produit.
+
+Il représente :
+
+* la vision ;
+* la maîtrise ;
+* la technologie ;
+* le potentiel ;
+* l'intelligence décisionnelle.
+
+Le Bleu Cosmos attire naturellement le regard sans créer d'agressivité visuelle.
+
+Il constitue la couleur identitaire officielle de Cosmos Journal.
+
+---
+
+## Coral
+
+Le Coral représente :
+
+* la perte ;
+* l'écart ;
+* l'alerte ;
+* la dégradation.
+
+Son objectif est d'être immédiatement identifiable tout en restant plus élégant qu'un rouge saturé classique.
+
+---
+
+## Neutral Colors
+
+Les couleurs neutres représentent :
+
+* les informations de contexte ;
+* les références ;
+* les données descriptives.
+
+Elles servent à maintenir une hiérarchie claire entre l'information principale et l'information secondaire.
+
+---
+
+# Materials
+
+Les matériaux sont volontairement sobres.
+
+Le produit utilise :
+
+* des surfaces sombres ;
+* des bordures fines ;
+* des contrastes maîtrisés ;
+* des ombres discrètes.
+
+Le luxe provient de la qualité des proportions.
+
+Jamais de la quantité d'effets.
+
+---
+
+# Typography
+
+La typographie constitue un élément majeur de l'identité Cosmos.
+
+Les valeurs importantes doivent être immédiatement lisibles.
+
+Les labels doivent rester discrets.
+
+La hiérarchie typographique est préférée aux artifices graphiques.
+
+Une bonne typographie remplace souvent une décoration inutile.
+
+---
+
+# Component Philosophy
+
+Les composants sont considérés comme des objets industriels.
+
+Une fois validés :
+
+leur géométrie devient stable.
+
+Les évolutions futures concernent :
+
+* les matériaux ;
+* les contrastes ;
+* les couleurs ;
+* la qualité perçue.
+
+Jamais leur architecture sans justification produit.
+
+---
+
+# Premium Craft
+
+Le Premium n'est pas obtenu en ajoutant davantage d'éléments.
+
+Il est obtenu en améliorant ceux qui existent déjà.
+
+Chaque passe de Product Craft cherche à augmenter la qualité perçue sans modifier l'équilibre général de l'interface.
+
+Le meilleur travail est souvent celui qui paraît invisible.
+
+---
+
+# Motion
+
+Les animations existent uniquement lorsqu'elles améliorent la compréhension.
+
+Une animation ne doit jamais devenir une distraction.
+
+Le mouvement accompagne la décision.
+
+Il ne cherche jamais à attirer l'attention.
+
+---
+
+# Recognition Test
+
+Avant de valider une évolution visuelle, chaque décision doit répondre aux questions suivantes :
+
+* Renforce-t-elle l'identité Cosmos ?
+* Améliore-t-elle la lisibilité ?
+* Améliore-t-elle la prise de décision ?
+* Respecte-t-elle la sobriété du produit ?
+* Est-elle cohérente avec les autres modules ?
+* Semble-t-elle naturelle plutôt que démonstrative ?
+
+Si une réponse est négative, la modification doit être réévaluée.
+
+---
+
+# Golden Rule
+
+> **La qualité d'une interface Cosmos ne se mesure pas au nombre d'éléments ajoutés, mais au nombre de décisions justes qui rendent ces éléments indispensables.**
+
+---
+
+
+### **Invisible Excellence**
+
+> Une interface Cosmos ne cherche jamais à impressionner par des effets visibles. Elle cherche à donner une impression de qualité qui paraît naturelle. L'utilisateur ne remarque pas les détails individuellement, mais ressent immédiatement que l'ensemble est plus précis, plus fluide et plus professionnel.
+

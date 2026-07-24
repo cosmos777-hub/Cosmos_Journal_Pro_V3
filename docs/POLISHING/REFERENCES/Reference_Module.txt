@@ -1,0 +1,340 @@
+# REFERENCE_MODULE.md
+
+> Project: Cosmos Journal Pro V3
+> Version: 1.0
+> Status: Official Reference Module
+> Last Updated: End of Phase 1 – Journal Reference Module
+
+---
+
+# Purpose
+
+Le module **Journal** constitue désormais le **Reference Module** officiel de Cosmos Journal Pro V3.
+
+Il représente le niveau de qualité, de cohérence et de finition attendu pour tous les futurs modules du projet.
+
+Aucun nouveau module ne doit être considéré comme terminé s'il n'atteint pas un niveau de qualité comparable.
+
+---
+
+# Why the Journal?
+
+Le Journal est le premier module à avoir bénéficié d'un cycle complet de conception, développement, polishing, audit et validation.
+
+Il a servi de laboratoire pour construire :
+
+- la philosophie produit ;
+- la philosophie UX ;
+- le Design System ;
+- les règles de composition visuelle ;
+- les conventions de développement ;
+- les standards de documentation.
+
+Tous les futurs modules devront s'appuyer sur ces fondations.
+
+---
+
+# What Makes It the Reference?
+
+Le Journal est le premier module à satisfaire simultanément les exigences suivantes.
+
+## Product Vision
+
+Le module respecte entièrement la vision officielle du produit :
+
+- Workflow First
+- Premium Simplicity
+- Data With Purpose
+
+---
+
+## UX Philosophy
+
+Le Journal applique les principes suivants :
+
+- Workflow First
+- Scan First
+- Compact First
+- Premium Simplicity
+- Cockpit Feeling
+- Intelligent Density
+- Functional Size
+- Visual Gravity
+- Intelligent Width
+- Local Density
+- Content Driven Layout
+
+---
+
+## Visual Composition
+
+Le Journal respecte :
+
+- une hiérarchie visuelle claire ;
+- un parcours de lecture naturel ;
+- un alignement cohérent ;
+- une densité maîtrisée ;
+- un scroll unique ;
+- l'architecture Double Viewport.
+
+---
+
+## Design System
+
+Le Journal applique intégralement le Design System officiel :
+
+- composants homogènes ;
+- rythme d'espacement cohérent ;
+- système de chips ;
+- cartes normalisées ;
+- scrollbar premium ;
+- états visuels uniformes.
+
+---
+
+## Technical Architecture
+
+Le Journal respecte la structure officielle du projet.
+
+### Core
+
+Responsable uniquement de la logique métier.
+
+Aucun accès direct au DOM.
+
+Exemples :
+
+- state.js
+- storage.js
+- calculations.js
+- mediaStorage.js
+
+---
+
+### UI
+
+Responsable uniquement de l'interface.
+
+Aucune logique métier.
+
+Communication avec Core uniquement via les API prévues.
+
+---
+
+### Storage
+
+Deux niveaux de stockage sont désormais officiels.
+
+#### LocalStorage
+
+Données métier :
+
+- trades
+- paramètres
+- préférences
+- statistiques
+
+#### IndexedDB
+
+Données lourdes :
+
+- captures HTF
+- captures LTF
+- captures Résultat
+
+Chaque technologie possède une responsabilité clairement définie.
+
+---
+
+# Official Architectural Patterns
+
+Les patterns suivants deviennent des standards du projet.
+
+## Single Source of Truth
+
+Chaque information possède un seul propriétaire.
+
+Aucune duplication de logique.
+
+---
+
+## Single Scroll Owner
+
+Une seule zone de scroll par espace fonctionnel.
+
+Jamais de double scrollbar.
+
+---
+
+## Double Viewport
+
+Viewport fixe.
+
+Contenu réel.
+
+Scroll unique.
+
+Ce pattern devient la référence pour tous les futurs panneaux complexes.
+
+---
+
+## Component Isolation
+
+Chaque composant possède une responsabilité unique.
+
+Les composants restent indépendants.
+
+---
+
+## Progressive Enhancement
+
+Les nouvelles fonctionnalités enrichissent le produit.
+
+Elles ne cassent jamais les workflows existants.
+
+---
+
+# Quality Standards
+
+Chaque module devra satisfaire les critères suivants.
+
+## Fonctionnel
+
+Aucun bug bloquant.
+
+Workflow fluide.
+
+---
+
+## Visuel
+
+Respect du Design System.
+
+Respect de la composition visuelle.
+
+---
+
+## UX
+
+Respect intégral de UX_PHILOSOPHY.md.
+
+---
+
+## Architecture
+
+Respect de PROJECT_STRUCTURE.md.
+
+Aucune dette technique volontaire.
+
+---
+
+## Documentation
+
+Toute évolution importante doit être documentée dans :
+
+- DECISIONS_LOG.md
+- COMPONENT_CATALOG.md
+- STATE_MODEL.md
+- PROJECT_STATUS.md
+
+---
+
+## Audit
+
+Un module n'est jamais considéré terminé après compilation.
+
+Il doit être audité.
+
+Les audits doivent couvrir :
+
+- comportement fonctionnel ;
+- architecture ;
+- performances ;
+- cohérence visuelle ;
+- mémoire ;
+- régressions.
+
+MEDIA-001 constitue le modèle d'audit à reproduire.
+
+---
+
+# Lessons Learned
+
+Le développement du Journal a permis d'établir plusieurs principes durables.
+
+Une interface compacte peut rester très confortable.
+
+Le workflow est plus important que la richesse visuelle.
+
+Le polishing doit être continu.
+
+Les audits finaux sont indispensables.
+
+La documentation doit évoluer au même rythme que le code.
+
+---
+
+# Reference Features
+
+Le Journal introduit plusieurs références officielles.
+
+- Wizard Focus
+- Historique repliable
+- Dynamic Tag Chips
+- Delta Émotionnel
+- Double Viewport
+- Native Screenshot Management (MEDIA-001)
+- Scrollbar Premium
+- Architecture Core/UI
+- IndexedDB + LocalStorage
+- Workflow First
+
+Ces fonctionnalités servent désormais de référence pour tous les futurs développements.
+
+---
+
+# Next Reference Modules
+
+Les prochains modules devront atteindre le même niveau de qualité.
+
+Ordre officiel :
+
+1. Dashboard
+2. Analytics
+3. Insights
+4. Settings
+
+Chaque module devra être :
+
+- développé ;
+- polishé ;
+- audité ;
+- documenté.
+
+Avant d'être promu au statut de module de référence.
+
+---
+
+# Evolution Strategy
+
+Cosmos Journal Pro V3 évolue par couches successives.
+
+Chaque nouveau module s'appuie sur les standards validés précédemment.
+
+Le projet privilégie la consolidation plutôt que l'accumulation rapide de fonctionnalités.
+
+Cette stratégie garantit une évolution durable, cohérente et maîtrisée.
+
+---
+
+# Closing Statement
+
+Le Journal n'est plus simplement une fonctionnalité.
+
+Il est devenu la référence officielle de Cosmos Journal Pro V3.
+
+Toutes les futures décisions de conception, de développement et de polishing devront désormais s'y comparer avant d'être validées.
+
+---
+
+End of Document

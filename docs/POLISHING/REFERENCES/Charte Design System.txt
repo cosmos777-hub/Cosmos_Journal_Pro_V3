@@ -1,0 +1,563 @@
+# DESIGN_SYSTEM_CHARTER.md
+
+> Project: Cosmos Journal Pro V3
+> Version: 1.0
+> Status: Official Design Charter
+> Last Updated: End of Phase 1 – Journal Reference Module
+
+---
+
+# Purpose
+
+Cette charte définit les règles officielles du Design System de Cosmos Journal Pro V3.
+
+Elle constitue la référence unique pour tous les développements UI.
+
+Aucune nouvelle interface ne doit être créée sans respecter cette charte.
+
+---
+
+# Design Philosophy
+
+Le Design System repose sur cinq valeurs fondamentales.
+
+• Premium
+
+• Moderne
+
+• Minimaliste
+
+• Intelligent
+
+• Orienté Performance
+
+Chaque composant doit renforcer ces valeurs.
+
+Jamais les contredire.
+
+---
+
+# Core Principles
+
+Le Design System applique les principes définis dans :
+
+- PRODUCT_VISION.md
+- UX_PHILOSOPHY.md
+- VISUAL_COMPOSITION.md
+
+Les composants ne sont que la traduction visuelle de cette philosophie.
+
+---
+
+# Visual Identity
+
+Le style général doit inspirer :
+
+- confiance ;
+- précision ;
+- stabilité ;
+- fluidité.
+
+Le produit ne cherche jamais l'effet "wow".
+
+Il recherche une élégance discrète.
+
+---
+
+# Color Philosophy
+
+Les couleurs servent uniquement à transmettre une information.
+
+Jamais à décorer.
+
+Hiérarchie :
+
+• Surface
+
+• Texte
+
+• Accent
+
+• Succès
+
+• Avertissement
+
+• Danger
+
+Les couleurs d'accent doivent rester rares afin de conserver leur impact.
+
+---
+
+# Typography
+
+Priorités :
+
+Lisibilité
+
+↓
+
+Hiérarchie
+
+↓
+
+Esthétique
+
+Jamais l'inverse.
+
+Les tailles suivent une hiérarchie simple.
+
+Les contrastes typographiques remplacent autant que possible les couleurs.
+
+---
+
+# Spacing System
+
+Le rythme officiel est basé sur :
+
+8 px
+
+16 px
+
+24 px
+
+32 px
+
+Tous les espacements doivent être des multiples de cette grille.
+
+Aucune valeur arbitraire.
+
+---
+
+# Alignment
+
+Alignement principal :
+
+Toujours à gauche.
+
+Les éléments centrés sont réservés :
+
+- aux états vides ;
+- aux dialogues ;
+- aux écrans de confirmation.
+
+---
+
+# Border Radius
+
+Tous les composants utilisent le même langage de formes.
+
+Les rayons doivent rester cohérents.
+
+Jamais un composant très rond au milieu d'éléments anguleux.
+
+---
+
+# Shadows
+
+Les ombres servent uniquement à créer une profondeur légère.
+
+Jamais à attirer l'attention.
+
+Une ombre forte est considérée comme une erreur de Design System.
+
+---
+
+# Cards
+
+Les cartes sont le composant principal de Cosmos.
+
+Chaque carte possède :
+
+- un objectif unique ;
+- une hiérarchie claire ;
+- une structure prévisible.
+
+Structure officielle :
+
+Titre
+
+↓
+
+Contenu
+
+↓
+
+Actions
+
+---
+
+# Buttons
+
+Chaque bouton possède un rôle clair.
+
+Les tailles sont limitées.
+
+Les variantes sont limitées.
+
+Les états officiels :
+
+Normal
+
+Hover
+
+Active
+
+Disabled
+
+Loading (si nécessaire)
+
+Aucune variante supplémentaire sans justification.
+
+---
+
+# Chips
+
+Les chips constituent le système principal de sélection rapide.
+
+Ils doivent :
+
+- être immédiatement compréhensibles ;
+- conserver une taille homogène ;
+- rester lisibles même en grand nombre.
+
+Le nombre de gabarits est volontairement limité.
+
+---
+
+# Inputs
+
+Les champs suivent les mêmes règles :
+
+- largeur cohérente ;
+- hauteur cohérente ;
+- labels systématiques ;
+- espacement constant.
+
+Les formulaires doivent rester extrêmement lisibles.
+
+---
+
+# Scrollbars
+
+Une seule scrollbar par zone fonctionnelle.
+
+Style :
+
+Premium
+
+Discrète
+
+Fine
+
+Toujours cohérente dans toute l'application.
+
+Le Double Viewport est la référence officielle lorsqu'un contenu dépasse la hauteur disponible.
+
+---
+
+# Icons
+
+Les icônes servent à renforcer la compréhension.
+
+Jamais à remplacer entièrement le texte.
+
+Une icône ambiguë doit toujours être accompagnée d'un libellé.
+
+---
+
+# Animations
+
+Les animations doivent être :
+
+rapides
+
+fluides
+
+subtiles
+
+Leur objectif :
+
+améliorer la compréhension.
+
+Jamais impressionner.
+
+---
+
+# Responsive Design
+
+Le responsive doit préserver :
+
+- le workflow ;
+- la lisibilité ;
+- la hiérarchie.
+
+La version mobile ne doit jamais être une simple réduction de la version desktop.
+
+---
+
+# Accessibility
+
+Le Design System privilégie :
+
+- contraste suffisant ;
+- zones cliquables confortables ;
+- navigation logique ;
+- feedback visuel immédiat.
+
+---
+
+# Component Governance
+
+Un nouveau composant ne peut être créé que si :
+
+- aucun composant existant ne répond au besoin ;
+- il respecte la philosophie produit ;
+- il est documenté dans COMPONENT_CATALOG.md.
+
+---
+
+# Evolution Rules
+
+Toute modification du Design System doit être :
+
+1. analysée ;
+
+2. validée ;
+
+3. documentée ;
+
+4. tracée dans DECISIONS_LOG.md.
+
+Le Design System évolue lentement.
+
+La stabilité est une priorité.
+
+---
+
+# Reference Module
+
+Le Journal constitue l'implémentation officielle du Design System.
+
+Tous les futurs modules devront respecter ces standards avant validation.
+
+---
+
+# Validation Checklist
+
+Avant toute validation visuelle :
+
+✓ Respect de PRODUCT_VISION
+
+✓ Respect de UX_PHILOSOPHY
+
+✓ Respect de VISUAL_COMPOSITION
+
+✓ Respect du Design System
+
+✓ Cohérence avec le Journal
+
+Si un seul point est négatif, l'interface doit être revue.
+
+---
+
+# Cosmos Journal Pro V3 — Design System (Journal Wizard)
+**Statut : officiel, figé à l'issue de la phase de Polishing UX-003A**
+**Périmètre actuel : le Wizard du Journal.** Les valeurs ci-dessous sont la référence pour toute généralisation future à Dashboard/Analytics/Insights/Settings.
+
+---
+
+## 1. Compréhension des priorités (UX/UI)
+
+À travers l'ensemble de nos échanges, cinq priorités reviennent systématiquement et guident tous tes arbitrages :
+
+1. **La densité prime sur la taille.** Ton objectif n'a jamais été "plus petit" pour lui-même, mais qu'aucun pixel ne soit gaspillé. Un composant ne doit occuper que l'espace dicté par son usage réel — jamais par la place disponible dans son conteneur (D-030, Functional Size).
+
+2. **Le "cockpit" plutôt que le "formulaire".** Tu rejettes explicitement toute sensation de formulaire administratif. L'utilisateur doit avoir l'impression de piloter un outil, pas de remplir des champs (D-039, Cockpit Feeling). Cette phrase à elle seule a guidé la quasi-totalité des choix de dimensionnement.
+
+3. **La hiérarchie visuelle délibérée (Visual Gravity).** Tous les éléments ne se valent pas : Stratégie (Carte ③) doit dominer visuellement (14px, gabarit affirmé) pendant que HTF/LTF s'effacent (12px, gabarit réduit) ; le bouton "Enregistrer" reste toujours plus affirmé que "Précédent" ; le Delta Émotionnel reste l'information dominante de sa carte. Rien n'est jamais uniforme par défaut — chaque élément a un poids proportionnel à son importance réelle (D-037).
+
+4. **La rigueur mathématique du rythme et de l'alignement.** Tu as une tolérance zéro pour la dérive de quelques pixels ou l'espacement irrégulier. À plusieurs reprises tu as demandé un "cran régulier et mathématique" — et effectivement, un vrai bug d'espacement additif (gap de grille + margin cumulés) a été détecté et corrigé grâce à cette exigence. L'alignement gauche strict (labels, champs, chips, titres sur une même ligne invisible) est non négociable.
+
+5. **La discrétion des éléments secondaires.** Scrollbar fine et semi-transparente, aperçus en `card-secondary` sans relief, opacité réduite pour les blocs "Utility" (captures) — tout élément non essentiel au workflow principal doit s'effacer visuellement sans jamais disparaître fonctionnellement.
+
+**Ce qui NE te satisfait jamais** : les composants "bootstrap" (chips/boutons/inputs trop grands, aspect générique), l'espace vide asymétrique non justifié, et toute règle CSS qui casse la cohérence entre deux cartes similaires.
+
+---
+
+## 2. Spécifications techniques (valeurs exactes en production)
+
+### Panels (Cartes)
+| Propriété | Valeur |
+|---|---|
+| `max-width` du panel Journal (`#journal-panel`) | **380px** (référence unique, alignée sur la Carte ①) |
+| `border-radius` (`--radius-card`) | **16px** |
+| `padding` interne du panel (`--space-3`) | **24px** |
+| `border` | `1px solid var(--border)` |
+| `box-shadow` (`--shadow-soft`) | `0 18px 60px rgba(0,0,0,0.28)` |
+| `max-height` du panel (scrollable) | **560px** |
+
+### Labels
+| Propriété | Valeur |
+|---|---|
+| `font-size` | **11px** |
+| `font-weight` | hérité du composant de base (`650`) |
+| Couleur | `var(--text-soft)` |
+| `gap` label → contenu (dans `.field`) | **8px** (`--space-1`, valeur unique et universelle) |
+
+### Chips / Badges — quatre gabarits distincts (Visual Gravity)
+| Section | `font-size` | `padding` | `min-height` |
+|---|---|---|---|
+| Base (gabarit par défaut) | 10px | 0 8px | 20px |
+| **Stratégie** (Carte ③, élément central) | **14px** | **0 14px** | **30px** |
+| Actif / Direction (Carte ②), Cause principale / Intervention manuelle (Carte ⑤) | 12px | 0 11px | 24px |
+| Causes secondaires (tags, Carte ⑤) / Confluences (tags, Carte ③) | 10–12px selon contexte | 0 7–11px | 20–24px |
+| `border-radius` (pilule, toutes chips) | `var(--radius-pill)` = **999px** |
+
+### Champs massifs (Date/Heure, HTF/LTF)
+| Propriété | Valeur |
+|---|---|
+| `font-size` | **12px** |
+| `padding` | **6px 10px** |
+| Layout Date/Heure entrée/Heure sortie | 3 colonnes égales (`field-row--3`, ~33% chacune) |
+| Layout HTF/LTF | Colonnes indépendantes flex (`.timeframe-cluster .field { display:flex; flex-direction:column; align-items:flex-start; gap:6px }`) |
+| Inputs/selects génériques du Wizard | `min-height: 32px; padding: 5px 8px;` |
+| Textarea | `min-height: 64px; padding: 8px 10px;` |
+
+### Boutons d'action (Précédent / Suivant)
+| Propriété | Valeur |
+|---|---|
+| `min-height` | **28px** |
+| `padding` | **0 10px** |
+| `font-size` | **11px** |
+| Alignement | `display:flex; align-items:center; justify-content:space-between;` sur `.wizard-nav` |
+| Bouton primaire "Enregistrer" (Carte ⑦) | **Exclu** de cette réduction — reste au gabarit `.button.primary` standard (Visual Gravity : action la plus affirmée) |
+
+---
+
+## 3. Règles de comportement global
+
+### Alignement horizontal gauche (verrou strict)
+Tous les blocs suivants partagent une règle défensive commune, sans aucune exception :
+```css
+.wizard-card, .field-group, .field-row,
+.control-cluster, .field, .segmented, .checklist {
+  margin-left: 0;
+  padding-left: 0;
+}
+```
+Complété par `align-items: flex-start` sur tous les conteneurs flex (`.control-cluster`, `.segmented`, `.checklist`, `.timeframe-cluster .field`) et `justify-items: start` sur `.field` — aucun élément ne peut dériver du bord gauche du padding du panel, quel que soit son contenu.
+
+### Scrollbar verticale intégrée
+- **Propriétaire unique du scroll** : `#journal-panel` (le panel entier — titre "Mode Focus", barre de progression, carte active, boutons Précédent/Suivant compris). Une seule zone de défilement couvre l'intégralité du panel, quelle que soit la carte affichée.
+- **Piège technique identifié et corrigé** : `#journal-panel` étant un item du grid parent (`.journal-layout`), il fallait explicitement `min-height: 0` pour que `max-height` + `overflow-y: auto` fonctionnent (sinon le `min-height: auto` par défaut d'un item grid se cale sur la hauteur du contenu et neutralise l'overflow).
+- **Paramètres fixés** :
+```css
+#journal-panel {
+  min-height: 0;
+  max-height: 560px;
+  overflow-y: auto;
+  overflow-x: hidden; /* aucune scrollbar horizontale, jamais */
+}
+#journal-panel::-webkit-scrollbar { width: 6px; }
+#journal-panel::-webkit-scrollbar-track { background: transparent; }
+#journal-panel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+#journal-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.4);
+}
+```
+
+### Rythme vertical (un seul cran mathématique)
+- **16px** (`--space-2`) entre chaque bloc de haut niveau d'une carte (titre → contenu → bouton), porté par une règle unique `> * + * { margin-top: var(--space-2) }` — jamais de gap de grille cumulé avec un margin individuel (bug identifié et éliminé).
+- **8px** (`--space-1`) en rythme interne, micro-niveau : entre un label et son contenu direct (`.field`), et entre les champs d'un même bloc cognitif (`.field-group`).
+
+---
+
+## 4. Charte CSS condensée — référence absolue
+
+```css
+/* ═══════════════════════════════════════════════════════════
+   COSMOS JOURNAL PRO V3 — DESIGN SYSTEM WIZARD (référence figée)
+   ═══════════════════════════════════════════════════════════ */
+
+/* --- Panel --- */
+#journal-panel {
+  max-width: 380px;
+  min-height: 0;
+  max-height: 560px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#journal-panel::-webkit-scrollbar { width: 6px; }
+#journal-panel::-webkit-scrollbar-track { background: transparent; }
+#journal-panel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+#journal-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.4);
+}
+/* --radius-card:16px / --space-3 (padding):24px / --shadow-soft hérités de .panel */
+
+/* --- Rythme vertical (un seul cran par tier) --- */
+.wizard-card.active > * + *,
+.card-content > * + * { margin-top: var(--space-2); }   /* 16px — macro */
+#trade-form .field { gap: 8px; justify-items: start; }   /* 8px — micro */
+
+/* --- Labels --- */
+#trade-form .field label { font-size: 11px; }
+
+/* --- Chips : 4 gabarits (Visual Gravity) --- */
+#trade-form .chip {                          /* base */
+  min-height: 20px; padding: 0 8px; font-size: 10px;
+}
+#trade-form #strategy-options .chip {        /* élément central */
+  min-height: 30px; padding: 0 14px; font-size: 14px;
+}
+#trade-form #asset-options .chip,
+#trade-form #direction-options .chip,
+#trade-form #emotional-cause-options .chip,
+#trade-form #manual-intervention-options .chip {   /* aéré/premium */
+  min-height: 24px; padding: 0 11px; font-size: 12px;
+}
+.checklist label {                            /* tags Confluences/Causes */
+  min-height: 20px; padding: 0 7px; font-size: 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* --- Champs massifs (allégés) --- */
+#htf-select, #timeframe-select,
+#trade-date, #entry-time, #exit-time {
+  font-size: 12px; padding: 6px 10px;
+}
+#trade-form input, #trade-form select { min-height: 32px; padding: 5px 8px; }
+#trade-form textarea { min-height: 64px; padding: 8px 10px; }
+
+/* --- Boutons de navigation --- */
+.wizard-nav {
+  display: flex; align-items: center; justify-content: space-between;
+}
+#trade-form .wizard-nav .button {
+  min-height: 28px; padding: 0 10px; font-size: 11px;
+}
+/* Bouton primaire "Enregistrer" : jamais réduit — reste .button.primary standard */
+
+/* --- Verrou d'alignement gauche (absolu, aucune exception) --- */
+.wizard-card, .field-group, .field-row,
+.control-cluster, .field, .segmented, .checklist {
+  margin-left: 0; padding-left: 0;
+}
+.control-cluster, .segmented, .checklist,
+.timeframe-cluster .field { align-items: flex-start; }
+```
+
+### Règles de gouvernance (à respecter pour toute évolution future)
+1. Toute nouvelle carte/section doit se référer à la **largeur unique de 380px** — jamais de largeur ad hoc.
+2. Tout nouveau contrôle doit choisir explicitement l'un des **4 gabarits de chip** existants (base / central / aéré / tag) plutôt que d'en inventer un cinquième.
+3. Le rythme vertical reste **à deux tiers uniquement** : 16px (macro, entre blocs) et 8px (micro, label→contenu) — jamais une troisième valeur arbitraire.
+4. Tout conteneur flex ajouté au Wizard doit systématiquement porter `align-items: flex-start`.
+5. Le bouton d'action principal (validation) reste toujours le composant le plus affirmé visuellement de sa carte — jamais réduit au même gabarit que la navigation secondaire.
+
+End of Document

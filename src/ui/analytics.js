@@ -1,6 +1,16 @@
 // Sprint 1 — ARCH-001 (Livraison 3) : rendu de la vue Analytics (filtres, KPI
 // recalculés en direct, tableau de performance par dimension), déplacé tel quel
 // depuis main.js.
+//
+// DASH-001 (Phase 2) : Capital actuel et Drawdown max rejoignent cette vue,
+// rapatriés depuis le Dashboard (voir DECISIONS_LOG.md D-048). Contrairement à
+// leur ancien calcul Dashboard (toujours basé sur l'historique complet), les deux
+// deviennent sensibles aux filtres actifs, cohérent avec la philosophie "laboratoire
+// filtrable" de cette vue (Document 03) : Drawdown max est recalculé sur `filtered` ;
+// Capital actuel se restreint au compte sélectionné si `filters.accountId` est
+// renseigné, sinon reste la somme des comptes actifs (comportement hérité du
+// Dashboard). Aucune nouvelle formule : réutilise calculations.drawdownMax(), déjà
+// existante.
 import { dom } from "./dom.js";
 import { state } from "../core/state.js";
 import { calculations } from "../core/calculations.js";
@@ -24,11 +34,44 @@ export const analyticsUi = {
             options.map(o => `<option value="${utils.escape(o.value)}">${utils.escape(o.label)}</option>`).join("");
           if (options.some(o => o.value === previous)) select.value = previous;
         },
+        // ANALYTICS-001 (Bloc ③ Preuves) : miroir exact de
+        // journalUi.renderHistoryToggle() — même préférence persistée,
+        // même mécanisme d'accordéon, réutilisé sans divergence.
+        renderAnalyticsProofToggle() {
+          if (!dom["analytics-proof-collapsible"]) return;
+          const collapsed = state.data.preferences.analyticsProofCollapsed !== false;
+          dom["analytics-proof-collapsible"].classList.toggle("open", !collapsed);
+          dom["analytics-proof-toggle"].setAttribute("aria-expanded", String(!collapsed));
+        },
+        // ANALYTICS-002 (Bloc ③ Comprendre vos indicateurs) : contenu
+        // statique (aucune donnée à recalculer) — seul l'état replié/ouvert
+        // est piloté, même mécanisme que renderAnalyticsProofToggle().
+        renderAnalyticsHelpToggle() {
+          if (!dom["analytics-help-collapsible"]) return;
+          const collapsed = state.data.preferences.analyticsHelpCollapsed !== false;
+          dom["analytics-help-collapsible"].classList.toggle("open", !collapsed);
+          dom["analytics-help-toggle"].setAttribute("aria-expanded", String(!collapsed));
+        },
         // Milestone 3B (Document 03 : "les graphiques se mettent à jour immédiatement, sans
         // bouton") : relit les filtres, recalcule avec le même moteur que le Dashboard (3A),
         // sans jamais dupliquer les formules.
         updateAnalyticsView() {
           if (!dom["analytics-kpi-count"]) return;
+          try {
+            this.updateAnalyticsViewInner();
+          } catch (error) {
+            // Défense en profondeur (bug report #6) : aucune Promise/fetch n'existe
+            // dans ce pipeline (entièrement synchrone), donc si cette erreur se
+            // déclenche malgré tout, elle n'est presque certainement pas produite
+            // par ce bloc — mais on l'isole proprement plutôt que de laisser un
+            // crash silencieux remonter et casser le reste de render().
+            console.error("Échec du rendu Analytics", error);
+            this.toast("Erreur lors du filtrage des Analytics.", "negative");
+          }
+        },
+        updateAnalyticsViewInner() {
+          this.renderAnalyticsProofToggle();
+          this.renderAnalyticsHelpToggle();
           const filters = {
             accountId: dom["analytics-filter-account"].value,
             asset: dom["analytics-filter-asset"].value,
@@ -67,6 +110,24 @@ export const analyticsUi = {
 
           const planRespect = calculations.planRespectRate(filtered);
           dom["analytics-kpi-plan-respect"].textContent = planRespect == null ? "—" : `${planRespect.toFixed(2)}%`;
+
+          // DASH-001 (D-048) : Capital actuel et Drawdown max, rapatriés depuis le
+          // Dashboard. Le compte pris en compte se restreint au filtre Compte actif
+          // s'il est renseigné (cohérent avec le reste de cette vue, filtrable par
+          // compte) ; sinon, comportement hérité du Dashboard (somme des comptes actifs).
+          if (dom["analytics-kpi-capital"]) {
+            const activeAccounts = state.data.accounts.filter(a => !a.archived);
+            const scopedAccounts = filters.accountId
+              ? activeAccounts.filter(a => a.id === filters.accountId)
+              : activeAccounts;
+
+            const totalCapital = scopedAccounts.reduce((sum, a) => sum + (Number(a.currentCapital) || 0), 0);
+            dom["analytics-kpi-capital"].textContent = totalCapital.toFixed(2);
+
+            const totalInitialCapital = scopedAccounts.reduce((sum, a) => sum + (Number(a.initialCapital) || 0), 0);
+            const drawdown = calculations.drawdownMax(filtered, totalInitialCapital);
+            dom["analytics-kpi-drawdown"].textContent = filtered.length ? `${drawdown.toFixed(2)}%` : "—";
+          }
 
           const dateFilterActive = Boolean(filters.dateFrom || filters.dateTo);
           dom["analytics-filter-note"].textContent = dateFilterActive

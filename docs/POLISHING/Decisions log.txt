@@ -524,3 +524,153 @@ corrigée par ce ticket).
 (Intelligent Density). Aucun scroll interne ajouté — `resize: vertical` reste
 la seule voie d'agrandissement (déjà présent dans `components.css`), pour ne
 jamais introduire une seconde scrollbar imbriquée dans le Wizard.
+
+---
+
+## MEDIA-001 — Native Screenshot Management
+
+### D-042 — Stockage binaire séparé (IndexedDB), jamais mêlé à `localStorage`
+**Contexte** : remplacement des 3 champs de liens texte (HTF/LTF/Résultat)
+par des captures natives intégrées au trade.
+**Décision** : les images sont stockées en `Blob` dans IndexedDB, via un
+module dédié unique (`src/core/mediaStorage.js`), strictement séparé de
+`storage.js` (qui reste seul responsable de `localStorage`).
+`trade.media.{htf,ltf,result}` accepte deux formes durables — legacy
+(chaîne, ancien lien texte, jamais réécrite automatiquement) et native
+(`{ native: true, type }`, référence déterministe `tradeId::slot`) — et une
+3e forme transitoire, l'encodée (`{ native: true, type, dataUrl }`), qui
+n'existe **jamais** dans `state.data` en mémoire, uniquement dans un JSON
+exporté "avec captures" (voir D-044).
+**Justification** : `localStorage` est synchrone et plafonné (~5-10 Mo) —
+incompatible avec l'objectif Document 04 §8 ("Dashboard fluide avec
+plusieurs milliers de trades"). IndexedDB est asynchrone et sans plafond
+arbitraire.
+**Conséquence durable** : `migrations.js` fait désormais autorité sur la
+FORME de `trade.media` (`isNativeCapture`/`isLegacyMediaLink`/
+`isEncodedCapture`), `mediaStorage.js` sur son CONTENU binaire — même
+séparation de responsabilité que `storage.js`/`state.js`.
+
+### D-043 — Compression adaptative, pas de seuil fixe
+**Décision** : `mediaStorage.compressImage()` cherche automatiquement le
+meilleur compromis qualité/poids autour d'une cible (~600 Ko), plutôt que
+d'appliquer un couple dimension/qualité figé. Le format d'origine est
+préservé quand il est déjà pertinent (WebP), pas systématiquement converti
+en JPEG.
+**Justification** : une règle fixe (1600px/JPEG 0.8) proposée initialement
+dégraderait certaines captures ou stockerait plus que nécessaire pour
+d'autres — la cible de poids avec paliers de qualité/dimension s'adapte à
+chaque image individuellement.
+
+### D-044 — Export à deux niveaux, léger inchangé par défaut
+**Décision** : "Exporter" reste strictement identique au comportement
+pré-MEDIA-001 (aucune capture encodée). "Exporter avec captures" est un
+second bouton explicite (pas une case à cocher), qui encode chaque capture
+native en base64 (`dataUrl`) dans une copie du JSON, sans jamais modifier
+`state.data` ni IndexedDB (lecture seule).
+**Import** : un JSON réimporté restaure les captures dans IndexedDB
+uniquement s'il contient des `dataUrl` (export complet) ; un export léger
+réimporté ne restaure pas les captures — comportement documenté et attendu,
+pas une régression.
+**Conséquence durable** : aucun utilisateur qui n'utilise pas les captures
+ne voit son export changer de poids ou de structure.
+
+### D-045 — Suppression en cascade systématique
+**Décision** : `deleteTrade`, `clearData` et `runImport` (avant réécriture)
+vident systématiquement les entrées IndexedDB concernées, pour ne jamais
+laisser de captures orphelines gonfler silencieusement le stockage.
+
+### D-046 — Activation de Loading (sortie du statut Reserved)
+**Contexte** : D-014 (Sprint 2) documentait Loading comme *Reserved
+(Conceptual)*, faute de déclencheur asynchrone réel.
+**Décision** : l'écriture/lecture IndexedDB des captures est le premier
+déclencheur réel — Loading passe à *Stable*, strictement scopé aux
+vignettes de capture (`.capture-loading`). Voir `STATE_MODEL.md`, mis à
+jour en conséquence.
+**Conséquence durable** : cette activation ne généralise pas Loading au
+reste de l'application — le principe de D-014 (pas de fondation sans
+déclencheur réel) reste valide partout ailleurs.
+
+### D-047 — Livraison G : corrections qualité interne (aucun changement de comportement)
+**Contexte** : audit final de clôture (avant déclaration du Journal comme Reference
+Module) — trois anomalies internes identifiées, aucune visible pour l'utilisateur.
+**Décision** :
+- **A1** — `renderCaptureSlots()` n'est plus appelé depuis `renderSelectors()` (qui
+  s'exécute à chaque interaction du Wizard sans rapport avec les captures), mais une
+  seule fois depuis `componentsUi.render()`, plus les appels déjà explicites de
+  `handleCaptureFile`/`removeCapture`/`startEditTrade`. Élimine des lectures IndexedDB
+  redondantes à chaque clic de chip (Actif, Stratégie, Direction...).
+- **A2** — `resetTradeForm()` révoque désormais aussi les URLs objet (`URL.createObjectURL`)
+  d'un trade en cours d'édition, pas seulement celles d'un draft de création abandonné.
+  Couvre les trois sorties du formulaire (validation, annulation d'édition, annulation
+  de création) sans exception.
+- **A3** — `["htf", "ltf", "result"]` codé en dur dans `encodeCapturesForExport`/
+  `reviveCapturesFromImport` (main.js) remplacé par `CAPTURE_SLOT_KEYS`, déjà exporté
+  par `journal.js` depuis la Livraison D. Une seule source de vérité pour la liste des
+  slots de capture.
+**Justification** : ces trois points touchaient directement les axes d'audit
+(performance, mémoire, architecture) sans qu'aucun ne soit visible fonctionnellement —
+corrigés isolément, sans toucher au comportement utilisateur, conformément au
+périmètre strict validé pour cette livraison.
+**Conséquence durable** : confirme la règle déjà en vigueur (`CAPTURE_SLOT_KEYS`
+comme source unique) et établit un précédent — tout futur rendu déclenché par une
+fonction à haute fréquence d'appel (comme `renderSelectors()`) doit être passé au
+crible : ne doit y figurer que ce qui dépend réellement de son déclencheur.
+
+### D-049 — DASH-001 : composition finale des KPI Dashboard, Jumeau Numérique redimensionné
+Contexte : validation visuelle de DASH-001, après observation du résultat livré.
+Décision : la colonne KPI principale devient P&L réel / P&L théorique / Respect du
+plan / Jumeau Numérique / Capital actuel. RR moyen et Drawdown max quittent
+définitivement le Dashboard (restent dans Analytics, inchangés). Le Jumeau
+Numérique passe d'un gabarit pleine largeur à un gabarit standard (même hauteur
+que les autres KPI, largeur = 2 cartes), pour ne plus dominer disproportionnément
+la grille.
+Conséquence durable : toute évolution future de la grille Dashboard doit
+respecter ce nouvel équilibre (3 colonnes, digital twin en span-2) avant
+d'envisager DASH-002.
+
+### D-050 — Dashboard Visual Hierarchy (3 niveaux)
+**Contexte** : audit qualité DASH-001 (Option B), suite du complément de
+validation et de la correction ciblée Jumeau Numérique / Capital actuel.
+**Décision** : le Dashboard est désormais officiellement organisé selon trois
+niveaux, chacun répondant à une question distincte (Document 01, VISUAL_COMPOSITION.md) :
+
+- **Niveau 1 — Performance** (grille `.kpi-grid--primary`, 3 colonnes) :
+  P&L réel, P&L théorique, Respect du plan. Répond à *"Comment performe mon
+  trading ?"*.
+- **Niveau 2 — Synthèse** (`.kpi--digital-twin`, rangée pleine largeur sous
+  le Niveau 1) : Jumeau Numérique, mise en page interne à deux colonnes
+  (info/légende à gauche, visualisation à droite). Fait office de transition
+  visuelle entre Performance et Pilotage — hauteur constante, jamais de
+  scroll interne (voir §4).
+- **Niveau 3 — Pilotage** (panneau `.dashboard-pilot`, ex-`.mission`, voir
+  D-051) : Delta émotionnel, Winrate, Capital actuel. Répond à *"Dans quel
+  état suis-je actuellement ?"*.
+
+**Justification** : applique Decision First, Content Driven Layout, Visual
+Gravity, Intelligent Density et Scan First (UX_PHILOSOPHY.md) en séparant
+clairement Performance → Synthèse → Pilotage, plutôt qu'une grille plate de
+KPI sans hiérarchie de lecture.
+**Conséquence durable** : tout futur KPI Dashboard doit d'abord être classé
+dans l'un de ces trois niveaux avant d'être positionné — jamais ajouté "là où
+il y a de la place".
+
+### D-051 — Suppression de la dette de nommage `.mission` sur le panneau de pilotage
+**Contexte** : le panneau `aside#dashboard-pilot-panel` portait encore la
+classe CSS `.mission` (et son effet décoratif `.mission::after`), héritée de
+l'ancien panneau "Architecture V3" (lui-même remplacé par le panneau de
+pilotage lors de D-048). Ce résidu n'avait aucun effet fonctionnel mais
+entretenait une confusion de nommage avec la fonctionnalité **Centre de
+Mission** (Document 03, `#mission-title`/`#mission-copy`, bandeau "Mission
+du moment"), qui elle reste inchangée et n'est pas concernée par ce ticket.
+**Décision** : renommage `.mission` → `.dashboard-pilot` (classe CSS +
+attribut `class` dans `index.html`). L'id `#dashboard-pilot-panel` était déjà
+correctement nommé depuis D-048 et n'est pas modifié. Aucun changement
+visuel ni fonctionnel — l'effet décoratif orbital (`::after`) est conservé à
+l'identique sous le nouveau nom de classe.
+**Conséquence durable** : `.mission` ne doit plus jamais être utilisé pour
+désigner le panneau de pilotage dans le code ou la documentation future —
+seul `#mission-title`/`#mission-copy` (bandeau Centre de Mission, hero-grid
+gauche) reste légitimement associé au mot "mission".
+
+D-052 — DASH-001 Premium Visual Polish : identité Cosmos scopée au Dashboard
+Décision : --cosmos-glow/--coral-warm remplacent vert/rouge uniquement dans #view-dashboard (Ring Winrate, icône Capital, finition Jumeau Numérique). Analytics/Journal/Insights conservent la palette --success/--danger d'origine — aucune règle globale .positive/.negative modifiée. Justification : éviter un impact non demandé (règle de scoping du Design System Charter), le ticket portant explicitement sur le Dashboard.

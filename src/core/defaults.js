@@ -30,6 +30,12 @@ export const defaults = {
     activeSettingsCategory: "accounts",
     // UX-003 (Sprint 3, Livraison 2A — D-017) : historique du Journal fermé
     // par défaut, état persisté au même titre que le thème.
-    historyCollapsed: true
+    historyCollapsed: true,
+    // ANALYTICS-001 (Bloc Preuves) : même pattern que historyCollapsed —
+    // panneau des Preuves replié par défaut.
+    analyticsProofCollapsed: true,
+    // ANALYTICS-002 (Bloc "Comprendre vos indicateurs") : même pattern,
+    // panneau d'aide contextuelle replié par défaut.
+    analyticsHelpCollapsed: true
   }
 };

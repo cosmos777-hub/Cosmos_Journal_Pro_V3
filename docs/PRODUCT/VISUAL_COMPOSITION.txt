@@ -1,246 +1,340 @@
-# Cosmos Journal Pro V3
-# Visual Composition
+# VISUAL_COMPOSITION.md
 
-Version : 1.0
-Statut : Référence Produit
-
----
-
-# Objectif
-
-Ce document définit les règles de composition visuelle de Cosmos Journal Pro V3.
-
-Il complète `UX_PHILOSOPHY.md`.
-
-UX_PHILOSOPHY explique :
-
-Pourquoi concevoir l'interface.
-
-VISUAL_COMPOSITION explique :
-
-Comment organiser visuellement l'espace.
+> Project: Cosmos Journal Pro V3
+> Version: 2.0
+> Status: Official
+> Last Updated: End of Phase 1 – Journal Reference Module
 
 ---
 
-# Principe fondamental
+# Purpose
 
-L'espace est une ressource.
+Ce document définit les règles de composition visuelle utilisées dans Cosmos Journal Pro V3.
 
-Il ne doit jamais être gaspillé.
+Il ne décrit pas le style graphique (couleurs, typographie ou composants).
 
-Mais il ne doit jamais être rempli artificiellement.
+Il décrit la manière dont les éléments sont organisés dans l'espace afin de créer une interface cohérente, lisible et orientée vers la performance.
 
-L'objectif est d'obtenir une interface :
+Toutes les futures interfaces devront respecter ces règles.
 
-- légère
-- équilibrée
-- premium
-- efficace
-
-Utiliser l'application avec le moins de défilement possible.
 ---
 
-# Visual Balance
+# Visual Philosophy
 
-Une fonctionnalité importante ne devient pas importante parce qu'elle est énorme.
+La composition visuelle doit donner une impression immédiate de :
 
-Elle devient importante grâce à :
+- stabilité ;
+- maîtrise ;
+- précision ;
+- fluidité.
 
-- sa position
-- sa hiérarchie
-- son contraste
-- son animation
-- son interaction
-- son contexte
+L'utilisateur doit avoir le sentiment d'utiliser un véritable cockpit de trading.
 
-La taille est le dernier levier.
+Chaque élément possède une place logique.
+
+Rien n'est décoratif.
+
+---
+
+# Visual Hierarchy
+
+L'information est organisée selon quatre niveaux.
+
+## Niveau 1
+
+Information essentielle.
+
+Exemples :
+
+- Performance
+- Résultat
+- Décision principale
+
+Toujours immédiatement visible.
+
+---
+
+## Niveau 2
+
+Information importante.
+
+Exemples :
+
+- Stratégie
+- Direction
+- Actif
+- Statistiques principales
+
+Visible sans effort.
+
+---
+
+## Niveau 3
+
+Information contextuelle.
+
+Exemples :
+
+- Notes
+- Tags
+- Liens
+- Captures
+
+Accessible rapidement sans attirer l'attention.
+
+---
+
+## Niveau 4
+
+Information secondaire.
+
+Exemples :
+
+- Paramètres avancés
+- Options
+- Informations rarement consultées
+
+Présente mais discrète.
+
+---
+
+# Reading Flow
+
+Le regard doit naturellement suivre ce parcours :
+
+Haut
+
+↓
+
+Centre
+
+↓
+
+Bas
+
+↓
+
+Action
+
+Aucune rupture visuelle ne doit casser ce flux.
+
+---
+
+# Visual Gravity
+
+Les éléments importants doivent naturellement attirer le regard.
+
+Cette hiérarchie est obtenue par :
+
+- taille ;
+- contraste ;
+- espacement ;
+- position.
+
+Jamais par une multiplication des couleurs.
 
 ---
 
 # Intelligent Density
 
-La densité est un objectif permanent.
+La densité visuelle dépend du contenu.
 
-Elle concerne :
+Une carte dense n'est pas un problème si son organisation reste claire.
 
-- la hauteur
-- la largeur
-
-Tous les écrans.
-
-Toutes les cartes.
-
-Tous les panneaux.
-
-Tous les KPI.
-
-Le but est :
-
-Afficher davantage d'informations utiles sans augmenter la charge cognitive.
+L'espace est utilisé de manière intentionnelle.
 
 ---
 
-# Proportional Design
+# Intelligent Width
 
-Chaque composant doit occuper uniquement l'espace dont il a réellement besoin.
+La largeur d'un panneau est définie par son contenu.
 
-Jamais plus.
+Une largeur excessive augmente inutilement les mouvements des yeux.
 
-Exemples :
-
-Un KPI n'a pas besoin d'une grande carte.
-
-Une statistique simple n'a pas besoin d'un panneau immense.
-
-Une liste vide ne doit pas conserver une grande hauteur.
-
-Une carte contenant deux champs ne doit pas mesurer 500 px de haut.
+Le confort de lecture est prioritaire.
 
 ---
 
-# Hero Components
+# Functional Size
 
-Certains composants sont centraux.
+Chaque composant possède une taille adaptée à sa fonction.
 
-Exemple :
+Les éléments critiques occupent davantage d'espace.
 
-Le Wizard.
-
-Ils peuvent bénéficier de davantage d'espace.
-
-Mais cette augmentation reste raisonnable.
-
-Un Hero Component ne doit jamais :
-
-- écraser les autres éléments
-- créer une sensation de lourdeur
-- monopoliser l'écran
-
-L'objectif est :
-
-Attirer naturellement le regard.
-
-Pas envahir l'interface.
+Les éléments secondaires restent volontairement plus compacts.
 
 ---
 
-# Secondary Components
+# Local Density
 
-Les composants secondaires doivent rester discrets.
+Chaque zone possède son propre rythme.
 
-Ils doivent être :
+Toutes les cartes n'ont pas besoin de la même hauteur ni de la même densité.
 
-- accessibles
-- visibles
-- immédiatement compréhensibles
+Le contenu détermine la composition.
 
-Mais ils ne doivent jamais rivaliser visuellement avec un Hero Component.
+---
 
-Exemple :
+# Alignment Rules
 
-Historique des trades.
+Alignement principal :
+
+Toujours à gauche.
+
+Les ruptures d'alignement sont exceptionnelles.
+
+Elles doivent toujours être justifiées par une fonction précise.
 
 ---
 
 # White Space
 
-Les espaces blancs sont utiles.
+Les espaces vides ne sont jamais perdus.
 
 Ils servent à :
 
-- respirer
-- organiser
-- guider le regard
+- séparer ;
+- respirer ;
+- hiérarchiser.
 
-Ils ne doivent jamais devenir de l'espace perdu.
-
----
-
-# Large Screens
-
-Les grands écrans sont une opportunité.
-
-Ils ne doivent jamais être remplis avec des composants artificiellement agrandis.
-
-Ils doivent permettre :
-
-- plus d'informations visibles
-- moins de défilement
-- une meilleure organisation
-- une meilleure comparaison visuelle
+Réduire un espace ne signifie pas améliorer la densité.
 
 ---
 
-# Cards
+# Double Viewport
 
-Une carte ne possède pas une taille fixe.
+Architecture officielle introduite avec le Journal.
 
-Sa taille dépend :
+Structure :
 
-- de son contenu
-- de son importance
-- de son rôle
+Viewport fixe
 
-Une carte est dimensionnée par son besoin.
+↓
 
-Jamais par habitude.
+Contenu réel
 
----
+↓
 
-# KPI
+Scroll unique
 
-Les KPI doivent être très compacts.
+Objectifs :
 
-Ils doivent permettre :
+- conserver une hauteur constante ;
+- améliorer le confort de navigation ;
+- éviter les doubles scrollbars.
 
-- une lecture immédiate
-- une comparaison rapide
-
-Ils ne doivent pas consommer un espace disproportionné.
+Cette architecture devient la référence pour tous les futurs panneaux nécessitant un contenu important.
 
 ---
 
-# Panels
+# Scroll Philosophy
 
-Les panneaux ne sont pas des conteneurs géants.
+Une seule zone de scroll doit être responsable du déplacement du contenu.
 
-Ils servent uniquement à regrouper des informations cohérentes.
+Le scroll doit être :
 
-Leur taille doit être minimale.
+- fluide ;
+- prévisible ;
+- confortable.
 
----
-
-# Wizard
-
-Le Wizard est un Hero Component.
-
-Sa priorité est exprimée par :
-
-- sa position
-- son animation
-- son focus
-- son ergonomie
-
-Pas uniquement par sa largeur.
+Le contenu ne doit jamais sembler "bloqué" dans son conteneur.
 
 ---
 
-# Dashboard
+# Card Composition
 
-Le Dashboard est une vue de synthèse.
+Chaque carte suit le même schéma.
 
-Son objectif est :
+Titre
 
-Montrer le maximum d'informations pertinentes avec le minimum de défilement.
+↓
+
+Contenu
+
+↓
+
+Navigation
+
+Le titre et les boutons de navigation doivent toujours rester accessibles rapidement.
 
 ---
 
-# Règle finale
+# Dashboard Composition
 
-Avant d'augmenter la taille d'un composant, toujours se demander :
+Le Dashboard privilégie :
 
-Cette augmentation améliore-t-elle réellement l'expérience ?
+- une lecture immédiate ;
+- une vision globale ;
+- un minimum de friction.
 
-Si la réponse est non,
+L'utilisateur doit comprendre son état de trading en quelques secondes.
 
-il faut revoir la composition plutôt que les dimensions.
+---
+
+# Analytics Composition
+
+Analytics favorise la comparaison.
+
+Les graphiques et indicateurs doivent rester lisibles avant d'être détaillés.
+
+---
+
+# Insights Composition
+
+Les Insights mettent en avant les tendances.
+
+Jamais les détails.
+
+L'objectif est d'orienter la réflexion.
+
+---
+
+# Settings Composition
+
+Les Paramètres privilégient la simplicité.
+
+Les options sont regroupées par thème.
+
+Chaque catégorie possède une hiérarchie claire.
+
+---
+
+# Visual Consistency
+
+Tous les modules doivent donner l'impression d'appartenir au même produit.
+
+Les différences de composition ne doivent exister que lorsqu'elles répondent à un besoin fonctionnel.
+
+---
+
+# Reference Module
+
+Le Journal constitue la référence officielle de composition visuelle.
+
+Tous les futurs modules devront s'en inspirer avant toute personnalisation.
+
+---
+
+# Design Validation Checklist
+
+Avant de valider une interface, vérifier :
+
+✓ La hiérarchie visuelle est-elle évidente ?
+
+✓ Les éléments importants attirent-ils naturellement le regard ?
+
+✓ Le parcours de lecture est-il fluide ?
+
+✓ Les espacements sont-ils cohérents ?
+
+✓ Une seule zone de scroll est-elle responsable du contenu ?
+
+✓ La densité est-elle adaptée au contenu ?
+
+✓ L'interface donne-t-elle une impression de maîtrise et de sérénité ?
+
+Si une réponse est négative, la composition doit être revue.
+
+---
+
+End of Document

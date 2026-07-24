@@ -1,141 +1,505 @@
 # NAMING_CONVENTIONS.md
 
-**Cosmos Journal Pro V3**
-Version : 1.0
-Statut : Officiel (validé lors d'ARCH-004, issu de CODE-001)
+> Project: Cosmos Journal Pro V3
+> Version: 2.0
+> Status: Official
+> Last Updated: End of Phase 1 – Journal Reference Module
 
 ---
 
-## 1. Principe général
+# Purpose
 
-Conformément au Document 04 §15 :
+Ce document définit les conventions officielles de nommage utilisées dans Cosmos Journal Pro V3.
 
-> Des noms explicites, jamais d'abréviations obscures.
+Ses objectifs sont :
 
-Ces conventions ont été observées dans la base de code existante lors de
-l'audit CODE-001/ARCH-004 ; ce document les **fige** pour tous les
-développements futurs.
+- améliorer la lisibilité du code ;
+- garantir la cohérence entre les modules ;
+- faciliter le travail collaboratif entre développeurs et IA ;
+- limiter la dette technique.
 
----
-
-## 2. Fichiers
-
-| Type | Convention | Exemple |
-|---|---|---|
-| Modules JS | `camelCase.js`, un nom = un rôle | `calculations.js`, `migrations.js`, `dashboard.js` |
-| Modules CSS | `camelCase.css`, nommé d'après la vue ou la fonction qu'il stylise | `dashboard.css`, `animations.css` |
-| Documents projet | `SCREAMING_SNAKE_CASE.md` pour la documentation officielle | `PROJECT_STRUCTURE.md`, `POLISHING_MASTER_PLAN.md` |
-
-Un fichier `ui/xxx.js` porte toujours le nom de la vue qu'il rend
-(`dashboard.js` → vue Dashboard). Un fichier `core/xxx.js` porte le nom de sa
-responsabilité métier (`storage.js` → stockage, jamais `data.js` ou `db.js`).
+Ces conventions sont obligatoires pour tous les nouveaux développements.
 
 ---
 
-## 3. Variables et propriétés d'état
+# General Principles
 
-- **camelCase** systématique : `riskAmount`, `emotionalDeltaR`, `currentCapital`.
-- Les propriétés dérivées du Delta Émotionnel suivent toujours le suffixe
-  explicite de leur unité : `emotionalDeltaR` (en R), `emotionalDeltaCurrency`
-  (en devise) — jamais de nom ambigu comme `delta` seul dans les objets trade.
-- Les sélections en cours du formulaire (wizard) sont préfixées `selected` dans
-  `state.js` : `selectedAsset`, `selectedStrategy`, `selectedSetupQuality`.
-- Les valeurs de champs DOM miroir (input hidden) utilisent le suffixe
-  `-value` en HTML (`asset-value`, `direction-value`) pour les distinguer des
-  éléments d'affichage.
+Les noms doivent toujours être :
 
----
+- explicites ;
+- prévisibles ;
+- cohérents ;
+- orientés métier.
 
-## 4. Fonctions
+Éviter :
 
-### Fonctions de calcul (`core/calculations.js`)
-Verbe ou nom d'action explicite, jamais d'abréviation :
-```
-calculateRiskAmount()     → écrit riskAmount()
-calculateEmotionalDelta() → écrit emotionalDeltaFull()
-generateInsights()
-generateMission()
-buildEquityCurve()
-buildTradeMetricsV3Cards()
-```
-Le préfixe `build` est utilisé quand la fonction assemble un objet composite
-à partir de plusieurs valeurs ; `generate` quand le résultat contient une
-part d'analyse (Insights, Mission) ; le nom seul (`riskAmount`, `winrate`,
-`expectancy`) quand la fonction retourne directement la grandeur nommée.
-
-### Fonctions de rendu (`ui/*.js`)
-Préfixe `render` pour tout ce qui régénère du HTML, `update` pour tout ce qui
-rafraîchit un affichage déjà existant sans le reconstruire entièrement :
-```
-renderDashboard(), renderTrades(), renderSettings()
-updateAnalyticsView(), updateResultPreviews(), updateDurationPreview()
-```
-
-### Fonctions utilitaires pures (`utils/`)
-Nom court mais non ambigu : `uid`, `clone`, `escape`, `formatR`, `formatPercent`, `tone`.
+- les abréviations inutiles ;
+- les noms génériques (`data`, `value`, `temp`, `obj`, `item`) ;
+- les suffixes numérotés (`button2`, `panel3`, etc.).
 
 ---
 
-## 5. Constantes
+# File Naming
 
-**SCREAMING_SNAKE_CASE**, définies uniquement dans `utils/constants.js` :
-```
-APP_VERSION
-STORAGE_KEY
-LEGACY_TRADES_KEY
-LEGACY_PREFS_KEY
-HISTORY_DISPLAY_LIMIT
-RISK_LEVELS_BY_ACCOUNT_TYPE
-```
-Aucune constante métier ne doit être redéfinie ailleurs — `constants.js` est
-la source unique de vérité (Document 04 §11 : *"aucun élément ne doit être
-codé en dur"*).
+## JavaScript
 
----
+Format :
 
-## 6. Modules ES
+camelCase.js
 
-- **Exports nommés uniquement** (`export const`, `export function`) —
-  **jamais de `export default`**. Convention établie dès ARCH-001 et
-  respectée dans tous les fichiers `src/`.
-- Chaque module exporte un seul objet principal portant le nom du fichier :
-  `calculations.js` → `export const calculations`, `storage.js` →
-  `export const storage` (+ `featureRegistry` en export secondaire, car
-  intrinsèquement lié au stockage).
-- Les modules `ui/*.js` exportent un objet suffixé `Ui` :
-  `dashboardUi`, `journalUi`, `analyticsUi`, `insightsUi`, `settingsUi`,
-  `componentsUi` — fusionnés ensuite dans `main.js` en un seul objet `ui`.
+Exemples :
+
+state.js
+
+storage.js
+
+mediaStorage.js
+
+calculations.js
+
+dashboard.js
+
+journal.js
+
+settings.js
 
 ---
 
-## 7. Attributs HTML / data-*
+## CSS
 
-- Actions cliquables génériques : `data-action="nom-action"` (ex.
-  `data-action="open-settings"`, `data-action="export-json"`).
-- Actions liées à une entité précise : `data-{verbe}-{entité}="id"` (ex.
-  `data-edit-trade="trade-123"`, `data-delete-trade="trade-123"`,
-  `data-remove-setting="assets"`).
-- Formulaires dynamiques : `data-add-{entité}` (ex. `data-add-account`,
-  `data-add-setting="assets"`).
-- Navigation : `data-view="dashboard"`, `data-settings-category="accounts"`.
+Nom du module concerné.
 
-Cette convention permet une délégation d'événements centralisée dans
-`main.js` (`document.addEventListener("click", ...)`) sans jamais attacher de
-gestionnaire `onclick` individuel (interdit depuis le Milestone 1, Document 08).
+Exemples :
+
+dashboard.css
+
+journal.css
+
+settings.css
+
+components.css
+
+variables.css
 
 ---
 
-## 8. Commentaires de traçabilité
+## Documentation
 
-Chaque bloc de code significatif porte un commentaire de provenance au format :
-```
-// Milestone X[lettre] (Document 0Y §Z) : description courte.
-```
-ou pour le Polishing :
-```
-// Sprint N — TICKET-NNN (Livraison X) : description courte.
-```
-Cette convention permet de retracer, pour n'importe quelle fonction, la
-spécification produit ou le ticket technique qui l'a introduite — essentiel
-pour respecter la règle Document 06 §2 : *"ne jamais modifier une
-fonctionnalité de manière isolée"*.
+Toujours :
+
+MAJUSCULES_AVEC_UNDERSCORE.md
+
+Exemples :
+
+PROJECT_STATUS.md
+
+STATE_MODEL.md
+
+PRODUCT_VISION.md
+
+UX_PHILOSOPHY.md
+
+COMPONENT_CATALOG.md
+
+---
+
+# Folder Naming
+
+Toujours :
+
+lowercase
+
+Exemples :
+
+core/
+
+ui/
+
+styles/
+
+docs/
+
+product/
+
+polishing/
+
+---
+
+# Variables
+
+Toujours :
+
+camelCase
+
+Exemples :
+
+currentTrade
+
+selectedAccount
+
+editingTradeId
+
+draftTradeId
+
+capturePreview
+
+emotionDelta
+
+---
+
+# Constants
+
+Toujours :
+
+UPPER_SNAKE_CASE
+
+Exemples :
+
+CAPTURE_SLOT_KEYS
+
+DEFAULT_SETTINGS
+
+MAX_IMAGE_SIZE
+
+SUPPORTED_IMAGE_TYPES
+
+LOCAL_STORAGE_KEY
+
+---
+
+# Functions
+
+Les fonctions doivent commencer par un verbe.
+
+Exemples :
+
+saveTrade()
+
+deleteTrade()
+
+renderDashboard()
+
+calculatePnL()
+
+compressImage()
+
+hydrateCaptureThumbnails()
+
+updateStatistics()
+
+renderCaptureSlots()
+
+---
+
+# Boolean Variables
+
+Toujours commencer par :
+
+is
+
+has
+
+can
+
+should
+
+Exemples :
+
+isEditing
+
+isCollapsed
+
+isNativeCapture
+
+hasScreenshot
+
+canExport
+
+shouldCompress
+
+---
+
+# Event Handlers
+
+Toujours :
+
+handle...
+
+Exemples :
+
+handleSave()
+
+handleImport()
+
+handleDrop()
+
+handlePaste()
+
+handleCaptureFile()
+
+---
+
+# UI Rendering
+
+Toujours :
+
+render...
+
+Exemples :
+
+renderJournal()
+
+renderDashboard()
+
+renderHistory()
+
+renderCaptureSlots()
+
+renderWizard()
+
+---
+
+# State Updates
+
+Toujours :
+
+update...
+
+Exemples :
+
+updateTrade()
+
+updateStatistics()
+
+updateSettings()
+
+updateTheme()
+
+---
+
+# Creation Functions
+
+Toujours :
+
+create...
+
+Exemples :
+
+createTrade()
+
+createCaptureSlot()
+
+createViewer()
+
+---
+
+# Delete Functions
+
+Toujours :
+
+delete...
+
+Exemples :
+
+deleteTrade()
+
+deleteCapture()
+
+deleteAllForTrade()
+
+---
+
+# DOM Elements
+
+Préfixe conseillé :
+
+$ (optionnel)
+
+Exemples :
+
+$panel
+
+$history
+
+$viewer
+
+$captureSlot
+
+---
+
+# CSS Classes
+
+Toujours :
+
+kebab-case
+
+Exemples :
+
+wizard-card
+
+capture-slot
+
+history-panel
+
+delta-panel
+
+journal-layout
+
+premium-scrollbar
+
+---
+
+# CSS Variables
+
+Toujours :
+
+--cosmos-
+
+Exemples :
+
+--cosmos-primary
+
+--cosmos-surface
+
+--cosmos-spacing
+
+--journal-viewport-height
+
+---
+
+# Data Attributes
+
+Toujours :
+
+data-action
+
+data-slot
+
+data-view
+
+data-card
+
+data-step
+
+Exemples :
+
+data-action="save"
+
+data-slot="htf"
+
+data-view="dashboard"
+
+---
+
+# IDs
+
+Réservés uniquement :
+
+- ancres principales
+- composants uniques
+
+Exemples :
+
+#journal-panel
+
+#history-panel
+
+#trade-form
+
+#media-viewer
+
+---
+
+# Component Naming
+
+Toujours des noms métier.
+
+Bon :
+
+CaptureSlot
+
+DeltaEmotionPanel
+
+HistoryPanel
+
+WizardNavigation
+
+MediaViewer
+
+Mauvais :
+
+Panel2
+
+CardA
+
+Widget3
+
+---
+
+# Documentation Naming
+
+Les tickets utilisent :
+
+ARCH-xxx
+
+UI-xxx
+
+UX-xxx
+
+MEDIA-xxx
+
+CODE-xxx
+
+Exemples :
+
+ARCH-004
+
+UX-004
+
+MEDIA-001
+
+---
+
+# Decision Naming
+
+Toujours :
+
+D-001
+
+D-002
+
+D-003
+
+...
+
+Aucune réutilisation d'identifiant.
+
+---
+
+# Future Modules
+
+Les prochains modules devront respecter exactement les mêmes conventions.
+
+Dashboard
+
+Analytics
+
+Insights
+
+Settings
+
+Aucune exception.
+
+---
+
+# Naming Philosophy
+
+Un nom doit permettre de comprendre son rôle sans lire son implémentation.
+
+Si une variable, une fonction ou un composant nécessite une explication pour être compris, son nom doit être revu.
+
+Le code doit être auto-documenté autant que possible.
+
+---
+
+End of Document

@@ -36,6 +36,23 @@
       --motion-fast: 160ms;
       --motion: 250ms;
       font-family: Inter, "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      /* DASH-001 (Premium Visual Polish) — identité Cosmos, scopée au Dashboard */
+      /* DASH-001 (Premium Visual Polish V2) — Palette Cosmos & Néon */
+  --cosmos-glow: #6366f1; /* Bleu-violet néon façon logo Cosmos */
+  --cosmos-glow-bright: #3b82f6;
+  --cosmos-glow-soft: rgba(99, 102, 241, 0.4);
+
+  --neon-pink: #ff2a85;
+  --coral-warm: #ff7e5f;
+  --coral-warm-soft: rgba(255, 42, 133, 0.35);
+
+  /* ANALYTICS-002 — Identité visuelle propre au module Analytics, scopée à
+     #view-analytics (voir analytics.css). Vert néon pour les statistiques
+     positives, dégradé Coral → Saumon pour les négatives — jamais le bleu
+     Cosmos du Dashboard comme couleur dominante dans Analytics. */
+  --analytics-positive-glow: #22e5a0;
+  --analytics-positive-glow-soft: rgba(34, 229, 160, 0.4);
+  --salmon: #ff9472;
     }
 
     [data-theme="light"] {
