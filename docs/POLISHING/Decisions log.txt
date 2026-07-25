@@ -674,3 +674,70 @@ gauche) reste légitimement associé au mot "mission".
 
 D-052 — DASH-001 Premium Visual Polish : identité Cosmos scopée au Dashboard
 Décision : --cosmos-glow/--coral-warm remplacent vert/rouge uniquement dans #view-dashboard (Ring Winrate, icône Capital, finition Jumeau Numérique). Analytics/Journal/Insights conservent la palette --success/--danger d'origine — aucune règle globale .positive/.negative modifiée. Justification : éviter un impact non demandé (règle de scoping du Design System Charter), le ticket portant explicitement sur le Dashboard.
+
+## D-053 — Analytics devient le Reference Module de l'analyse décisionnelle
+
+Le module Analytics est officiellement figé.
+
+Son architecture est organisée autour de quatre blocs complémentaires :
+
+① Contexte
+→ Filtres et KPI synthétiques.
+
+② Laboratoire d'exploration
+→ Centre de gravité du module.
+→ Workspace stable à hauteur fixe.
+→ Analyse comparative des performances.
+
+③ Comprendre vos indicateurs
+→ Référence pédagogique compacte expliquant les principaux indicateurs de trading.
+→ Replié par défaut.
+
+④ Preuves
+→ Liste des trades correspondant au contexte analysé.
+→ Repliée par défaut.
+→ Fonctionne comme une preuve des conclusions obtenues dans le Workspace.
+
+Cette architecture devient la référence officielle pour tous les futurs développements Analytics.
+
+## D-054 — Analytics adopte la philosophie "Laboratoire d'exploration"
+
+Analytics n'a pas pour vocation d'afficher davantage de statistiques.
+
+Sa mission est d'aider le trader à comprendre :
+
+• pourquoi il obtient ses résultats ;
+• quelles variables influencent réellement sa performance ;
+• quelles actions concrètes permettront de progresser.
+
+Le Workspace devient le cœur décisionnel du module.
+
+Les KPI fournissent le contexte.
+
+Le Workspace explique.
+
+Les Preuves démontrent.
+
+## D-055 — Premium Visual Polish Analytics
+
+Comme pour le Dashboard, une dernière passe de Premium Visual Polish est réalisée avant la clôture du module.
+
+Cette étape ne modifie jamais :
+
+• l'architecture ;
+• les calculs ;
+• les composants ;
+• les gabarits.
+
+Elle améliore uniquement :
+
+• la qualité perçue ;
+• les contrastes ;
+• les couleurs ;
+• la hiérarchie visuelle ;
+• les états vides ;
+• les micro-détails.
+
+Cette étape applique officiellement le principe :
+
+Invisible Excellence.

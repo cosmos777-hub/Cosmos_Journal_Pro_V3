@@ -24,6 +24,21 @@
       background: var(--surface-2);
     }
 
+    /* ANALYTICS-QA-002 (Premium Visual Polish) — en-tête de tableau sticky.
+       #analytics-workspace-viewport est le seul ancêtre scrollable (hauteur fixe,
+       voir "Double Fond" / D-041) : position:sticky s'y ancre naturellement, sans
+       toucher au gabarit ni à la hauteur du Workspace. Fond opaque + léger flou
+       pour que le texte des lignes ne transparaisse jamais sous les en-têtes
+       pendant le défilement (même esprit que la scrollbar premium : discret mais
+       fonctionnel). */
+    .breakdown-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: color-mix(in srgb, var(--surface) 96%, transparent);
+      backdrop-filter: blur(6px);
+    }
+
 @media (max-width: 640px) {
   #breakdown-table {
     overflow-x: auto;
@@ -129,6 +144,37 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
+/* ANALYTICS-QA-002 (Premium Visual Polish, §3 Hiérarchie visuelle) —
+   mise en valeur extrêmement discrète du panel Workspace : le "laboratoire
+   d'exploration" est le centre de gravité fonctionnel d'Analytics (Document
+   03), il mérite une présence légèrement plus affirmée que les autres
+   panels, sans jamais devenir un effet démonstratif. Aucune dimension
+   touchée (padding/largeur/hauteur du .panel restent hérités tels quels).
+   ANALYTICS-QA-002 (révision) : sur demande explicite, le liseré/la nuance
+   de surface utilisent désormais le même bleu néon que le Dashboard
+   (--cosmos-glow), pas le vert néon --analytics-positive-glow initialement
+   retenu. Dérogation ciblée et volontaire au scoping D-052 (qui réservait
+   le bleu Cosmos au Dashboard) : limitée à cet accent de hiérarchie précis,
+   n'affecte ni .positive/.negative ni aucune autre règle de couleur du
+   module (le vert néon reste la teinte "positive" d'Analytics ailleurs). */
+#view-analytics .analytics-workspace-panel {
+  background: color-mix(in srgb, var(--surface) 92%, var(--cosmos-glow) 3%);
+  border-color: color-mix(in srgb, var(--border) 85%, var(--cosmos-glow) 10%);
+}
+
+/* ANALYTICS-QA-002 — État vide du Workspace. Réutilise le composant
+   générique .empty-state (components.js → this.emptyState()) tel quel,
+   sans le redéfinir : seul ce wrapper force le bloc à occuper toute la
+   hauteur du viewport (moins le padding déjà porté par .panel), pour que
+   le message soit centré verticalement dans le cadre existant plutôt que
+   plaqué en haut — jamais de nouvelle hauteur, jamais de nouveau
+   composant, conforme aux contraintes du ticket. */
+.analytics-workspace-empty {
+  min-height: 328px;
+  display: grid;
+  place-items: center;
+}
+
 /* ── Bloc ③ Comprendre vos indicateurs (aide contextuelle) ───────────── */
 /* Réutilise .history-panel-collapsible / .history-toggle-bar /
    .history-collapsible / .history-collapsible-inner (components.css /
@@ -226,22 +272,43 @@
   transform: rotate(90deg);
 }
 
+/* ANALYTICS-QA-002 (révision) — Différenciation du bloc "Comprendre vos
+   indicateurs" par rapport au bloc "Preuves" (#analytics-proof-panel), qui
+   reste en blanc/texte standard. Seul le titre H2 de la barre repliable est
+   concerné (le libellé eyebrow "Aide contextuelle" au-dessus reste inchangé,
+   déjà discret par nature). Même bleu néon que le Dashboard (--cosmos-glow-bright
+   + lueur --cosmos-glow-soft, identique au traitement de .positive sur
+   #view-dashboard) — aucun changement de taille, de poids ou de structure,
+   uniquement la couleur. */
+#analytics-help-panel .history-toggle-title h2 {
+  color: var(--cosmos-glow-bright);
+  text-shadow: 0 0 14px var(--cosmos-glow-soft);
+}
+
 /* ═══════════════════════════════════════════════════════════
    ANALYTICS-002 — Identité visuelle propre au module
    Scoping strict à #view-analytics (même principe que le Dashboard,
    DECISIONS_LOG.md D-052) : jamais de règle .positive/.negative globale
-   modifiée. Vert néon pour le positif, dégradé Coral → Saumon pour le
-   négatif — jamais le bleu Cosmos du Dashboard comme couleur dominante.
+   modifiée. Vert néon pour le positif, dégradé Coral pour le négatif —
+   jamais le bleu Cosmos du Dashboard comme couleur dominante.
    ═══════════════════════════════════════════════════════════ */
 #view-analytics .positive {
   color: var(--analytics-positive-glow);
   text-shadow: 0 0 12px var(--analytics-positive-glow-soft);
 }
 
+/* ANALYTICS-QA-002 (§1 Couleurs des KPI) : dégradé négatif désormais
+   STRICTEMENT identique à celui du Dashboard (même paire de couleurs
+   neon-pink → coral-warm, même drop-shadow 8px), au lieu de l'ancien
+   dégradé coral-warm → salmon propre à Analytics. Seule la couleur
+   POSITIVE (vert néon, ci-dessus) reste différenciée entre les deux
+   modules — conforme à la demande explicite du ticket : "utiliser
+   exactement le même dégradé Coral que celui adopté sur le Dashboard"
+   pour le négatif, tout en conservant l'identité verte pour le positif. */
 #view-analytics .negative {
-  background: linear-gradient(135deg, var(--coral-warm) 0%, var(--salmon) 100%);
+  background: linear-gradient(135deg, var(--neon-pink) 0%, var(--coral-warm) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 6px var(--coral-warm-soft));
+  filter: drop-shadow(0 0 8px var(--coral-warm-soft));
 }

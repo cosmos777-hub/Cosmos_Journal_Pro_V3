@@ -11,6 +11,12 @@
 // renseigné, sinon reste la somme des comptes actifs (comportement hérité du
 // Dashboard). Aucune nouvelle formule : réutilise calculations.drawdownMax(), déjà
 // existante.
+//
+// ANALYTICS-QA-002 (Premium Visual Polish) : aucune formule, aucun calcul, aucune
+// structure de données modifiée — uniquement l'application de classes de teinte déjà
+// existantes (utils.tone) à deux KPI qui n'en bénéficiaient pas encore (RR moyen,
+// Drawdown max), et un état vide plus soigné pour le tableau de performance par
+// dimension. Voir DECISIONS_LOG.md pour la justification complète du Product Craft.
 import { dom } from "./dom.js";
 import { state } from "../core/state.js";
 import { calculations } from "../core/calculations.js";
@@ -102,8 +108,15 @@ export const analyticsUi = {
           dom["analytics-kpi-expectancy"].textContent = filtered.length ? utils.formatR(expectancy) : "—";
           dom["analytics-kpi-expectancy"].className = `kpi-value ${filtered.length ? utils.tone(expectancy) : "neutral"}`;
 
+          // ANALYTICS-QA-002 (§1 Couleurs des KPI) : le RR moyen est une valeur
+          // signée au même titre que l'Expectancy (un trade individuel peut être
+          // négatif) — il exploitait déjà utils.formatR/tone ailleurs (breakdown
+          // table) mais pas ici. Complète la couverture de l'identité visuelle
+          // Analytics sans introduire de nouveau calcul (réutilise calculations.averageRR
+          // et utils.tone, déjà existants).
           const avgRR = calculations.averageRR(filtered);
           dom["analytics-kpi-avg-rr"].textContent = avgRR == null ? "—" : `${avgRR.toFixed(2)}R`;
+          dom["analytics-kpi-avg-rr"].className = `kpi-value ${avgRR == null ? "neutral" : utils.tone(avgRR)}`;
 
           const avgDuration = calculations.averageDuration(filtered);
           dom["analytics-kpi-avg-duration"].textContent = avgDuration == null ? "—" : `${avgDuration} min`;
@@ -127,6 +140,14 @@ export const analyticsUi = {
             const totalInitialCapital = scopedAccounts.reduce((sum, a) => sum + (Number(a.initialCapital) || 0), 0);
             const drawdown = calculations.drawdownMax(filtered, totalInitialCapital);
             dom["analytics-kpi-drawdown"].textContent = filtered.length ? `${drawdown.toFixed(2)}%` : "—";
+            // ANALYTICS-QA-002 : le Drawdown est toujours une grandeur positive
+            // (une "profondeur" de baisse, jamais un signe) — utils.tone(valeur) ne
+            // s'applique donc pas directement (il classerait toute valeur >0 comme
+            // "positive", ce qui serait sémantiquement faux ici). Règle dédiée et
+            // minimale : un drawdown strictement supérieur à 0 est visuellement
+            // une donnée négative (coût de risque), 0 reste neutre. Aucune formule
+            // touchée, uniquement l'habillage visuel de la valeur déjà calculée.
+            dom["analytics-kpi-drawdown"].className = `kpi-value ${filtered.length && drawdown > 0 ? "negative" : "neutral"}`;
           }
 
           const dateFilterActive = Boolean(filters.dateFrom || filters.dateTo);
@@ -144,7 +165,15 @@ export const analyticsUi = {
           const groups = calculations.groupTradesByDimension(filtered, dimension, state.data.accounts);
 
           if (!groups.length) {
-            dom["breakdown-table"].innerHTML = `<p class="muted">Aucune donnée à regrouper pour cette sélection.</p>`;
+            // ANALYTICS-QA-002 (§2 Workspace) : état vide soigné et centré, au lieu
+            // d'un simple message texte. Réutilise le composant générique
+            // this.emptyState() (components.js) tel quel — seul le wrapper
+            // .analytics-workspace-empty (analytics.css) force le centrage vertical
+            // dans la hauteur fixe du Workspace. Aucun nouveau composant créé.
+            dom["breakdown-table"].innerHTML = `<div class="analytics-workspace-empty">${this.emptyState(
+              "Aucune donnée disponible",
+              "Ajustez vos filtres ou ajoutez des trades pour visualiser une performance par dimension."
+            )}</div>`;
             return;
           }
 

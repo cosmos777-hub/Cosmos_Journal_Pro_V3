@@ -1,0 +1,324 @@
+# COACH_PRODUCT_VISION.md
+
+# Cosmos Journal Pro V3
+
+## Product Vision — Coach
+
+---
+
+# 1. Pourquoi Coach existe
+
+Cosmos n'a jamais eu pour ambition de devenir un simple journal de trading.
+
+Son objectif est d'accompagner le trader dans sa progression.
+
+Cette progression repose sur une chaîne de transformation de la donnée.
+
+Le Journal capture les événements.
+
+Le Dashboard transforme ces événements en information.
+
+Analytics transforme cette information en compréhension.
+
+Coach constitue la dernière étape de cette chaîne.
+
+Sa mission est de transformer cette compréhension en décision.
+
+Coach n'est donc pas un écran supplémentaire.
+
+Il est le module qui donne un sens pratique à tout ce que Cosmos connaît déjà.
+
+---
+
+# 2. La pyramide d'intelligence de Cosmos
+
+Chaque module possède une responsabilité unique.
+
+```
+Journal
+↓
+Capture les données
+
+Dashboard
+↓
+Transforme les données en information
+
+Analytics
+↓
+Transforme l'information en compréhension
+
+Coach
+↓
+Transforme la compréhension en décision
+```
+
+Aucun module ne remplace le précédent.
+
+Chaque module poursuit son travail.
+
+Cette séparation des responsabilités constitue l'un des principes fondamentaux de Cosmos.
+
+---
+
+# 3. Mission
+
+La mission de Coach est simple.
+
+Répondre à une seule question.
+
+> Quelle est la prochaine meilleure action pour améliorer tes performances ?
+
+Coach ne cherche pas à montrer davantage de données.
+
+Il ne cherche pas à produire davantage de statistiques.
+
+Il aide le trader à choisir la prochaine action ayant le plus grand impact sur sa progression.
+
+---
+
+# 4. La promesse de Coach
+
+Lorsqu'un utilisateur ouvre Coach, il ne cherche pas un rapport.
+
+Il ne cherche pas un tableau.
+
+Il ne cherche pas une nouvelle analyse.
+
+Il cherche une direction.
+
+Coach lui promet qu'en quelques instants il repartira avec une conviction claire :
+
+* quelle est sa priorité actuelle ;
+* pourquoi cette priorité est importante ;
+* quelles preuves justifient cette recommandation ;
+* comment mesurer sa progression.
+
+Coach réduit la charge mentale.
+
+Il protège la concentration.
+
+Il aide à décider.
+
+---
+
+# 5. Product Experience
+
+Coach doit procurer une expérience différente des autres modules.
+
+Dashboard procure une vision globale.
+
+Analytics procure une compréhension.
+
+Coach procure une décision.
+
+L'utilisateur ne doit jamais avoir l'impression de lire un rapport.
+
+Il doit avoir l'impression de dialoguer avec un mentor expérimenté.
+
+À la fin de la consultation, une seule idée doit rester en tête :
+
+> Je sais exactement sur quoi concentrer mes efforts maintenant.
+
+---
+
+# 6. La personnalité de Coach
+
+Coach n'est pas un professeur.
+
+Coach n'est pas un juge.
+
+Coach n'est pas un contrôleur.
+
+Coach est un mentor.
+
+Il observe.
+
+Il comprend.
+
+Il explique.
+
+Puis il conseille.
+
+Son objectif n'est jamais de culpabiliser.
+
+Son objectif est d'aider le trader à progresser.
+
+Même lorsqu'il met en évidence une faiblesse, son discours reste constructif.
+
+Il ne cherche jamais à impressionner.
+
+Il cherche à être utile.
+
+---
+
+# 7. Les principes fondateurs
+
+Toutes les décisions de conception devront respecter les principes suivants.
+
+## Une seule priorité
+
+Coach protège l'attention.
+
+Il préfère une excellente recommandation à cinq recommandations moyennes.
+
+La priorité doit toujours être évidente.
+
+---
+
+## Toujours expliquer pourquoi
+
+Une recommandation sans justification ne crée pas la confiance.
+
+Chaque conseil doit pouvoir être relié aux données qui l'ont produit.
+
+Coach ne demande jamais à l'utilisateur de lui faire confiance.
+
+Il montre son raisonnement.
+
+---
+
+## Les preuves avant les opinions
+
+Les conclusions de Coach proviennent toujours des analyses de Cosmos.
+
+Le rôle d'Analytics est d'explorer.
+
+Le rôle de Coach est de conclure.
+
+Aucune recommandation ne doit être arbitraire.
+
+---
+
+## Les recommandations doivent être exploitables
+
+Une recommandation doit conduire à une action.
+
+Elle doit être concrète.
+
+Mesurable.
+
+Applicable.
+
+Le trader doit savoir immédiatement ce qu'il peut changer.
+
+---
+
+## Renforcer autant que corriger
+
+Le coaching ne consiste pas uniquement à corriger les erreurs.
+
+Les bons comportements doivent également être reconnus.
+
+Coach consolide les forces autant qu'il corrige les faiblesses.
+
+---
+
+## La simplicité avant la quantité
+
+Une page remplie de recommandations n'est pas une bonne page.
+
+Coach filtre.
+
+Il simplifie.
+
+Il hiérarchise.
+
+Il retire le bruit.
+
+---
+
+# 8. Ton éditorial
+
+Coach parle avec calme.
+
+Son langage est simple.
+
+Accessible.
+
+Précis.
+
+Il ne dramatise jamais.
+
+Il ne cherche jamais à motiver artificiellement.
+
+Il ne promet jamais des résultats.
+
+Il accompagne.
+
+Le ton recherché est celui d'un mentor expérimenté.
+
+Pas celui d'un commercial.
+
+Pas celui d'une intelligence artificielle.
+
+Pas celui d'un professeur.
+
+---
+
+# 9. Les relations avec les autres modules
+
+Journal capture les faits.
+
+Dashboard montre la situation.
+
+Analytics explique les causes.
+
+Coach choisit la prochaine direction.
+
+Les modules ne sont pas concurrents.
+
+Ils sont complémentaires.
+
+Dashboard répond :
+
+> Que se passe-t-il ?
+
+Analytics répond :
+
+> Pourquoi cela se produit-il ?
+
+Coach répond :
+
+> Quelle est la prochaine meilleure action ?
+
+Cette progression constitue l'architecture intellectuelle de Cosmos.
+
+---
+
+# 10. Ce que Coach ne doit jamais devenir
+
+Coach n'est pas un second Dashboard.
+
+Coach n'est pas un second Analytics.
+
+Coach n'est pas un chatbot.
+
+Coach n'est pas un dictionnaire.
+
+Coach n'est pas une liste infinie de conseils.
+
+Coach n'est pas une intelligence artificielle qui invente des réponses.
+
+Coach reste un moteur de décision fondé sur les données réellement calculées par Cosmos.
+
+---
+
+# 11. Philosophie
+
+Le rôle d'un tableau de bord est de montrer.
+
+Le rôle d'une analyse est d'expliquer.
+
+Le rôle d'un coach est d'aider à choisir.
+
+Coach constitue la dernière étape du raisonnement.
+
+Il ne remplace jamais le jugement du trader.
+
+Il éclaire la prochaine décision.
+
+La qualité d'un coach ne se mesure pas au nombre de recommandations qu'il produit.
+
+Elle se mesure à sa capacité à faire émerger, au bon moment, la seule recommandation qui mérite réellement l'attention du trader.
+
+C'est cette philosophie qui guidera toutes les futures évolutions du module Coach.
