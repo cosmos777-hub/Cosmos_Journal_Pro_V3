@@ -1,324 +1,710 @@
-# COACH_PRODUCT_VISION.md
+COACH_PRODUCT_VISION.md
+00. Quote
+“The purpose of a trading journal is not to remember yesterday. It is to improve tomorrow.”
+La vocation d’un journal de trading n’est pas de se souvenir d’hier. Elle est d’améliorer demain.
+ 
+⸻
+ 1. Vision Statement
+A trader does not progress by collecting more statistics. He progresses by building better habits.
+Un trader ne progresse pas en accumulant davantage de statistiques. Il progresse en construisant de meilleures habitudes.
+ 
+⸻
+ 
+2. Introduction
+Cosmos n’a jamais eu pour ambition de devenir un simple journal de trading.
+Depuis sa conception, chaque évolution du produit poursuit une idée unique : transformer l’expérience accumulée par le trader en une progression durable.
+Le Journal capture les faits.
+Le Dashboard révèle l’état actuel.
+Analytics explique les résultats.
+Coach constitue l’étape suivante de cette évolution.
+Sa mission n’est pas d’afficher davantage de données.
+Sa mission est de transformer les connaissances produites par Cosmos en actions concrètes, compréhensibles et progressives.
+Coach ne remplace ni le jugement du trader, ni son expérience.
+Il agit comme un mentor silencieux qui aide à identifier les comportements les plus importants à améliorer, puis accompagne leur transformation en habitudes durables.
+Cette philosophie marque une évolution importante du projet.
+Cosmos n’est plus seulement un outil d’enregistrement.
+Il devient un système de progression.
+ 
+⸻
+ 
+03. Why Coach Exists
+Le rôle de Coach n’est pas d’améliorer directement les performances financières.
+Sa responsabilité est beaucoup plus fondamentale.
+Coach aide le trader à développer les comportements qui rendent les bonnes performances reproductibles dans le temps.
+Les profits sont une conséquence.
+Les habitudes sont la véritable cible.
+Chaque Mission, chaque recommandation et chaque Playbook poursuivent un seul objectif :
+Transformer progressivement les bonnes pratiques en compétences acquises.
+Le succès de Coach ne repose donc jamais sur un résultat ponctuel.
+Il repose sur la qualité des comportements que le trader construit jour après jour.
+ 
+⸻
 
-# Cosmos Journal Pro V3
-
-## Product Vision — Coach
-
----
-
-# 1. Pourquoi Coach existe
-
-Cosmos n'a jamais eu pour ambition de devenir un simple journal de trading.
-
-Son objectif est d'accompagner le trader dans sa progression.
-
-Cette progression repose sur une chaîne de transformation de la donnée.
-
-Le Journal capture les événements.
-
-Le Dashboard transforme ces événements en information.
-
-Analytics transforme cette information en compréhension.
-
-Coach constitue la dernière étape de cette chaîne.
-
-Sa mission est de transformer cette compréhension en décision.
-
-Coach n'est donc pas un écran supplémentaire.
-
-Il est le module qui donne un sens pratique à tout ce que Cosmos connaît déjà.
-
----
-
-# 2. La pyramide d'intelligence de Cosmos
-
-Chaque module possède une responsabilité unique.
-
-```
+4. The Evolution of Cosmos
+Coach n’est pas un module indépendant.
+Il constitue le lien entre la compréhension et la progression.
+Chaque module possède une responsabilité clairement définie.
 Journal
-↓
-Capture les données
-
+│
+│ Capture les faits
+▼
 Dashboard
-↓
-Transforme les données en information
-
+│
+│ Observe la situation actuelle
+▼
 Analytics
-↓
-Transforme l'information en compréhension
-
+│
+│ Explique les résultats
+▼
 Coach
-↓
-Transforme la compréhension en décision
-```
-
-Aucun module ne remplace le précédent.
-
-Chaque module poursuit son travail.
-
-Cette séparation des responsabilités constitue l'un des principes fondamentaux de Cosmos.
-
----
-
-# 3. Mission
-
-La mission de Coach est simple.
-
-Répondre à une seule question.
-
-> Quelle est la prochaine meilleure action pour améliorer tes performances ?
-
-Coach ne cherche pas à montrer davantage de données.
-
-Il ne cherche pas à produire davantage de statistiques.
-
-Il aide le trader à choisir la prochaine action ayant le plus grand impact sur sa progression.
-
----
-
-# 4. La promesse de Coach
-
-Lorsqu'un utilisateur ouvre Coach, il ne cherche pas un rapport.
-
-Il ne cherche pas un tableau.
-
-Il ne cherche pas une nouvelle analyse.
-
-Il cherche une direction.
-
-Coach lui promet qu'en quelques instants il repartira avec une conviction claire :
-
-* quelle est sa priorité actuelle ;
-* pourquoi cette priorité est importante ;
-* quelles preuves justifient cette recommandation ;
-* comment mesurer sa progression.
-
-Coach réduit la charge mentale.
-
-Il protège la concentration.
-
-Il aide à décider.
-
----
-
-# 5. Product Experience
-
-Coach doit procurer une expérience différente des autres modules.
-
-Dashboard procure une vision globale.
-
-Analytics procure une compréhension.
-
-Coach procure une décision.
-
-L'utilisateur ne doit jamais avoir l'impression de lire un rapport.
-
-Il doit avoir l'impression de dialoguer avec un mentor expérimenté.
-
-À la fin de la consultation, une seule idée doit rester en tête :
-
-> Je sais exactement sur quoi concentrer mes efforts maintenant.
-
----
-
-# 6. La personnalité de Coach
-
-Coach n'est pas un professeur.
-
-Coach n'est pas un juge.
-
-Coach n'est pas un contrôleur.
-
-Coach est un mentor.
-
-Il observe.
-
-Il comprend.
-
-Il explique.
-
-Puis il conseille.
-
-Son objectif n'est jamais de culpabiliser.
-
-Son objectif est d'aider le trader à progresser.
-
-Même lorsqu'il met en évidence une faiblesse, son discours reste constructif.
-
-Il ne cherche jamais à impressionner.
-
-Il cherche à être utile.
-
----
-
-# 7. Les principes fondateurs
-
-Toutes les décisions de conception devront respecter les principes suivants.
-
-## Une seule priorité
-
-Coach protège l'attention.
-
-Il préfère une excellente recommandation à cinq recommandations moyennes.
-
-La priorité doit toujours être évidente.
-
----
-
-## Toujours expliquer pourquoi
-
-Une recommandation sans justification ne crée pas la confiance.
-
-Chaque conseil doit pouvoir être relié aux données qui l'ont produit.
-
-Coach ne demande jamais à l'utilisateur de lui faire confiance.
-
-Il montre son raisonnement.
-
----
-
-## Les preuves avant les opinions
-
-Les conclusions de Coach proviennent toujours des analyses de Cosmos.
-
-Le rôle d'Analytics est d'explorer.
-
-Le rôle de Coach est de conclure.
-
-Aucune recommandation ne doit être arbitraire.
-
----
-
-## Les recommandations doivent être exploitables
-
-Une recommandation doit conduire à une action.
-
-Elle doit être concrète.
-
-Mesurable.
-
-Applicable.
-
-Le trader doit savoir immédiatement ce qu'il peut changer.
-
----
-
-## Renforcer autant que corriger
-
-Le coaching ne consiste pas uniquement à corriger les erreurs.
-
-Les bons comportements doivent également être reconnus.
-
-Coach consolide les forces autant qu'il corrige les faiblesses.
-
----
-
-## La simplicité avant la quantité
-
-Une page remplie de recommandations n'est pas une bonne page.
-
-Coach filtre.
-
-Il simplifie.
-
-Il hiérarchise.
-
-Il retire le bruit.
-
----
-
-# 8. Ton éditorial
-
-Coach parle avec calme.
-
-Son langage est simple.
-
-Accessible.
-
-Précis.
-
-Il ne dramatise jamais.
-
-Il ne cherche jamais à motiver artificiellement.
-
-Il ne promet jamais des résultats.
-
+│
+│ Choisit le prochain levier de progression
+▼
+Digital Twin
+│
+│ Conserve les compétences acquises
+Cette organisation garantit une séparation claire des responsabilités.
+Le Journal capture.
+Le Dashboard synthétise.
+Analytics interprète.
+Coach décide.
+Le Digital Twin mémorise.
+Aucun module ne duplique la responsabilité d’un autre.
+Cette séparation est volontaire.
+Elle rend le produit plus lisible, plus évolutif et plus cohérent.
+ 
+⸻ 
+5. Product Philosophy
+Coach repose sur une conviction simple.
+Les résultats fluctuent.
+Les habitudes perdurent.
+C’est pourquoi Coach ne cherche jamais à optimiser directement les indicateurs financiers.
+Il cherche à renforcer les comportements qui influencent durablement ces indicateurs.
+Chaque décision prise par le moteur respecte les principes suivants :
+	•	Les comportements sont plus importants que les résultats.
+	•	Les habitudes sont plus importantes que les performances ponctuelles.
+	•	Les preuves précèdent toujours les recommandations.
+	•	Une seule Mission active concentre toute l’attention.
+	•	Les petites améliorations répétées produisent les plus grands progrès.
+	•	La progression est plus importante que la perfection.
+	•	La compréhension précède toujours l’action.
+Coach n’est pas conçu pour juger le trader.
+Il est conçu pour l’aider à progresser avec constance.
+ 
+⸻
+ ✅ Récapitulatif
+Nous venons de rédiger les fondations du manifeste :
+	•	Quote officielle du module.
+	•	Vision Statement.
+	•	Introduction.
+	•	Purpose.
+	•	Product Philosophy.
+Cette première partie établit l’identité et la raison d’être de Coach avant d’aborder son fonctionnement.
+ 
+⸻
+
+6. Cosmos Progression Loop
+Cosmos est conçu comme un système de progression continue.
+Aucun module n’a vocation à fonctionner de manière isolée.
+Chaque interaction du trader alimente un cycle unique dont l’objectif est de transformer l’expérience en compétence.
+Cette boucle constitue le cœur de la philosophie Cosmos.
+                Agir
+                  │
+                  ▼
+          Enregistrer
+                  │
+                  ▼
+          Comprendre
+                  │
+                  ▼
+             Décider
+                  │
+                  ▼
+           Progresser
+                  │
+                  ▼
+            Agir à nouveau
+Chaque étape possède une responsabilité unique.
+Agir
+Le trader exécute son plan de trading.
+Le marché produit une nouvelle expérience.
+ 
+⸻
+ 
+Enregistrer
+Le Journal capture fidèlement cette expérience.
+Il ne juge pas.
+Il ne conseille pas.
+Il enregistre uniquement les faits.
+ 
+⸻
+ 
+Comprendre
+Analytics transforme les données en compréhension.
+Les statistiques deviennent des explications.
+Les comportements commencent à apparaître.
+ 
+⸻
+ 
+Décider
+Coach identifie le comportement qui représente le meilleur levier de progression.
+Il transforme l’analyse en une Mission concrète.
+ 
+⸻
+ 
+Progresser
+Le Playbook accompagne progressivement le trader jusqu’à la consolidation d’une nouvelle habitude.
+Cette habitude devient ensuite une compétence durable intégrée au Digital Twin.
+ 
+⸻
+ 
+Lorsque cette compétence est consolidée, une nouvelle boucle commence naturellement.
+Ainsi, Cosmos n’est jamais figé.
+Chaque cycle construit progressivement le trader qu’il deviendra demain.
+ 
+⸻
+
+
+What Coach Is
+Coach est un moteur de progression.
+Sa mission n’est pas de produire davantage de données, mais de donner du sens aux connaissances déjà produites par Cosmos.
+Il agit comme un mentor méthodique qui accompagne le trader dans la construction de comportements durables.
+Coach observe.
+Il interprète.
+Il priorise.
 Il accompagne.
+Mais il ne remplace jamais le trader.
+Chaque recommandation poursuit un objectif unique :
+Transformer progressivement un comportement en habitude, puis une habitude en compétence durable.
+Coach n’est pas motivé par les résultats immédiats.
+Il est guidé par la progression à long terme.
+Son rôle consiste à aider le trader à concentrer son attention sur le levier qui aura le plus grand impact sur son développement.
+Pour remplir cette mission, Coach repose sur cinq responsabilités fondamentales.
+Observer
+Identifier les comportements récurrents à partir des données produites par Cosmos.
+Comprendre
+Transformer ces observations en une analyse cohérente et explicable.
+Prioriser
+Sélectionner l’unique Mission qui représente le meilleur levier de progression.
+Accompagner
+Proposer un Playbook simple, progressif et centré sur un seul comportement.
+Consolider
+Transformer progressivement les progrès observés en compétences durables intégrées au Digital Twin.
+Coach ne poursuit donc jamais des statistiques.
+Il poursuit des habitudes.
+ 
+⸻
+ 
+What Coach Is Not
+Définir ce que Coach n’est pas est aussi important que définir ce qu’il est.
+Cette frontière protège la cohérence du produit et évite les dérives futures.
+Coach n’est pas un tableau de statistiques.
+Cette responsabilité appartient déjà à Analytics.
+Coach s’appuie sur les analyses.
+Il ne les reproduit jamais.
+ 
+⸻
+ 
+Coach n’est pas un moteur de prédiction.
+Il ne cherche pas à anticiper les marchés.
+Il accompagne uniquement les comportements observés.
+ 
+⸻
+ 
+Coach n’est pas un fournisseur de signaux.
+Il ne recommande jamais :
+	•	d’acheter ;
+	•	de vendre ;
+	•	d’ouvrir une position ;
+	•	de fermer une position.
+Les décisions de marché appartiennent toujours au trader.
+Cette règle constitue l’un des principes fondateurs de Cosmos.
+Coach accompagne les comportements.
+Il ne prend jamais les décisions de trading à la place de l’utilisateur.
+ 
+⸻
+ 
+Coach n’est pas un juge.
+Il ne récompense pas les profits.
+Il ne sanctionne pas les pertes.
+Chaque recommandation est formulée dans une logique d’apprentissage et de progression.
+L’objectif n’est jamais de culpabiliser.
+L’objectif est toujours de construire.
+ 
+⸻
+ 
+Coach n’est pas une intelligence artificielle autonome.
+La première version de Cosmos repose sur un moteur entièrement déterministe.
+Toutes les Missions.
+Tous les Playbooks.
+Toutes les recommandations.
+Toutes les priorités.
+Proviennent de règles métier transparentes et explicables.
+Une éventuelle intelligence artificielle viendra enrichir cette expérience dans le futur.
+Elle ne remplacera jamais le Decision Engine.
+Elle ne modifiera jamais les preuves.
+Elle ne choisira jamais les Missions.
+Elle accompagnera uniquement leur compréhension.
+Comme nous l’avons défini :
+L’intelligence artificielle enrichit la décision. Elle ne la prend jamais.
+ 
+⸻
+ 
+Coach n’est pas un système de notifications.
+Il ne cherche jamais à attirer constamment l’attention.
+Il intervient uniquement lorsque son accompagnement apporte une véritable valeur.
+Le silence fait partie intégrante de son intelligence.
+ 
+⸻
+ 
+Coach n’est pas conçu pour rendre le trader dépendant.
+Son objectif est exactement l’inverse.
+À mesure que les compétences se consolident, le trader devient plus autonome, plus discipliné et plus confiant dans son propre processus décisionnel.
+Le succès ultime de Coach est donc paradoxal.
+Il consiste à devenir progressivement moins nécessaire.
+ 
+⸻
+ 
 
-Le ton recherché est celui d'un mentor expérimenté.
+Le meilleur Coach est celui qui rend progressivement le trader capable de progresser par lui-même.
 
-Pas celui d'un commercial.
+⸻
+ 
+✅ Récapitulatif
+Nous venons de définir les frontières officielles de Coach :
+	•	ce qu’il est ;
+	•	ce qu’il n’est volontairement pas ;
+	•	son rôle comme mentor plutôt que comme système de signaux ;
+	•	son objectif ultime : développer l’autonomie du trader.
+cette section va protéger durablement l’identité du module contre les dérives fonctionnelles.
+ 
+⸻
 
-Pas celui d'une intelligence artificielle.
 
-Pas celui d'un professeur.
+07. Position in the Cosmos Ecosystem
 
----
+Coach n’est pas une fonctionnalité ajoutée au Journal.
 
-# 9. Les relations avec les autres modules
+Il représente l’aboutissement naturel de l’évolution de Cosmos.
 
-Journal capture les faits.
+Chaque module de l’application possède une responsabilité unique et prépare le travail du suivant.
 
-Dashboard montre la situation.
+Le Journal transforme l’expérience en données.
 
-Analytics explique les causes.
+Le Dashboard transforme les données en visibilité.
 
-Coach choisit la prochaine direction.
+Analytics transforme la visibilité en compréhension.
 
-Les modules ne sont pas concurrents.
+Coach transforme la compréhension en progression.
 
-Ils sont complémentaires.
+Le Digital Twin transforme cette progression en mémoire durable.
 
-Dashboard répond :
+Cette séparation des responsabilités constitue l’un des principes fondateurs de Cosmos.
 
-> Que se passe-t-il ?
+Aucun module ne reproduit le rôle d’un autre.
 
-Analytics répond :
+Chacun intervient au moment où sa valeur est la plus pertinente.
 
-> Pourquoi cela se produit-il ?
+Le Journal ne conseille jamais.
 
-Coach répond :
+Le Dashboard n’interprète jamais.
 
-> Quelle est la prochaine meilleure action ?
+Analytics ne décide jamais.
 
-Cette progression constitue l'architecture intellectuelle de Cosmos.
+Coach ne calcule jamais.
 
----
+Le Digital Twin ne juge jamais.
 
-# 10. Ce que Coach ne doit jamais devenir
+Cette architecture permet à chaque module d’exceller dans une responsabilité clairement définie tout en participant à une vision produit unique.
 
-Coach n'est pas un second Dashboard.
+Coach occupe ainsi une position particulière.
 
-Coach n'est pas un second Analytics.
+Il constitue le passage entre la connaissance et l’action.
 
-Coach n'est pas un chatbot.
+C’est le premier module dont la responsabilité n’est plus d’expliquer le passé, mais d’influencer positivement l’avenir.
 
-Coach n'est pas un dictionnaire.
+⸻
 
-Coach n'est pas une liste infinie de conseils.
+08. The Coaching Philosophy
 
-Coach n'est pas une intelligence artificielle qui invente des réponses.
+Coach n’est pas conçu pour corriger les erreurs.
 
-Coach reste un moteur de décision fondé sur les données réellement calculées par Cosmos.
+Il est conçu pour construire des compétences.
 
----
+Cette différence paraît subtile.
 
-# 11. Philosophie
+Elle change pourtant complètement l’expérience utilisateur.
 
-Le rôle d'un tableau de bord est de montrer.
+Un système centré sur les erreurs rappelle constamment ce qui n’a pas fonctionné.
 
-Le rôle d'une analyse est d'expliquer.
+Un système centré sur les compétences montre progressivement ce que le trader est en train de devenir.
 
-Le rôle d'un coach est d'aider à choisir.
+Coach adopte volontairement cette seconde approche.
 
-Coach constitue la dernière étape du raisonnement.
+Chaque recommandation poursuit un objectif unique :
 
-Il ne remplace jamais le jugement du trader.
+Renforcer durablement un comportement utile.
 
-Il éclaire la prochaine décision.
+Pour y parvenir, Coach applique plusieurs convictions fondamentales.
 
-La qualité d'un coach ne se mesure pas au nombre de recommandations qu'il produit.
+Les comportements précèdent les résultats.
 
-Elle se mesure à sa capacité à faire émerger, au bon moment, la seule recommandation qui mérite réellement l'attention du trader.
+Les résultats financiers sont la conséquence visible de centaines de décisions invisibles.
 
-C'est cette philosophie qui guidera toutes les futures évolutions du module Coach.
+Coach agit sur ces décisions.
+
+Jamais directement sur les profits.
+
+⸻
+
+Une seule priorité à la fois.
+
+La progression demande de la concentration.
+
+Multiplier les objectifs revient à disperser l’attention.
+
+Coach ne poursuit donc jamais plusieurs comportements simultanément.
+
+Une Mission.
+
+Un comportement.
+
+Un objectif.
+
+⸻
+
+Les preuves avant les opinions.
+
+Coach ne formule jamais une recommandation parce qu’elle semble pertinente.
+
+Chaque Mission repose sur des observations répétées et suffisamment documentées.
+
+La progression commence toujours par la compréhension.
+
+⸻
+
+Les petites victoires construisent les grandes transformations.
+
+Une amélioration durable ne naît presque jamais d’un changement radical.
+
+Elle résulte d’une succession de petites réussites répétées.
+
+Coach valorise cette progression continue plutôt que la recherche d’une perfection immédiate.
+
+⸻
+
+L’autonomie est la destination finale.
+
+Coach n’a pas vocation à rendre le trader dépendant.
+
+Au contraire.
+
+Chaque compétence acquise réduit progressivement le besoin d’accompagnement.
+
+Le meilleur Coach est celui qui rend progressivement le trader capable de progresser par lui-même.
+
+⸻
+
+11. Core Concepts
+
+Coach repose sur un ensemble réduit de concepts métier.
+
+Ils constituent le vocabulaire officiel du module.
+
+Chaque concept possède une responsabilité précise.
+
+Ensemble, ils forment la chaîne de progression de Cosmos.
+
+Mission
+
+La Mission représente l’unité fondamentale de progression.
+
+Elle identifie le comportement qui offre actuellement le meilleur potentiel d’amélioration.
+
+Une seule Mission peut être active à la fois.
+
+⸻
+
+Playbook
+
+Le Playbook est la stratégie utilisée pour accomplir une Mission.
+
+Il transforme un objectif abstrait en une série d’actions simples, progressives et directement applicables.
+
+Le Playbook accompagne.
+
+Il ne commande jamais.
+
+⸻
+
+Progress
+
+La progression mesure l’évolution du comportement ciblé.
+
+Elle ne représente pas un résultat financier.
+
+Elle reflète l’acquisition progressive d’une meilleure habitude.
+
+⸻
+
+Habit
+
+Une habitude apparaît lorsqu’un comportement positif devient suffisamment stable pour être considéré comme reproductible.
+
+Les habitudes constituent les véritables briques de progression de Cosmos.
+
+⸻
+
+Skill
+
+Une compétence est une habitude consolidée.
+
+Elle représente un comportement durablement acquis et suffisamment démontré pour être intégré au profil du trader.
+
+Les compétences décrivent ce que le trader sait désormais faire avec constance.
+
+⸻
+
+Digital Twin
+
+Le Digital Twin est la mémoire vivante du trader.
+
+Il ne conserve pas les performances.
+
+Il conserve les compétences.
+
+Il représente l’identité comportementale construite au fil des expériences.
+
+Le Digital Twin n’est donc pas une photographie.
+
+Il est l’évolution continue du trader.
+
+⸻
+
+Achievement
+
+Les Achievements reconnaissent les progrès durablement démontrés.
+
+Ils ne récompensent jamais un événement isolé.
+
+Ils célèbrent les habitudes et les compétences construites dans le temps.
+
+Ils constituent une forme de reconnaissance, jamais une finalité.
+
+⸻
+
+Decision Engine
+
+Le Decision Engine est le cœur logique de Coach.
+
+Il transforme les observations produites par Cosmos en une Mission prioritaire, cohérente et explicable.
+
+Toutes ses décisions sont déterministes et entièrement traçables.
+
+Parfait. Nous poursuivons donc le même document.
+ 
+⸻
+ 
+12. Coaching Principles
+Les principes suivants constituent les règles fondatrices de Coach.
+Ils guident toutes les décisions du produit, indépendamment de son implémentation technique.
+Ces principes sont volontairement intemporels.
+Ils définissent l’identité même du module.
+ 
+⸻
+ 
+One Mission at a Time
+Le progrès exige de la concentration.
+Coach ne demande jamais au trader de modifier plusieurs comportements simultanément.
+Une seule Mission peut être active à un instant donné.
+Cette contrainte n’est pas une limitation.
+Elle constitue l’un des principaux leviers d’efficacité du système.
+ 
+⸻
+ 
+Behavior Before Performance
+Coach n’optimise jamais directement les résultats.
+Il optimise les comportements qui produisent ces résultats.
+Les profits fluctuent.
+Les habitudes persistent.
+Les comportements constituent donc le véritable levier de progression.
+ 
+⸻
+ 
+Evidence Before Advice
+Chaque recommandation doit être justifiée.
+Aucun conseil ne peut être formulé sans observations suffisantes.
+Le moteur ne cherche jamais à avoir raison.
+Il cherche à être crédible.
+ 
+⸻
+ 
+Progress Before Perfection
+Coach ne poursuit jamais la perfection.
+Il valorise les améliorations progressives.
+Chaque petite victoire prépare la suivante.
+Le progrès continu est toujours préféré aux changements brutaux.
+ 
+⸻
+ 
+Simplicity Before Complexity
+Le meilleur conseil est souvent le plus simple.
+Coach limite volontairement le nombre d’actions proposées.
+Le Playbook reste toujours clair, concret et directement applicable.
+La simplicité favorise l’exécution.
+ 
+⸻
+ 
+Recognition Matters
+Corriger un comportement est important.
+Reconnaître une progression l’est tout autant.
+Coach célèbre les habitudes consolidées.
+Il ne se contente pas de signaler les axes d’amélioration.
+La motivation durable repose autant sur la reconnaissance que sur la correction.
+ 
+⸻
+ 
+Coaching Without Interruption
+Le trading reste toujours la priorité.
+Coach n’interrompt jamais inutilement le workflow.
+Son accompagnement est pensé pour apparaître au moment où il apporte le plus de valeur.
+L’expérience doit rester fluide, discrète et non intrusive.
+ 
+⸻
+ 
+Build Independence
+Le rôle d’un mentor n’est pas de créer une dépendance.
+Il est de développer l’autonomie.
+Chaque Mission réussie rapproche progressivement le trader d’une capacité à progresser par lui-même.
+Le succès ultime de Coach est donc de devenir progressivement moins indispensable.
+ 
+⸻
+ 
+13. Explainability First
+La confiance constitue le fondement de toute recommandation.
+Pour cette raison, Coach applique un principe absolu :
+Chaque décision doit pouvoir être expliquée.
+L’utilisateur doit toujours comprendre pourquoi une Mission apparaît.
+Il ne doit jamais avoir l’impression que le système agit de manière arbitraire.
+Cette exigence dépasse la simple transparence.
+Elle participe directement à la relation de confiance entre le produit et son utilisateur.
+Pour garantir cette cohérence, Coach repose sur trois lois fondamentales.
+ 
+⸻
+ 
+First Law
+No Recommendation Without Data
+Aucune recommandation ne peut exister sans données.
+Toute observation provient exclusivement des informations enregistrées dans Cosmos.
+ 
+⸻
+ 
+Second Law
+No Conclusion Without Evidence
+Une observation isolée ne constitue jamais une conclusion.
+Le moteur recherche des comportements répétés, cohérents et suffisamment documentés avant de tirer une interprétation.
+ 
+⸻
+ 
+Third Law
+No Mission Without Explanation
+Chaque Mission doit être accompagnée d’une justification compréhensible.
+Le trader ne reçoit jamais une instruction.
+Il comprend toujours pourquoi cette Mission est prioritaire.
+ 
+⸻
+ 
+Ces trois lois constituent le socle de confiance du module.
+Elles garantissent que Coach reste un système explicable, transparent et prévisible.
+ 
+⸻
+ 
+14. Product Evolution
+Coach est conçu comme une architecture évolutive.
+Son ambition est de grandir sans jamais remettre en cause ses principes fondateurs.
+Cette évolution est organisée en plusieurs générations.
+ 
+⸻
+ 
+Coach V1
+La première version repose sur un moteur entièrement déterministe.
+Toutes les Missions.
+Tous les Playbooks.
+Toutes les priorités.
+Toutes les décisions.
+Sont définis par des règles métier documentées.
+Chaque recommandation est reproductible.
+Chaque décision est explicable.
+Cette approche garantit une maîtrise complète du comportement du système.
+ 
+⸻
+ 
+Coach V2
+Les futures versions pourront intégrer une couche d’intelligence artificielle.
+Cette évolution ne remplacera jamais le Decision Engine.
+L’intelligence artificielle interviendra uniquement pour enrichir l’expérience.
+Par exemple :
+	•	reformuler les recommandations ;
+	•	personnaliser les explications ;
+	•	adapter le ton du coaching ;
+	•	proposer des exemples contextualisés ;
+	•	faciliter la compréhension.
+Les décisions continueront d’être prises par le moteur déterministe.
+Cette séparation garantit la stabilité de la philosophie Cosmos.
+ 
+⸻
+ 
+AI as Enhancement, not Authority
+Cette phrase résume l’ensemble de notre vision.
+L’intelligence artificielle enrichit la décision.
+Elle ne la prend jamais.
+ 
+⸻
+ 
+15. Success Definition
+La réussite de Coach ne se mesure pas à la quantité de recommandations produites.
+Elle ne se mesure pas non plus à la rentabilité immédiate du trader.
+Le véritable succès apparaît lorsque le trader développe progressivement de meilleures habitudes.
+Une Mission réussie n’est pas celle qui disparaît rapidement.
+C’est celle qui devient inutile parce que le comportement concerné est désormais acquis.
+Une compétence consolidée représente le véritable résultat attendu.
+Le Digital Twin devient alors le reflet fidèle de cette évolution.
+Coach atteint pleinement sa mission lorsque les compétences du trader progressent plus vite que son besoin d’accompagnement.
+Le succès du produit réside donc dans l’autonomie qu’il construit.
+Pas dans la fréquence de ses interventions.
+ 
+⸻
+ 
+16. Closing Manifesto
+Depuis son origine, Cosmos poursuit une ambition simple.
+Transformer chaque expérience de trading en une opportunité d’apprentissage.
+Le Journal capture cette expérience.
+Le Dashboard la rend visible.
+Analytics la rend compréhensible.
+Coach la transforme en progression.
+Le Digital Twin en conserve durablement les bénéfices.
+Ensemble, ces modules ne constituent pas une collection de fonctionnalités.
+Ils forment un système unique dont la vocation est d’aider le trader à devenir progressivement une meilleure version de lui-même.
+Coach n’est pas conçu pour prédire les marchés.
+Il n’est pas conçu pour remplacer le jugement humain.
+Il n’est pas conçu pour promettre des profits.
+Il est conçu pour accompagner la construction de comportements durables.
+Parce qu’au bout du compte, les marchés changent.
+Les stratégies évoluent.
+Les conditions économiques se transforment.
+Mais les compétences acquises restent.
+C’est pourquoi Cosmos ne cherche pas seulement à améliorer les performances.
+Il cherche à développer les personnes qui produisent ces performances.
+ 
+⸻
+ 
+Vision Statement
+A trader does not progress by collecting more statistics. He progresses by building better habits.
+Un trader ne progresse pas en accumulant davantage de statistiques. Il progresse en construisant de meilleures habitudes.
+ 
+⸻
+ 
+✅ Fin de la rédaction
+
+
+

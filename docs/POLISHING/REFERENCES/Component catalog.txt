@@ -371,4 +371,33 @@ qu'un simple chiffre) et Intelligent Density (ne doit pas alourdir l'écran).
 
 **Statut** : Stable.
 
+## Coach Journey Container
+
+### Description
+
+Conteneur principal du module Coach.
+
+Il accueille un seul chapitre actif à la fois tout en conservant une hauteur fixe.
+
+### Responsabilités
+
+- Maintenir une expérience stable.
+- Héberger les transitions entre chapitres.
+- Afficher la navigation permanente.
+- Synchroniser les indicateurs de progression.
+
+### Composition
+
+- Navigation des chapitres
+- Viewport principal
+- Indicateurs de progression
+- Zone de transition
+
+### Design Principles
+
+- Journey Before Information
+- Hierarchy Before Size
+- Double Fond
+- Compact First
+
 End of Document

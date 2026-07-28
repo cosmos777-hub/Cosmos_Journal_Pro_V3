@@ -18,6 +18,8 @@ const WIZARD_CARD_LABELS = [
   "Compte", "Trade", "Analyse", "Gestion", "Résultat", "Delta émotionnel", "Notes", "Validation"
 ];
 
+export const RR_PLANNED_OPTIONS = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10];
+
 // MEDIA-001 (Livraison C) : les 3 slots de capture d'un trade — forme figée par
 // calculations.js/migrations.js (trade.media.{htf,ltf,result}), jamais un 4e slot
 // sans mise à jour coordonnée de ces deux fichiers.
@@ -94,11 +96,13 @@ export const journalUi = {
             this.renderSelectors();
           });
 
-          this.renderChips(dom["emotional-cause-options"], state.data.settings.emotionalCauses, state.selectedEmotionalCause, value => {
-            state.selectedEmotionalCause = value;
-            dom["emotional-cause-value"].value = value;
-            this.renderSelectors();
-          });
+         // RP-002C : Causes émotionnelles devient une sélection multiple
+          // (checklist), même mécanisme que Confluences/Tags juste au-dessus/
+          // en-dessous — plus de distinction principale/secondaire.
+          this.renderChecklist(dom["emotional-cause-options"], state.data.settings.emotionalCauses, state.selectedEmotionalCauses, value => {
+            const index = state.selectedEmotionalCauses.indexOf(value);
+            if (index === -1) state.selectedEmotionalCauses.push(value); else state.selectedEmotionalCauses.splice(index, 1);
+          }); 
 
           this.renderChips(dom["manual-intervention-options"], ["Oui", "Non"], state.selectedManualIntervention, value => {
             state.selectedManualIntervention = value;
@@ -107,9 +111,21 @@ export const journalUi = {
             this.updateResultPreviews();
           });
 
-          dom["session-select"].innerHTML = state.data.settings.sessions.map(value => `<option>${utils.escape(value)}</option>`).join("");
-          dom["timeframe-select"].innerHTML = state.data.settings.ltf.map(value => `<option>${utils.escape(value)}</option>`).join("");
-          dom["htf-select"].innerHTML = state.data.settings.htf.map(value => `<option>${utils.escape(value)}</option>`).join("");
+          // RP-003 : préserve la sélection active lors de la reconstruction des
+          // listes, même mécanisme que account-select ci-dessus (D-0XY : jamais
+          // de logique dupliquée — même principe, appliqué aux 3 sélecteurs
+          // restants de renderSelectors()).
+          [
+            { dom: dom["session-select"], values: state.data.settings.sessions },
+            { dom: dom["timeframe-select"], values: state.data.settings.ltf },
+            { dom: dom["htf-select"], values: state.data.settings.htf }
+          ].forEach(({ dom: selectEl, values }) => {
+            const previousValue = selectEl.value;
+            selectEl.innerHTML = values.map(value => `<option>${utils.escape(value)}</option>`).join("");
+            if (values.includes(previousValue)) {
+              selectEl.value = previousValue;
+            }
+          });
 
           this.renderChecklist(dom["confluences-options"], state.data.settings.confluences, state.selectedConfluences, value => {
             const index = state.selectedConfluences.indexOf(value);
@@ -131,6 +147,7 @@ export const journalUi = {
 
           this.renderStars();
           this.renderRiskOptions();
+          this.renderRRPlannedOptions();
           this.updateComboPreview();
           this.updateDurationPreview();
           this.updateResultPreviews();
@@ -308,6 +325,17 @@ export const journalUi = {
 
           this.updateRiskPreview(account);
         },
+        
+        renderRRPlannedOptions() {
+    if (!dom["rr-planned"]) return;
+    const previous = dom["rr-planned"].value;
+    dom["rr-planned"].innerHTML =
+      `<option value="">—</option>` +
+      RR_PLANNED_OPTIONS.map(value => `<option value="${value}">${value}</option>`).join("");
+    if (RR_PLANNED_OPTIONS.some(v => String(v) === previous)) {
+      dom["rr-planned"].value = previous;
+    }
+  },
         // Affiche instantanément le montant réellement risqué en devise du compte actif.
         updateRiskPreview(account) {
           if (!dom["risk-amount-preview"]) return;

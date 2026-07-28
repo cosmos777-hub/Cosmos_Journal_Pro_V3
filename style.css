@@ -2,7 +2,10 @@
    Toutes les règles ont été déplacées vers styles/ (Livraisons 1, 2 et 3).
    Ce fichier n'importe plus que les modules, dans l'ordre attendu par le
    ticket : variables/base d'abord, puis layout/typography/components,
-   puis les styles par écran, puis les animations en dernier. */
+   puis les styles par écran, puis les animations en dernier.
+   COACH-001 : insights.css est retiré (Insights n'existe plus, remplacé par
+   Coach — voir DECISIONS_LOG.md), coach.css le remplace au même emplacement
+   dans l'ordre d'import. */
 @import url("./styles/variables.css");
 @import url("./styles/base.css");
 @import url("./styles/layout.css");
@@ -11,6 +14,6 @@
 @import url("./styles/dashboard.css");
 @import url("./styles/journal.css");
 @import url("./styles/analytics.css");
-@import url("./styles/insights.css");
+@import url("./styles/coach.css");
 @import url("./styles/settings.css");
 @import url("./styles/animations.css");

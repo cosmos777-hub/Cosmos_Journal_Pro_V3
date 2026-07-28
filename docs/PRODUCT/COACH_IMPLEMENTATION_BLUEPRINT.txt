@@ -1,0 +1,1096 @@
+# COACH_IMPLEMENTATION_BLUEPRINT.md
+
+---
+
+# 00. Informations du document
+
+**Type de document**
+
+Blueprint d'Implémentation
+
+**Module**
+
+Coach
+
+**Statut**
+
+Référence officielle
+
+**Public**
+
+* Product
+* UX/UI
+* Développement
+* QA
+
+---
+
+## Objectif
+
+Ce document traduit l'ensemble de la conception du module Coach en une architecture d'implémentation concrète.
+
+Il constitue le contrat entre la vision produit et le développement.
+
+Contrairement aux autres documents d'architecture, il ne décrit plus la philosophie du module, mais **la manière précise de le construire**.
+
+Toute implémentation du module Coach devra être conforme à ce Blueprint.
+
+---
+
+# 01. Philosophie du Blueprint
+
+Le Blueprint ne répond pas à la question :
+
+> Pourquoi Coach existe ?
+
+Cette réponse appartient au **Product Vision**.
+
+Il ne répond pas non plus à :
+
+> Comment Coach raisonne ?
+
+Cette réponse appartient au **Decision Engine**.
+
+Le Blueprint répond uniquement à une question :
+
+> **Comment cette architecture devient-elle une interface fonctionnelle ?**
+
+Il est donc volontairement concret.
+
+Chaque chapitre décrit :
+
+* l'objectif du bloc ;
+* son intention UX ;
+* sa composition ;
+* ses états ;
+* ses interactions ;
+* ses dépendances.
+
+---
+
+# 02. Les intentions de conception
+
+Avant de définir les écrans, une règle importante est établie.
+
+Chaque bloc de l'interface possède une **Intention Produit**.
+
+Cette intention est plus importante que son apparence.
+
+Elle guidera toutes les futures évolutions.
+
+---
+
+### Mission
+
+**Intention**
+
+Le trader doit comprendre sa priorité en moins de cinq secondes.
+
+---
+
+### Playbook
+
+**Intention**
+
+Le trader doit savoir immédiatement quoi faire.
+
+---
+
+### Progression
+
+**Intention**
+
+Le trader doit ressentir qu'il progresse même lorsque ses performances fluctuent.
+
+---
+
+### Achievements
+
+**Intention**
+
+Récompenser les comportements.
+
+Jamais distraire.
+
+---
+
+### Digital Twin
+
+**Intention**
+
+Donner envie au trader de devenir la meilleure version de lui-même.
+
+---
+
+### Historique
+
+**Intention**
+
+Apporter les preuves des décisions du Coach sans perturber la Mission active.
+
+---
+
+Je pense que ce chapitre sera extrêmement utile lors des futurs arbitrages UX. Dès qu'un doute apparaîtra, nous pourrons revenir à l'intention avant de discuter du design.
+
+---
+
+# 03. Architecture générale de l'écran
+
+L'écran Coach est organisé selon une hiérarchie verticale fixe.
+
+```text
+Mission
+      │
+      ▼
+Playbook
+      │
+      ▼
+Progression
+      │
+      ▼
+Achievements
+      │
+      ▼
+Digital Twin
+      │
+      ▼
+Historique
+```
+
+Cette hiérarchie est immuable.
+
+Aucun bloc secondaire ne peut prendre davantage d'importance que la Mission.
+
+---
+
+## Règle fondamentale
+
+Le regard de l'utilisateur doit naturellement tomber sur la Mission dès l'ouverture du module.
+
+Aucun autre élément ne doit concurrencer cette priorité.
+
+---
+
+# 04. Navigation
+
+Le module Coach ne possède pas de navigation interne complexe.
+
+L'utilisateur ne navigue pas entre plusieurs pages.
+
+Il suit une progression naturelle.
+
+La navigation est donc principalement verticale.
+
+Les sections secondaires pourront être repliables afin de limiter la charge cognitive.
+
+---
+
+## Principe
+
+Le nombre d'actions nécessaires pour reprendre une Mission doit être minimal.
+
+Coach ne doit jamais donner l'impression de demander un effort de navigation.
+
+---
+
+# 05. Composition de l'écran
+
+L'écran est composé de six espaces fonctionnels.
+
+| Zone         | Rôle                                   |
+| ------------ | -------------------------------------- |
+| Mission      | Définir la priorité actuelle           |
+| Playbook     | Proposer les actions à réaliser        |
+| Progression  | Montrer les progrès réalisés           |
+| Achievements | Valoriser les comportements consolidés |
+| Digital Twin | Montrer l'identité comportementale     |
+| Historique   | Justifier les décisions du Coach       |
+
+Chaque zone possède sa propre responsabilité.
+
+Aucune redondance ne doit exister entre elles.
+
+---
+
+---
+
+# 06. Workspace Mission
+
+## Objectif
+
+Le Workspace Mission constitue le point d'entrée du module Coach.
+
+Il représente la priorité absolue du trader.
+
+À tout moment, il doit être capable de répondre à une seule question :
+
+> **"Sur quoi dois-je travailler aujourd'hui ?"**
+
+Toutes les autres sections du module existent pour soutenir cette réponse.
+
+---
+
+## Composition
+
+Le Workspace Mission est composé des éléments suivants, dans cet ordre :
+
+```text
+Mission Header
+    │
+    ▼
+Mission Status
+    │
+    ▼
+Mission Title
+    │
+    ▼
+Mission Description
+    │
+    ▼
+Why this Mission
+    │
+    ▼
+Primary CTA
+```
+
+Aucun autre élément ne doit apparaître avant la Mission.
+
+---
+
+## Composants
+
+### Mission Header
+
+Contient :
+
+* Icône de Mission
+* État général (Active, Terminée, En attente...)
+* Niveau de confiance (optionnel selon la maturité du moteur)
+
+---
+
+### Mission Title
+
+Phrase courte.
+
+Claire.
+
+Orientée action.
+
+Exemples :
+
+* Respecter mon risque.
+* Laisser courir mes gains.
+* Éviter les sorties impulsives.
+
+Une Mission ne doit jamais nécessiter plusieurs lignes de réflexion pour être comprise.
+
+---
+
+### Mission Description
+
+Explique simplement :
+
+* pourquoi cette Mission existe ;
+* quel comportement est ciblé.
+
+Le ton doit rester bienveillant.
+
+Jamais culpabilisant.
+
+---
+
+### Why this Mission
+
+Petit encart pédagogique.
+
+Il résume le raisonnement du Coach.
+
+Exemple :
+
+> Cette Mission a été choisie car tes dernières analyses montrent que les sorties anticipées réduisent significativement tes performances.
+
+L'utilisateur comprend immédiatement que la recommandation repose sur des faits.
+
+---
+
+### Primary CTA
+
+Une seule action principale.
+
+Exemple :
+
+> Ouvrir le Playbook
+
+ou
+
+> Continuer cette Mission
+
+Jamais plusieurs CTA principaux.
+
+---
+
+## États
+
+Le Workspace Mission possède cinq états.
+
+### Loading
+
+Les données sont en cours de chargement.
+
+Skeleton.
+
+Aucune donnée fictive.
+
+---
+
+### No Mission
+
+Aucune Mission n'est encore disponible.
+
+L'écran explique :
+
+* comment une Mission est générée ;
+* pourquoi il faut davantage de données.
+
+---
+
+### Active Mission
+
+État nominal.
+
+La Mission est affichée.
+
+Toutes les interactions sont disponibles.
+
+---
+
+### Completed Mission
+
+La Mission est terminée.
+
+Une animation discrète célèbre la progression.
+
+Puis Coach prépare naturellement la prochaine étape.
+
+---
+
+### Waiting
+
+Une Mission est terminée mais le moteur attend davantage d'observations avant d'en générer une nouvelle.
+
+Le système ne remplit jamais ce vide artificiellement.
+
+---
+
+## Règles d'implémentation
+
+Le Workspace Mission :
+
+* n'est jamais repliable ;
+* reste toujours visible en premier ;
+* possède la priorité visuelle maximale ;
+* n'affiche jamais plusieurs Missions simultanément.
+
+---
+
+# 07. Workspace Playbook
+
+## Objectif
+
+Transformer la Mission en actions concrètes.
+
+Le Playbook répond à la question :
+
+> **"Comment réussir cette Mission ?"**
+
+---
+
+## Composition
+
+```text
+Playbook Header
+      │
+      ▼
+Objectif
+      │
+      ▼
+Liste d'actions
+      │
+      ▼
+Conseils pratiques
+      │
+      ▼
+Critères de réussite
+```
+
+---
+
+## Objectif
+
+Une phrase.
+
+Toujours positive.
+
+Exemple :
+
+> Cette semaine, concentre-toi sur la qualité de tes sorties plutôt que sur leur fréquence.
+
+---
+
+## Liste d'actions
+
+Le cœur du Playbook.
+
+Chaque action :
+
+* est courte ;
+* observable ;
+* réalisable ;
+* mesurable.
+
+Pas de longues explications.
+
+---
+
+## Conseils pratiques
+
+Bloc optionnel.
+
+Quelques recommandations.
+
+Jamais plus de quelques lignes.
+
+---
+
+## Critères de réussite
+
+Le trader sait exactement quand considérer le Playbook comme réussi.
+
+Aucune ambiguïté.
+
+---
+
+## États
+
+### Aucun Playbook
+
+Impossible.
+
+Une Mission possède toujours un Playbook.
+
+---
+
+### En cours
+
+État normal.
+
+---
+
+### Terminé
+
+Toutes les actions sont validées.
+
+Le système attend la validation du Progress Tracking.
+
+---
+
+## Règles
+
+Le Playbook ne doit jamais ressembler à un manuel.
+
+Il doit donner envie d'agir immédiatement.
+
+---
+
+# 08. Workspace Progression
+
+## Objectif
+
+Visualiser l'évolution réelle du trader.
+
+La Progression ne mesure pas le résultat financier.
+
+Elle mesure le changement comportemental.
+
+---
+
+## Composition
+
+```text
+Résumé
+      │
+      ▼
+Indicateur principal
+      │
+      ▼
+Évolution récente
+      │
+      ▼
+Commentaires du Coach
+```
+
+---
+
+## Résumé
+
+Une phrase.
+
+Toujours encourageante.
+
+Même lorsqu'une régression apparaît.
+
+Exemple :
+
+> Tu progresses de manière régulière. Continue à appliquer ton plan.
+
+---
+
+## Indicateur principal
+
+Le composant principal du bloc.
+
+Il doit être immédiatement compréhensible.
+
+Pas de métriques complexes.
+
+---
+
+## Évolution récente
+
+Affiche :
+
+* amélioration ;
+* stabilité ;
+* légère régression.
+
+Toujours dans une logique de tendance.
+
+Jamais sur un seul trade.
+
+---
+
+## Commentaires du Coach
+
+Courte synthèse.
+
+Le ton reste celui d'un mentor.
+
+---
+
+## États
+
+* Aucun progrès disponible
+* Progression active
+* Progression stabilisée
+* Mission terminée
+
+---
+
+## Règles
+
+La Progression ne doit jamais provoquer de frustration.
+
+Elle doit encourager la continuité.
+
+---
+
+---
+
+# 09. Workspace Achievements
+
+## Objectif
+
+Le Workspace Achievements met en valeur les comportements durablement acquis.
+
+Son rôle n'est pas de créer une compétition.
+
+Il sert à rappeler au trader les habitudes positives qu'il a construites.
+
+---
+
+## Composition
+
+```text
+Achievements Header
+        │
+        ▼
+Dernier Achievement débloqué
+        │
+        ▼
+Galerie des Achievements
+        │
+        ▼
+Prochaine étape
+```
+
+---
+
+## Composants
+
+### Dernier Achievement
+
+Mis en avant pendant une courte période.
+
+Permet de célébrer la progression récente.
+
+---
+
+### Galerie
+
+Affichage compact.
+
+Organisation par catégories.
+
+Exemple :
+
+* Discipline
+* Gestion du risque
+* Sessions
+* Exécution
+* Psychologie
+
+---
+
+### Prochaine étape
+
+Sans révéler tous les critères.
+
+L'objectif est de motiver sans transformer le système en "checklist".
+
+---
+
+## États
+
+* Aucun Achievement
+* Premier Achievement
+* Plusieurs Achievements
+* Tous les Achievements d'une catégorie
+
+---
+
+## Règles
+
+Les Achievements restent secondaires.
+
+Ils ne doivent jamais détourner l'attention de la Mission.
+
+---
+
+# 10. Workspace Digital Twin
+
+## Objectif
+
+Présenter l'identité comportementale du trader.
+
+Le Digital Twin ne montre pas les performances récentes.
+
+Il montre ce qui est devenu durable.
+
+---
+
+## Composition
+
+```text
+Digital Twin Header
+        │
+        ▼
+Portrait comportemental
+        │
+        ▼
+Forces principales
+        │
+        ▼
+Compétences acquises
+        │
+        ▼
+Axes de progression
+```
+
+---
+
+## Composants
+
+### Portrait comportemental
+
+Résumé synthétique.
+
+Quelques lignes.
+
+Le ton reste inspirant.
+
+---
+
+### Forces principales
+
+Les comportements consolidés.
+
+Exemple :
+
+* Discipline élevée
+* Gestion du risque maîtrisée
+* Bonne exécution Londres
+
+---
+
+### Compétences
+
+Liste des Skills validées.
+
+---
+
+### Axes de progression
+
+Uniquement des tendances.
+
+Jamais de jugement.
+
+---
+
+## États
+
+* Profil vide
+* Profil en construction
+* Profil consolidé
+
+---
+
+## Règles
+
+Le Digital Twin évolue lentement.
+
+Son interface doit refléter cette stabilité.
+
+---
+
+# 11. Workspace Historique
+
+## Objectif
+
+Rendre les décisions du Coach transparentes.
+
+L'Historique permet au trader de comprendre comment son évolution s'est construite.
+
+---
+
+## Composition
+
+```text
+Historique Header
+        │
+        ▼
+Timeline
+        │
+        ▼
+Missions passées
+        │
+        ▼
+Achievements obtenus
+```
+
+---
+
+## États
+
+* Historique vide
+* Historique disponible
+
+---
+
+## Règles
+
+Comme dans Analytics :
+
+* replié par défaut ;
+* ouverture volontaire ;
+* faible priorité visuelle.
+
+L'Historique constitue une preuve.
+
+Pas le cœur de l'expérience.
+
+---
+
+# 12. États globaux du module
+
+Le module Coach peut exister dans plusieurs états.
+
+## Première utilisation
+
+Aucune donnée.
+
+Coach explique son fonctionnement.
+
+---
+
+## Collecte de données
+
+Le moteur observe.
+
+Aucune Mission n'est encore générée.
+
+---
+
+## Mission active
+
+État nominal.
+
+---
+
+## Mission terminée
+
+Coach célèbre la progression.
+
+Le moteur prépare la suite.
+
+---
+
+## Attente
+
+Le moteur attend suffisamment de nouvelles observations avant de relancer une Mission.
+
+Cette attente est normale.
+
+Elle ne doit jamais donner l'impression d'un dysfonctionnement.
+
+---
+
+# 13. Interactions utilisateur
+
+Les interactions doivent rester limitées.
+
+Coach n'est pas un outil d'administration.
+
+C'est un compagnon de progression.
+
+---
+
+## Interactions principales
+
+* Ouvrir un Playbook
+* Marquer une action comme réalisée (si applicable)
+* Consulter les explications
+* Explorer le Digital Twin
+* Consulter les anciens Achievements
+* Déplier l'Historique
+
+---
+
+## Règle
+
+Chaque interaction doit rapprocher le trader de sa Mission.
+
+---
+
+# 14. Animations
+
+Les animations servent uniquement à renforcer la compréhension.
+
+Jamais à impressionner.
+
+---
+
+## Exemples
+
+### Nouvelle Mission
+
+Transition douce.
+
+---
+
+### Progression mise à jour
+
+Animation légère.
+
+---
+
+### Achievement débloqué
+
+Animation Premium.
+
+Courte.
+
+Mémorable.
+
+---
+
+### Nouvelle Skill
+
+Animation plus marquante.
+
+Événement rare.
+
+---
+
+## Règle
+
+Une animation doit toujours correspondre à un changement d'état significatif.
+
+---
+
+# 15. Responsive
+
+Le comportement responsive suit les principes déjà établis dans Cosmos.
+
+---
+
+## Desktop
+
+Tous les blocs restent visibles dans leur hiérarchie.
+
+---
+
+## Tablet
+
+Réduction des espacements.
+
+Aucune perte d'information.
+
+---
+
+## Mobile
+
+Les blocs conservent exactement le même ordre.
+
+La hiérarchie ne change jamais.
+
+Seule la densité évolue.
+
+---
+
+# 16. Intégration avec le Decision Engine
+
+Le Coach UI ne prend jamais de décision.
+
+Il consomme exclusivement les informations produites par le Decision Engine.
+
+```text
+Decision Engine
+        │
+        ▼
+Mission
+        │
+        ▼
+Playbook
+        │
+        ▼
+Progress Tracking
+        │
+        ▼
+Digital Twin
+        │
+        ▼
+Coach UI
+```
+
+L'interface est une couche de présentation.
+
+Elle ne modifie jamais la logique métier.
+
+---
+
+# 17. Flux de données
+
+Le flux officiel est le suivant :
+
+```text
+Journal
+
+↓
+
+Calculs
+
+↓
+
+Analytics
+
+↓
+
+Observations
+
+↓
+
+Patterns
+
+↓
+
+Decision Engine
+
+↓
+
+Mission
+
+↓
+
+Playbook
+
+↓
+
+Coach UI
+```
+
+Cette chaîne est unidirectionnelle.
+
+Le Coach ne réécrit jamais les données du Journal.
+
+---
+
+# 18. Checklist d'implémentation
+
+Avant de considérer le module comme terminé, les points suivants doivent être validés.
+
+### Architecture
+
+* Tous les Workspaces sont présents.
+* La hiérarchie est respectée.
+* La Mission reste l'élément central.
+
+### UX
+
+* La reprise d'une Mission demande peu d'actions.
+* Les états vides sont pédagogiques.
+* Les animations restent discrètes.
+
+### Design
+
+* Respect intégral du Design Language Cosmos.
+* Respect des tokens officiels.
+* Respect des principes Premium.
+
+### Technique
+
+* Aucune logique métier dans les composants UI.
+* Toutes les décisions proviennent du Decision Engine.
+* Les données restent synchronisées avec le Domain Model.
+
+### Qualité
+
+* Audit UX validé.
+* Audit UI validé.
+* Audit fonctionnel validé.
+* Premium Visual Polish réalisé.
+
+---
+
+# 19. Conclusion
+
+Le **Coach Implementation Blueprint** constitue le lien entre la vision produit et l'implémentation.
+
+Il garantit que le développement respecte :
+
+* la philosophie du produit ;
+* le raisonnement du Decision Engine ;
+* la cohérence du Domain Model ;
+* l'expérience utilisateur définie dans l'UI Architecture.
+
+Son objectif n'est pas de décrire le code.
+
+Son objectif est de rendre l'implémentation prévisible, cohérente et fidèle à l'identité de Cosmos.
+
+Une fois ce Blueprint validé, le développement du module Coach ne relève plus de la conception, mais de l'exécution.
+
+---
+
+# 🎉 Clôture de la phase de conception du Coach
+
+

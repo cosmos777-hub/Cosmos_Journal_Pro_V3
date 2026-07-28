@@ -741,3 +741,150 @@ Elle améliore uniquement :
 Cette étape applique officiellement le principe :
 
 Invisible Excellence.
+
+---
+
+## COACH-CORR-001 — Corrections issues de l'Audit Qualité
+
+### D-053 — Fenêtre "récent" unifiée dans Coach (CORR-002)
+**Contexte** : audit qualité du module Coach — `core/progress.js` utilisait une
+fenêtre de 10 trades pour définir le "récent", tandis que `core/achievements.js`
+en utilisait une de 20, sans qu'aucune des deux définitions ne soit justifiée
+l'une par rapport à l'autre.
+**Décision** : création de `core/coachConstants.js`, exportant
+`RECENT_TRADES_WINDOW = 20`. `core/progress.js` et `core/achievements.js`
+importent désormais cette même constante — une seule définition du "récent"
+dans tout le module Coach. La valeur retenue est 20 (celle d'Achievements),
+jugée plus stable pour dégager une tendance que 10.
+**Conséquence durable** : tout futur Workspace Coach ayant besoin d'une notion
+de "récent" doit importer `RECENT_TRADES_WINDOW` plutôt que définir sa propre
+valeur locale.
+
+### D-054 — Doctrine de Mission : R conservé, doctrine documentée (CORR-003)
+**Contexte** : l'audit a relevé que la Mission (Centre de Mission, Dashboard +
+Coach) peut afficher des valeurs en R dans son raisonnement, ce qui la
+rapproche visuellement d'un mini rapport Analytics — en tension avec la
+philosophie Coach (comportements avant statistiques).
+**Décision** : `calculations.generateMission()` n'est **pas modifiée**. Cette
+fonction est partagée par le Dashboard (`#mission-title`/`#mission-copy`) et
+par Coach (`coachUi.renderCoach()`, qui l'appelle directement) — en changer la
+formulation reviendrait à modifier une formule/un texte central au sens du
+Document 06 §4 ("jamais de règle métier dupliquée"), avec un risque de
+régression visuelle sur le Dashboard, hors périmètre de ce ticket.
+**Conséquence durable** : si une reformulation plus qualitative de la Mission
+est souhaitée, elle devra faire l'objet d'un ticket dédié touchant explicitement
+`calculations.generateMission()`, avec mise à jour corrélée de la documentation
+(Document 05) et validation sur les deux consommateurs (Dashboard et Coach).
+
+### D-055 — Product Language Coach : harmonisation reportée au Premium Visual Polish (CORR-004)
+**Contexte** : les noms actuels des Workspaces Coach (Playbook, Progress,
+Achievements, Digital Twin) mélangent anglais et français, et "Digital Twin"
+entre en collision terminologique avec le "Jumeau Numérique" déjà utilisé par
+le Dashboard (concept différent : courbe réel/théorique vs identité
+comportementale).
+**Décision** : aucun intitulé visible n'est modifié pendant COACH-CORR-001.
+L'harmonisation du Product Language de Coach (Playbook / Progress /
+Achievements / Digital Twin) est explicitement reportée au **Coach Premium
+Visual Polish**.
+**Conséquence durable** : le nom **"Jumeau Numérique"** reste exclusivement
+réservé au Dashboard (courbe réel/théorique, Document 05 §8). Le Workspace
+Coach actuellement nommé "Digital Twin" devra recevoir une autre appellation
+française lors du Premium Visual Polish, pour lever toute ambiguïté entre les
+deux fonctionnalités.
+
+### D-056 — CORR-001 : Progress (court terme) et Digital Twin (long terme) différenciés
+**Contexte** : l'audit a relevé que `progress.coachComment` et
+`digitalTwin.coachPerspective` (messages de clôture des deux Workspaces)
+portaient un ton très proche, au point d'être quasi interchangeables.
+**Décision** : `core/progress.js` (`computeCoachComment`) reste ancré dans le
+présent immédiat — il parle explicitement des prochains trades/prochaines
+séances. `core/digitalTwin.js` (`buildCoachPerspective`) est reformulé pour
+parler exclusivement du long terme — habitudes qui s'installent, identité qui
+se construit. Aucune formule ni donnée sous-jacente n'est modifiée, seul le
+texte généré change.
+**Conséquence durable** : tout futur texte ajouté à l'un de ces deux
+Workspaces doit respecter cette frontière temporelle (Progress = présent
+immédiat / Digital Twin = long terme) pour ne pas réintroduire la confusion
+corrigée ici.
+
+## D-0XX — Journey Before Information
+
+Le module Coach adopte officiellement le principe **Journey Before Information**.
+
+L'utilisateur ne reçoit jamais l'ensemble des informations simultanément.
+
+Le Coach révèle progressivement chaque chapitre afin de transformer une page d'informations en un véritable parcours de progression.
+
+---
+
+## D-0XX — Coach Journey Container
+
+Le Coach remplace définitivement l'empilement vertical de Workspaces par un conteneur fixe accueillant un chapitre actif à la fois.
+
+Cette architecture reprend la philosophie du Double Fond introduite par le Journal tout en développant une expérience propre au Coach grâce à une progression verticale.
+
+---
+
+## D-0XX — Product Language
+
+Le vocabulaire visible du Coach privilégie désormais des intitulés français immédiatement compréhensibles.
+
+Playbook → Plan d'action
+
+Progress → Progression
+
+Achievements → Acquis
+
+Digital Twin → Profil trader
+
+Le terme **Jumeau Numérique** reste exclusivement réservé au Dashboard.
+
+---
+
+## D-0XX — Coach Philosophy
+
+Le Coach n'évalue jamais les performances financières.
+
+Toutes les recommandations, Progressions, Acquis et Profils trader sont exclusivement construits à partir des comportements observables du trader.
+
+Cette règle devient un principe fondamental du produit.
+
+DECISIONS_LOG.md
+D-0XX — Simplification du modèle des causes émotionnelles
+
+Décision
+
+La distinction entre Cause principale et Causes secondaires est supprimée.
+
+Le Journal adopte désormais un unique champ Causes émotionnelles en sélection multiple.
+
+Motivation
+
+Réduire la complexité du formulaire.
+Éviter une hiérarchie artificielle entre les causes.
+Simplifier le modèle de données.
+Préparer une exploitation analytique plus cohérente dans les futures évolutions.
+
+Conséquences
+
+emotionalCauses devient l'unique source de vérité.
+L'ordre de la Carte ⑤ est normalisé :
+Intervention manuelle
+Causes émotionnelles
+D-0XY — Maintien de la saisie manuelle du RR prévu
+
+Décision
+
+Le champ RR prévu reste une saisie manuelle.
+
+Motivation
+
+Une version utilisant un sélecteur prédéfini a été expérimentée durant le Release Polish.
+
+Les contraintes d'affichage des contrôles natifs ne permettaient pas d'obtenir une expérience suffisamment compacte et élégante.
+
+La saisie manuelle a donc été conservée.
+
+Principe retenu
+
+En phase de Release Polish, une expérimentation qui n'améliore pas clairement l'expérience utilisateur est abandonnée au profit de la solution existante

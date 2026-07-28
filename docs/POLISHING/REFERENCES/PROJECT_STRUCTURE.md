@@ -1,7 +1,7 @@
 # PROJECT_STRUCTURE.md
 
 > **Project:** Cosmos Journal Pro V3\
-> **Document Version:** 2.0
+> **Document Version:** 3.0
 
 # Purpose
 
@@ -12,39 +12,56 @@ after the completion of Phase 1.
 
 # High-Level Structure
 
-    index.html
-    style.css
+index.html
+style.css
 
-    src/
-      main.js
+src/
+  main.js
 
-      core/
-        state.js
-        defaults.js
-        storage.js
-        mediaStorage.js
-        calculations.js
-        migrations.js
+  core/
+    state.js
+    defaults.js
+    storage.js
+    mediaStorage.js
+    calculations.js
+    migrations.js
 
-      ui/
-        components.js
-        dashboard.js
-        journal.js
-        analytics.js
-        insights.js
-        settings.js
+    playbooks.js
+    progress.js
+    achievements.js
+    digitalTwin.js
 
-    docs/
-      PRODUCT/
-        PRODUCT_VISION.md
-        UX_PHILOSOPHY.md
-        VISUAL_COMPOSITION.md
-        REFERENCE_MODULE.md
+  ui/
+    components.js
+    dashboard.js
+    journal.js
+    analytics.js
+    coach.js
+    playbook.js
+    progress.js
+    achievements.js
+    digitalTwin.js
+    settings.js
 
-      POLISHING/
-        REFERENCES/
-          DESIGN_SYSTEM_CHARTER.md
+styles/
+  coach.css
 
+docs/
+  PRODUCT/
+    PRODUCT_VISION.md
+    UX_PHILOSOPHY.md
+    VISUAL_COMPOSITION.md
+    REFERENCE_MODULE.md
+
+    COACH_PRODUCT_VISION.md
+    COACH_DOMAIN_MODEL.md
+    COACH_DECISION_ENGINE.md
+    COACH_UI_ARCHITECTURE.md
+    COACH_IMPLEMENTATION_BLUEPRINT.md
+
+  POLISHING/
+    REFERENCES/
+      DESIGN_SYSTEM_CHARTER.md
 ------------------------------------------------------------------------
 
 # Layer Responsibilities
@@ -136,11 +153,117 @@ Tracks implementation, audits and design governance.
 -   Modular evolution
 -   Documentation-driven development
 
+- Business generation separated from presentation
+- One Workspace = One Business Generator + One UI Component
+- Coach consumes business objects only
+- No Workspace recalculates existing business information
+- Information flows progressively through the product
+
 ------------------------------------------------------------------------
 
 # Reference Architecture
 
-The Journal module is the architectural reference.
+The Journal module remains the reference for workflow architecture.
 
-Future modules (Dashboard, Analytics, Insights and Settings) must follow
-the same layering and responsibilities.
+The Dashboard remains the reference for KPI presentation.
+
+The Coach module becomes the reference for business generation architecture,
+introducing the official Cosmos pattern:
+
+Business Generator
+
+↓
+
+Business Object
+
+↓
+
+UI Component
+
+This architecture is intended to become the standard for every future
+intelligent module of Cosmos Journal Pro V3.
+
+
+# Coach Architecture
+
+The Coach module follows the official Cosmos architecture based on a strict
+separation between business generation and presentation.
+
+Each Coach Workspace is composed of two independent layers.
+
+core/*
+    Pure business generation
+
+↓
+
+Business Object
+
+↓
+
+ui/*
+    Rendering and presentation
+
+Current Workspaces:
+
+Mission
+    calculations.generateMission()
+
+Playbook
+    core/playbooks.js
+    ui/playbook.js
+
+Progress
+    core/progress.js
+    ui/progress.js
+
+Achievements
+    core/achievements.js
+    ui/achievements.js
+
+Digital Twin
+    core/digitalTwin.js
+    ui/digitalTwin.js
+
+
+
+# Official Architectural Patterns
+
+## Workflow Pattern
+
+Journal
+
+User Workflow
+
+↓
+
+Business Logic
+
+↓
+
+Persistence
+
+## KPI Pattern
+
+Dashboard
+
+Calculations
+
+↓
+
+KPI Cards
+
+↓
+
+Visual Components
+
+## Coach Pattern
+
+Business Generator
+
+↓
+
+Business Object
+
+↓
+
+UI Component

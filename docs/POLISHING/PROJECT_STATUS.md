@@ -202,3 +202,143 @@ Phase 2 — Premium Product Experience
 ▶️ Insights Polishing
 
 ⏳ Settings Harmonization
+
+## COACH — Premium Coaching Workspace
+
+**Statut :** ✅ TERMINÉ
+
+### État d'avancement
+
+- ✅ Product Vision
+- ✅ Domain Model
+- ✅ Decision Engine (architecture)
+- ✅ UI Architecture
+- ✅ Implementation Blueprint
+- ✅ COACH-001 — Mission Workspace
+- ✅ COACH-002 — Plan d'action Workspace
+- ✅ COACH-003 — Progression Workspace
+- ✅ COACH-004 — Acquis Workspace
+- ✅ COACH-005 — Profil trader Workspace
+- ✅ Audit Qualité
+- ✅ Corrections Post-Audit
+- ✅ Premium Visual Polish
+
+### Résultat
+
+Le module Coach est désormais considéré comme fonctionnellement et visuellement terminé.
+
+Son architecture repose sur le principe **Journey Before Information**, organisé autour d'un **Journey Container** à conteneur fixe et chapitres successifs.
+
+Le Coach accompagne exclusivement les comportements du trader. Il ne récompense jamais les résultats financiers et n'utilise jamais le profit comme critère de progression.
+
+Le module est prêt pour les futures évolutions du Decision Engine sans nécessiter de refonte de son architecture.
+
+# COACH — Polishing Complete
+
+Le module Coach est officiellement terminé.
+
+Cette phase conclut la construction du système d'accompagnement de Cosmos Journal Pro V3.
+
+Au-delà de son implémentation fonctionnelle, le Coach dispose désormais de sa propre philosophie produit, de son architecture dédiée et d'une expérience utilisateur construite autour du principe **Journey Before Information**.
+
+Le module accompagne la progression du trader sans jamais valoriser les résultats financiers. Chaque recommandation, chaque Plan d'action, chaque Progression, chaque Acquis et chaque Profil trader sont exclusivement basés sur les comportements observables.
+
+Le Coach rejoint désormais le Journal, le Dashboard et l'Analytics parmi les modules officiellement finalisés du produit.
+
+Les prochaines itérations concerneront exclusivement des améliorations transversales, des harmonisations et des évolutions du Decision Engine, sans remise en cause de l'architecture du module.
+
+PROJECT_STATUS.md
+Release Polish
+✅ RP-001 — Dashboard : Filtre par compte
+
+Statut : Terminé
+
+Résumé
+
+Ajout d'un filtre par compte dans le Dashboard.
+Réutilisation de la logique existante (filterTrades()).
+Aucun changement des calculs, KPI ou du Design System.
+Aucun impact sur l'architecture des données.
+✅ RP-002 — Journal : Simplification du Delta émotionnel
+
+Statut : Terminé
+
+Résumé
+
+Réorganisation de la Carte ⑤ du Journal.
+La section Intervention manuelle est désormais affichée avant les causes émotionnelles afin de respecter le déroulement logique de l'analyse d'un trade.
+Suppression de la distinction entre Cause principale et Causes secondaires.
+Introduction d'une unique section Causes émotionnelles avec sélection multiple.
+Simplification du modèle de données du Journal autour d'un seul tableau emotionalCauses.
+Nettoyage des éléments DOM, de l'état du formulaire et de la logique devenue obsolète.
+Aucun impact sur Dashboard, Analytics, Coach ou les calculs.
+
+Note
+
+L'idée d'un sélecteur prédéfini pour le RR prévu a été étudiée puis abandonnée.
+Après évaluation UX, la saisie manuelle a été conservée, jugée plus simple et plus adaptée à l'expérience utilisateur recherchée.
+
+✅ RP-003 — Journal : persistance des sélections du Wizard
+
+Statut : Terminé
+
+Résumé
+
+Correction de la perte de sélection des champs reconstruits par renderSelectors().
+Généralisation du mécanisme de restauration déjà utilisé par account-select aux autres sélecteurs concernés.
+Les valeurs sélectionnées (Session, HTF, LTF) sont désormais conservées lors des reconstructions du formulaire.
+Correction réalisée exclusivement dans le Journal.
+Aucun impact sur le stockage, les calculs, Dashboard, Analytics ou Coach.
+# RP-005 — Scrollbars Theme Compatibility
+
+## Statut
+
+✅ Terminé
+
+## Problème identifié
+
+Les scrollbars personnalisées utilisaient des couleurs fixes adaptées uniquement au thème sombre :
+
+* `rgba(255,255,255,0.2)`
+* `rgba(255,255,255,0.4)`
+
+En thème clair, ces valeurs provoquaient une perte importante de contraste rendant les scrollbars difficiles voire impossibles à distinguer.
+
+## Correction appliquée
+
+Introduction de tokens dédiés dans le Design System :
+
+* `--scrollbar-thumb`
+* `--scrollbar-thumb-hover`
+
+Les valeurs changent automatiquement selon le thème actif.
+
+Les modules concernés utilisent désormais ces tokens :
+
+* Journal (`#journal-panel`)
+* Analytics (`#analytics-workspace-viewport`)
+* Analytics (`#analytics-proof-collapsible .trade-list`)
+* Coach (`.coach-journey-viewport`)
+
+## Impact
+
+Correction strictement visuelle.
+
+Aucun impact sur :
+
+* la logique métier ;
+* les données ;
+* le JavaScript ;
+* les layouts ;
+* les composants existants.
+
+## Validation
+
+Tests réalisés :
+
+* thème sombre : comportement conservé ;
+* thème clair : visibilité restaurée ;
+* hover : contraste renforcé ;
+* dimensions et comportement inchangés.
+
+RP-005 est considéré comme clôturé.

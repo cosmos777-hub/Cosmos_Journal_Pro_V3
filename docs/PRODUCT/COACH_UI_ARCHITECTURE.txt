@@ -1,0 +1,1046 @@
+# COACH_UI_ARCHITECTURE.md
+
+---
+
+# 00. Document Information
+
+**Document Type**
+
+Architecture Reference
+
+**Module**
+
+Coach
+
+**Status**
+
+Official Reference
+
+**Audience**
+
+* Product
+* UX
+* UI
+* Development
+
+**Purpose**
+
+Define the user experience architecture of the Coach module.
+
+This document specifies how the intelligence defined by the Domain Model and the Decision Engine is presented to the trader.
+
+It focuses on user experience, information hierarchy and interaction principles.
+
+It intentionally avoids implementation details.
+
+---
+
+# 01. Purpose
+
+Coach exists to transform behavioral intelligence into daily action.
+
+Its interface is not designed to display information.
+
+It is designed to maintain momentum.
+
+Every screen, every component and every interaction should encourage the trader to continue progressing.
+
+The objective is not to create an impressive dashboard.
+
+The objective is to create an environment where the next meaningful action is always obvious.
+
+---
+
+# 02. UX Philosophy
+
+Coach follows one fundamental principle.
+
+> **The Mission is the Interface.**
+
+Everything else is secondary.
+
+Statistics.
+
+Achievements.
+
+Progress bars.
+
+History.
+
+Digital Twin.
+
+These elements support the Mission.
+
+They never compete with it.
+
+The user should never wonder:
+
+> "Where should I look?"
+
+The interface should naturally answer:
+
+> "Here is what matters now."
+
+---
+
+## Action Before Information
+
+Coach never displays information without purpose.
+
+Every visible element must help the trader:
+
+* understand;
+* decide;
+* improve;
+* stay motivated.
+
+Information without action is considered visual noise.
+
+---
+
+## One Cognitive Goal
+
+At any moment, Coach should require only one mental objective.
+
+Complete the Mission.
+
+Everything else contributes to that objective.
+
+This principle minimizes cognitive load and maximizes behavioral consistency.
+
+---
+
+# 03. User Journey
+
+Each visit to Coach follows the same progression.
+
+```text
+Arrival
+
+↓
+
+Current Mission
+
+↓
+
+Recommended Action
+
+↓
+
+Playbook
+
+↓
+
+Progress
+
+↓
+
+Reflection
+
+↓
+
+Exit
+```
+
+The journey is intentionally short.
+
+Coach is designed to accompany trading.
+
+Not interrupt it.
+
+---
+
+## Session Continuity
+
+The interface should always feel persistent.
+
+The user does not "open Coach."
+
+The user **returns to an ongoing progression**.
+
+The current Mission is therefore the natural entry point of every session.
+
+---
+
+# 04. Information Hierarchy
+
+Coach organizes information according to behavioral importance.
+
+Not according to technical importance.
+
+The hierarchy remains constant.
+
+## Level 1
+
+Current Mission
+
+The primary focus.
+
+Immediately visible.
+
+Impossible to miss.
+
+---
+
+## Level 2
+
+Playbook
+
+Concrete actions.
+
+Visible immediately after the Mission.
+
+---
+
+## Level 3
+
+Progress
+
+Evidence that improvement is occurring.
+
+---
+
+## Level 4
+
+Achievements
+
+Recognition.
+
+Motivation.
+
+Celebration.
+
+---
+
+## Level 5
+
+Digital Twin
+
+Long-term identity.
+
+Always accessible.
+
+Never dominant.
+
+---
+
+## Level 6
+
+Historical details
+
+Available when needed.
+
+Hidden by default.
+
+---
+
+# 05. Screen Architecture
+
+The Coach screen is organized around five functional zones.
+
+```text
+Mission
+
+↓
+
+Playbook
+
+↓
+
+Progress
+
+↓
+
+Identity
+
+↓
+
+History
+```
+
+Each section naturally answers one question.
+
+Mission
+
+> What should I improve?
+
+---
+
+Playbook
+
+> How should I improve it?
+
+---
+
+Progress
+
+> Am I improving?
+
+---
+
+Identity
+
+> What am I becoming?
+
+---
+
+History
+
+> Why did Coach reach this conclusion?
+
+The trader never has to search for meaning.
+
+The layout itself communicates the progression.
+
+---
+
+# 06. Workspace Architecture
+
+Like the Journal and Analytics, Coach adopts a stable workspace.
+
+The frame remains fixed.
+
+Content scrolls internally when necessary.
+
+This preserves spatial memory and reinforces consistency across Cosmos.
+
+The workspace becomes the visual anchor of the coaching experience.
+
+Unlike Analytics, however, Coach prioritizes action over exploration.
+
+The workspace should therefore feel calmer, more focused and less analytical.
+
+---
+
+# 07. Mission Experience
+
+The Mission is the emotional center of the interface.
+
+It should immediately communicate three things:
+
+* the current objective;
+* why it matters;
+* what success looks like.
+
+The Mission is never presented as a warning.
+
+It is presented as an opportunity for progression.
+
+Language should remain encouraging, constructive and respectful.
+
+Coach guides.
+
+It never judges.
+
+---
+
+## Mission States
+
+A Mission may be:
+
+* Newly assigned
+* In progress
+* Near completion
+* Completed
+
+Each state should have a distinct visual treatment while preserving visual continuity.
+
+The objective is to create a sense of progression rather than abrupt transitions.
+
+---
+
+# 08. Playbook Experience
+
+The Playbook transforms intention into action.
+
+It should always appear simple.
+
+A trader should feel capable of starting immediately.
+
+Each action should be:
+
+* concise;
+* concrete;
+* measurable;
+* achievable.
+
+Coach avoids overwhelming the user with long lists.
+
+A few well-chosen actions are always preferable to exhaustive guidance.
+
+---
+
+Parfait. Nous terminons officiellement ce dernier document de la même manière que les précédents.
+
+À partir d'ici, nous ne définissons plus seulement une interface.
+
+Nous définissons **l'expérience émotionnelle** de Coach.
+
+C'est ce qui donnera au module son identité.
+
+---
+
+# **09. Progress Experience**
+
+## Purpose
+
+Progress should make improvement visible.
+
+Not performance.
+
+The objective is to reassure the trader that meaningful change is occurring, even when trading results fluctuate.
+
+Coach therefore celebrates behavioral consistency before financial outcomes.
+
+---
+
+## UX Philosophy
+
+Progress must feel alive.
+
+It should continuously communicate that every disciplined action contributes to long-term growth.
+
+Small improvements deserve visibility.
+
+Large improvements deserve celebration.
+
+The interface should naturally encourage perseverance.
+
+---
+
+## Design Principles
+
+Progress should answer three questions.
+
+> Where am I?
+
+↓
+
+> Am I improving?
+
+↓
+
+> What remains to be done?
+
+Nothing more.
+
+---
+
+# **10. Achievement Experience**
+
+## Purpose
+
+Achievements exist to reinforce positive behaviors.
+
+Never to create competition.
+
+Never to gamify trading.
+
+Their role is psychological.
+
+They acknowledge effort.
+
+They encourage consistency.
+
+They reward transformation.
+
+---
+
+## Recognition Philosophy
+
+Coach celebrates behaviors.
+
+Not profits.
+
+Achievements therefore become memories of personal growth rather than trophies.
+
+When unlocked, an Achievement should feel meaningful.
+
+Not frequent.
+
+Recognition gains value through rarity.
+
+---
+
+## UX Principles
+
+Achievements should surprise.
+
+Not overwhelm.
+
+Their presentation should remain elegant.
+
+Discrete animations.
+
+Premium visual treatment.
+
+No intrusive pop-ups.
+
+Recognition should feel earned.
+
+---
+
+# **11. Digital Twin Experience**
+
+## Purpose
+
+The Digital Twin represents the trader's long-term identity.
+
+Unlike Progress, which evolves daily,
+
+the Digital Twin evolves slowly.
+
+Its role is not to motivate immediate action.
+
+Its role is to answer a deeper question.
+
+> **Who am I becoming?**
+
+---
+
+## UX Philosophy
+
+The Digital Twin should inspire reflection.
+
+It should never resemble a profile page.
+
+It should resemble a living portrait of behavioral evolution.
+
+Every acquired Skill.
+
+Every mastered Habit.
+
+Every long-term strength.
+
+Gradually shapes this identity.
+
+---
+
+## Design Principles
+
+The Digital Twin should feel:
+
+* stable;
+* calm;
+* timeless;
+* aspirational.
+
+It is the quiet memory of the trader's journey.
+
+---
+
+# **12. Empty States**
+
+## Purpose
+
+An empty state is not the absence of content.
+
+It is the beginning of a story.
+
+Coach should never punish a new user with empty containers.
+
+Instead, every empty state should communicate possibility.
+
+---
+
+## Philosophy
+
+Every empty state answers one question.
+
+> **What happens next?**
+
+Examples.
+
+No active Mission.
+
+↓
+
+Coach explains how the first Mission will be generated.
+
+---
+
+No Achievements.
+
+↓
+
+Coach explains that recognition will naturally appear through consistency.
+
+---
+
+No Digital Twin.
+
+↓
+
+Coach explains that identity grows with experience.
+
+---
+
+Empty states teach.
+
+They never apologize.
+
+---
+
+# **13. Micro-interactions**
+
+## Purpose
+
+Micro-interactions reinforce confidence.
+
+Not decoration.
+
+Every animation should communicate meaning.
+
+---
+
+## Principles
+
+Transitions should be:
+
+* smooth;
+* subtle;
+* informative.
+
+Animations must never compete with content.
+
+They simply reinforce state changes.
+
+---
+
+## Examples
+
+Mission completed.
+
+↓
+
+Gentle confirmation.
+
+---
+
+Skill acquired.
+
+↓
+
+Memorable but restrained celebration.
+
+---
+
+Progress updated.
+
+↓
+
+Small visual feedback.
+
+---
+
+Everything remains intentional.
+
+Nothing feels theatrical.
+
+---
+
+# **14. Visual Language**
+
+Coach adopts the Premium Visual Language established by Dashboard.
+
+However, its emotional tone differs.
+
+Dashboard communicates confidence.
+
+Analytics communicates understanding.
+
+Coach communicates encouragement.
+
+---
+
+## Emotional Palette
+
+The interface should feel:
+
+* calm;
+* optimistic;
+* reassuring;
+* focused.
+
+Never aggressive.
+
+Never alarming.
+
+Even corrective feedback should remain constructive.
+
+---
+
+## Visual Hierarchy
+
+Hierarchy emerges through:
+
+* spacing;
+* rhythm;
+* typography;
+* contrast.
+
+Not excessive size.
+
+This extends the Cosmos principle:
+
+> **Hierarchy Before Size.**
+
+---
+
+# **15. UX Principles**
+
+The following principles govern every future UI decision.
+
+---
+
+### Mission Before Dashboard
+
+The current Mission always remains the visual center.
+
+---
+
+### Action Before Information
+
+Every visible element should encourage action.
+
+---
+
+### Simplicity Before Density
+
+Coach reduces cognitive effort.
+
+Not information quality.
+
+---
+
+### Encouragement Before Judgment
+
+Coach accompanies.
+
+It never criticizes.
+
+---
+
+### Progress Before Perfection
+
+Improvement is continuous.
+
+The interface reflects that philosophy.
+
+---
+
+### Consistency Before Novelty
+
+Visual coherence is preferred over unnecessary innovation.
+
+---
+
+### Identity Before Performance
+
+Coach develops traders.
+
+Not statistics.
+
+---
+
+# **16. Future Evolution**
+
+The architecture has been intentionally designed to support future expansion.
+
+Possible evolutions include:
+
+* adaptive Playbooks;
+* contextual educational content;
+* AI-assisted coaching conversations;
+* personalized coaching styles;
+* seasonal Missions;
+* collaborative coaching.
+
+These additions enrich the experience.
+
+They never modify the core UX philosophy established by this document.
+
+---
+
+# **17. Closing Notes**
+
+Coach is not another analytics screen.
+
+It is not a notification center.
+
+It is not a gamification system.
+
+Coach is a progression companion.
+
+Every interaction exists to answer one question:
+
+> **"What is the next meaningful step in becoming a better trader?"**
+
+The interface deliberately minimizes distraction.
+
+It maximizes clarity.
+
+It celebrates consistency.
+
+It protects focus.
+
+And above all,
+
+it reminds the trader that lasting performance is built through lasting behaviors.
+
+The interface therefore does not merely display intelligence.
+
+It makes intelligence feel supportive.
+
+That distinction defines the Coach experience.
+
+---
+
+
+---
+
+# 3. Coach Journey Architecture
+
+## Why the Architecture Changed
+
+The first iterations of Coach displayed all Workspaces as a long vertical page.
+
+Although functionally correct, this architecture created an undesirable cognitive effect.
+
+The user immediately perceived Coach as a large collection of information to read rather than an experience to live.
+
+Coach must never feel like documentation.
+
+It must feel like guidance.
+
+For this reason, the module adopts a new interaction model centered around progressive discovery.
+
+The objective is not to reduce the available information.
+
+The objective is to reveal it at the right moment.
+
+---
+
+# Journey Before Information
+
+Coach introduces a new official UX principle inside Cosmos.
+
+> **Journey Before Information**
+
+The product should never expose every piece of information simultaneously.
+
+Instead, it progressively accompanies the trader through a coherent sequence of chapters.
+
+Each chapter naturally prepares the next one.
+
+The user is therefore invited to continue the journey rather than scroll through a long page.
+
+This dramatically reduces cognitive load while increasing engagement.
+
+---
+
+# Coach Journey Container
+
+Coach is no longer composed of five stacked Workspaces.
+
+Instead, it is built around a single persistent container.
+
+This container acts as the permanent workspace of the Coach.
+
+Only one chapter is displayed at any given time.
+
+The container itself never changes its dimensions.
+
+Only its internal content evolves.
+
+This follows the same "Double Background" philosophy introduced by the Journal Wizard while adapting it to a completely different user experience.
+
+---
+
+# Vertical Journey
+
+Unlike the Journal Wizard, Coach does not use horizontal navigation.
+
+The Journal represents a workflow.
+
+Coach represents personal growth.
+
+For this reason, Coach adopts a vertical progression.
+
+Each chapter smoothly leaves through the top of the container while the next chapter enters from the bottom.
+
+This movement symbolises continuous progression rather than step execution.
+
+The interaction therefore reinforces the product philosophy itself.
+
+---
+
+# Chapter Navigation
+
+Navigation remains permanently visible.
+
+The user always knows:
+
+* where they currently are;
+* what has already been explored;
+* what comes next.
+
+The navigation is composed of two complementary elements.
+
+### Left Column
+
+Displays every chapter.
+
+Example:
+
+```text
+Mission
+
+Plan d'action
+
+Progression
+
+Acquis
+
+Portrait
+```
+
+The active chapter receives visual emphasis.
+
+The remaining chapters stay visible using a quieter visual treatment.
+
+---
+
+### Right Column
+
+Displays the vertical progression indicator.
+
+Example:
+
+```text
+●
+
+○
+
+○
+
+○
+
+○
+```
+
+The active indicator smoothly moves as the journey progresses.
+
+It complements the chapter list without competing with it.
+
+---
+
+# Chapter Transition
+
+Only one chapter exists inside the viewport.
+
+When the user chooses to continue:
+
+* the current chapter slides upward;
+* the next chapter enters from below;
+* the active chapter title updates;
+* the progression indicator advances;
+* the container itself never moves.
+
+The transition should feel calm, fluid and intentional.
+
+The animation is never decorative.
+
+It communicates progression.
+
+---
+
+# Navigation Philosophy
+
+Coach does not encourage free browsing between disconnected screens.
+
+Instead, it gently guides the trader through a meaningful sequence.
+
+Each chapter answers one question.
+
+Mission
+
+> What should I improve?
+
+↓
+
+Plan d'action
+
+> How should I improve it?
+
+↓
+
+Progression
+
+> Am I moving in the right direction?
+
+↓
+
+Acquis
+
+> Which habits have become part of me?
+
+↓
+
+Portrait
+
+> What kind of trader am I becoming?
+
+The entire experience tells a single story.
+
+---
+
+# Relationship with the Journal
+
+Although both modules use a persistent container, their philosophies differ.
+
+## Journal
+
+Workflow-oriented.
+
+The objective is efficient execution.
+
+Horizontal movement represents procedural progression.
+
+---
+
+## Coach
+
+Journey-oriented.
+
+The objective is personal transformation.
+
+Vertical movement represents continuous growth.
+
+The two modules therefore share the same architectural philosophy while expressing two completely different user experiences.
+
+---
+
+# Expected User Experience
+
+At no point should Coach feel like reading a report.
+
+At every interaction, the user should feel accompanied.
+
+The module should create the impression of progressing through a personal coaching session rather than consulting static information.
+
+The architecture itself therefore becomes part of the coaching experience.
+
+---
+
+# ✅ Fin de `COACH_UI_ARCHITECTURE.md`
+
+* **`COACH_PRODUCT_VISION.md`** définit la raison d'être du module et sa philosophie produit.
+* **`COACH_DOMAIN_MODEL.md`** établit le langage métier commun et les concepts fondamentaux.
+* **`COACH_DECISION_ENGINE.md`** décrit le raisonnement déterministe qui transforme les données en décisions de coaching.
+* **`COACH_UI_ARCHITECTURE.md`** traduit cette intelligence en une expérience utilisateur simple, motivante et cohérente.
+
+* **Journal** → construire l'action (*Workflow First*)
+* **Dashboard** → donner une vision instantanée (*Clarity First*)
+* **Analytics** → aider à comprendre (*Understanding First*)
+* **Coach** → transformer la compréhension en progression (*Action First*)

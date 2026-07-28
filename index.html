@@ -24,7 +24,7 @@
         <button class="nav-button active" type="button" data-view="dashboard">Dashboard</button>
         <button class="nav-button" type="button" data-view="journal">Journal</button>
         <button class="nav-button" type="button" data-view="analytics">Analytics</button>
-        <button class="nav-button" type="button" data-view="insights">Insights</button>
+        <button class="nav-button" type="button" data-view="coach">Coach</button>
       </nav>
 
       <div class="header-actions">
@@ -101,9 +101,20 @@
              Nom "Pilotage" provisoire — à raffiner lors d'un futur ticket de
              polissage visuel (voir DECISIONS_LOG.md D-048). -->
       <aside class="panel dashboard-pilot" id="dashboard-pilot-panel">
-        <p class="eyebrow">Pilotage</p>
-        <h2>Discipline &amp; régularité</h2>
-        <div style="display:grid; gap:var(--space-2);">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:var(--space-2);">
+    <div>
+      <p class="eyebrow">Pilotage</p>
+      <h2>Discipline &amp; régularité</h2>
+    </div>
+    <div class="field" style="min-width:150px;">
+      <label for="dashboard-account-filter">Compte</label>
+      <select id="dashboard-account-filter">
+        <option value="">Tous</option>
+      </select>
+    </div>
+  </div>
+  <div style="display:grid; gap:var(--space-2); margin-top:var(--space-2);">
+        
           <article class="card kpi">
             <span class="kpi-label">Delta émotionnel</span>
             <strong class="kpi-value neutral" id="kpi-delta">+0.00%</strong>
@@ -366,25 +377,18 @@
                 </div>
                 <div class="field-group">
                   <div class="field">
-                    <label>Cause principale</label>
-                    <div class="segmented" id="emotional-cause-options"></div>
-                    <input type="hidden" id="emotional-cause-value">
-                  </div>
-                  <!-- Progressive Disclosure : n'apparaît qu'après le choix d'une cause
-                       principale — avant, ce sont des options sans contexte. -->
-                  <div class="field hidden" id="emotional-causes-secondary-field">
-                    <label>Causes secondaires</label>
-                    <div class="checklist" id="emotional-causes-secondary-options"></div>
-                  </div>
-                </div>
-                <div class="field-group">
-                  <div class="field">
                     <label>Intervention manuelle ?</label>
                     <div class="segmented" id="manual-intervention-options">
                       <button type="button" class="chip">Oui</button>
                       <button type="button" class="chip active">Non</button>
                     </div>
                     <input type="hidden" id="manual-intervention-value" value="Non">
+                  </div>
+                </div>
+                <div class="field-group">
+                  <div class="field">
+                    <label>Causes émotionnelles</label>
+                    <div class="checklist" id="emotional-cause-options"></div>
                   </div>
                 </div>
               </div>
@@ -736,40 +740,94 @@
 
   </div>
 </div>
-  <div class="view" id="view-insights">
-    <div class="panel">
-      <p class="eyebrow">Insights IA</p>
-      <h2>Ce que Cosmos observe</h2>
-      <p class="muted">Généré uniquement à partir de données statistiquement pertinentes — jamais de conclusion inventée
-        sur un échantillon trop faible.</p>
+  <!--
+  COACH-POLISH-001 — Instructions de remplacement pour index.html
+  ═══════════════════════════════════════════════════════════════
+  Dans index.html, repérer le bloc qui commence par :
 
-      <div id="insights-empty-state" class="empty-state hidden" style="margin-top:16px;">
-        <div>
-          <h3>Pas assez de données</h3>
-          <p class="muted" id="insights-empty-copy">Ajoutez encore des trades pour obtenir une analyse fiable.</p>
-        </div>
-      </div>
+      <div class="view" id="view-coach">
 
-      <div id="insights-content" class="hidden" style="margin-top:16px; display:grid; gap:20px;">
-        <div>
-          <h3>🟢 Les forces</h3>
-          <div id="insights-forces" class="trade-list"></div>
-        </div>
-        <div>
-          <h3>🔴 Les faiblesses</h3>
-          <div id="insights-faiblesses" class="trade-list"></div>
-        </div>
-        <div>
-          <h3>🔵 Les opportunités</h3>
-          <div id="insights-opportunites" class="trade-list"></div>
-        </div>
-        <div>
-          <h3>⭐ Les recommandations</h3>
-          <div id="insights-recommandations" class="trade-list"></div>
-        </div>
+  et qui se termine par le </div> correspondant (juste avant
+  </main>). Supprimer intégralement ce bloc et le remplacer par le
+  bloc ci-dessous.
+
+  Rien d'autre ne change dans index.html : les 5 conteneurs génériques
+  (coach-mission-card, coach-playbook-card, coach-progress-card,
+  coach-achievements-card, coach-digitaltwin-card) sont conservés à
+  l'identique, avec leurs mêmes ids — seule leur enveloppe (Journey
+  Container : nav latérale + viewport scrollable + dots) change.
+  ui/coach.js, ui/playbook.js, ui/progress.js, ui/achievements.js et
+  ui/digitalTwin.js n'ont besoin d'aucune adaptation supplémentaire :
+  ils écrivent toujours dans les mêmes ids.
+-->
+
+<div class="view" id="view-coach">
+  <div class="panel" id="coach-panel">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Coach</p>
+        <h2>Ton parcours de progression</h2>
+        <p class="muted">Chaque chapitre s'enchaîne naturellement — avance à ton rythme, un seul à la fois.</p>
       </div>
     </div>
+
+    <div id="coach-empty-state" class="empty-state hidden" style="margin-top:16px;">
+      <div>
+        <h3 id="coach-empty-title">Pas assez de données</h3>
+        <p class="muted" id="coach-empty-copy">Ajoutez encore des trades pour obtenir une Mission fiable.</p>
+      </div>
+    </div>
+
+    <div id="coach-content" class="hidden coach-journey">
+      <nav class="coach-journey-nav" id="coach-journey-nav" aria-label="Chapitres du Coach"></nav>
+
+      <div class="coach-journey-viewport" id="coach-journey-viewport">
+
+        <section class="coach-chapter" data-chapter="mission">
+          <article class="card coach-mission-card" id="coach-mission-card" data-state="active">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Mission</p>
+                <h2 id="coach-mission-title">—</h2>
+              </div>
+              <span class="badge coach-priority" id="coach-mission-priority">—</span>
+            </div>
+            <p class="muted" id="coach-mission-description">—</p>
+            <p class="coach-mission-reasoning" id="coach-mission-reasoning">—</p>
+            <button class="button primary coach-mission-cta" type="button" id="coach-mission-cta" data-view="journal">Enregistrer un trade</button>
+          </article>
+        </section>
+
+        <section class="coach-chapter" data-chapter="playbook">
+          <!-- COACH-002 : conteneur générique unique. Tout le balisage interne
+               est injecté par ui/playbook.js — aucune structure à prévoir ici. -->
+          <article class="card coach-playbook-card" id="coach-playbook-card"></article>
+        </section>
+
+        <section class="coach-chapter" data-chapter="progress">
+          <!-- COACH-003 : conteneur générique unique. Tout le balisage interne
+               est injecté par ui/progress.js — aucune structure à prévoir ici. -->
+          <article class="card coach-progress-card" id="coach-progress-card"></article>
+        </section>
+
+        <section class="coach-chapter" data-chapter="achievements">
+          <!-- COACH-004 : conteneur générique unique. Tout le balisage interne
+               est injecté par ui/achievements.js — aucune structure à prévoir ici. -->
+          <article class="card coach-achievements-card" id="coach-achievements-card"></article>
+        </section>
+
+        <section class="coach-chapter" data-chapter="digitaltwin">
+          <!-- COACH-005 : conteneur générique unique. Tout le balisage interne
+               est injecté par ui/digitalTwin.js — aucune structure à prévoir ici. -->
+          <article class="card coach-digitaltwin-card" id="coach-digitaltwin-card"></article>
+        </section>
+
+      </div>
+
+      <div class="coach-journey-dots" id="coach-journey-dots" aria-hidden="true"></div>
+    </div>
   </div>
+</div>
   </main>
   </div>
 

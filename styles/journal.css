@@ -169,11 +169,11 @@
       background: transparent;
     }
     #journal-panel::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--scrollbar-thumb);
       border-radius: 10px;
     }
     #journal-panel::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: var(--scrollbar-thumb-hover);
     }
 
     /* La CARTE réelle : hauteur naturelle, jamais contrainte. Contient Mode
@@ -481,17 +481,16 @@
        aéré et premium que le gabarit de base (10px/20px). */
     #trade-form #asset-options .chip,
     #trade-form #direction-options .chip,
-    #trade-form #emotional-cause-options .chip,
     #trade-form #manual-intervention-options .chip {
       min-height: 24px;
       padding: 0 11px;
       font-size: 12px;
     }
 
-    /* Causes secondaires (Carte ⑤) : même famille visuelle que .checklist
-       (Confluences), mais aligné sur le même gabarit que les chips ci-dessus
-       pour rester cohérent avec le reste de la Carte ⑤. */
-    #emotional-causes-secondary-options.checklist label {
+    /* RP-002C : Causes émotionnelles passe de chips (sélection unique) à
+       checklist (sélection multiple) — même gabarit visuel qu'auparavant
+       (24px / 12px), seul le mécanisme de sélection change. */
+    #emotional-cause-options.checklist label {
       min-height: 24px;
       padding: 0 11px;
       font-size: 12px;

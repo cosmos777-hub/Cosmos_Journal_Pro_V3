@@ -2,6 +2,11 @@
 // depuis main.js. C'est un objet mutable partagé : les modules qui l'importent
 // mutent ses propriétés directement (state.data = ..., state.currentCard = ...),
 // exactement comme avant le découpage — aucun changement de comportement.
+//
+// RP-002C — Simplification du Delta émotionnel : selectedEmotionalCause (valeur
+// unique) et selectedEmotionalCausesSecondary (retiré en RP-002B) sont remplacés
+// par selectedEmotionalCauses (tableau, sélection multiple unique). La distinction
+// principale/secondaire est définitivement abandonnée (décision produit officielle).
 export const state = {
   data: null,
   selectedAsset: "",
@@ -11,11 +16,10 @@ export const state = {
   selectedDirection: "Buy",
   selectedSetupQuality: 0,
   selectedConfluences: [],
-  selectedEmotionalCause: "",
-  selectedEmotionalCausesSecondary: [],
+  selectedEmotionalCauses: [],
   selectedManualIntervention: "Non",
   // UX-004 (Dynamic Tag Chips) : tags sélectionnés dans le Wizard, même famille
-  // que selectedConfluences/selectedEmotionalCausesSecondary (multi-sélection).
+  // que selectedConfluences/selectedEmotionalCauses (multi-sélection).
   selectedTags: [],
   currentView: "dashboard",
   // MEDIA-001 (Livraison C) : identifiant de travail utilisé pour écrire dans
@@ -30,5 +34,7 @@ export const state = {
   // Miroir local de trade.media pendant la création (avant que le trade existe dans
   // state.data.trades). En mode édition, les captures sont écrites directement sur
   // le trade existant (state.data.trades) — ce champ n'est alors pas utilisé.
-  draftMedia: { htf: null, ltf: null, result: null }
+  draftMedia: { htf: null, ltf: null, result: null },
+  // RP-001 (Dashboard Account Filter) : filtre local au Dashboard, jamais persisté.
+  dashboardAccountFilter: ""
 };

@@ -1,0 +1,724 @@
+/* COACH-001 (Mission) + COACH-002 (Playbook) + COACH-003 (Progress)
+   + COACH-004 (Achievements) + COACH-005 (Digital Twin)
+   + COACH-POLISH-001 (Premium Visual Polish — Journey Container).
+   Styles du module Coach. Remplace insights.css (Insights n'existe plus, voir
+   DECISIONS_LOG.md). Dépend de variables.css et components.css (réutilise
+   .panel, .badge, .card, .button, .eyebrow, .muted, .empty-state — aucun
+   nouveau langage visuel introduit au niveau des primitives).
+
+   COACH-POLISH-001 : introduit le Journey Container (COACH_UI_ARCHITECTURE.md,
+   §"Coach Journey Architecture"). Principe : un seul conteneur à hauteur FIXE
+   (même philosophie "Double Fond" que #journal-panel/D-041 et
+   #analytics-workspace-viewport), un seul chapitre pleinement visible à la
+   fois, navigation latérale gauche + indicateurs de progression à droite.
+
+   COACH-POLISH-001 (révision palette) : accents de chapitre —
+     Mission        -> --coral-warm (corail néon, déjà utilisé au Dashboard)
+     Plan d'action   -> --analytics-positive-glow (vert néon, déjà utilisé en Analytics)
+     Progression      -> --cosmos-glow (bleu néon, déjà utilisé au Dashboard)
+     Acquis            -> --coach-gold (NOUVEAU token, scopé à ce fichier — seule
+                          couleur réellement nouvelle de tout le Design System,
+                          introduite sur demande explicite pour ce chapitre)
+     Profil trader      -> --cosmos-strong (inchangé) */
+
+:root {
+  /* Même référence de hauteur que le Wizard Journal (--journal-viewport-height)
+     et le Workspace Analytics (--analytics-workspace-height) : un seul point
+     de réglage, cohérent avec les deux autres modules à conteneur scrollable
+     fixe déjà existants dans Cosmos. */
+  --coach-journey-height: 460px;
+
+  /* COACH-POLISH-001 (révision palette) : or mat, réservé au chapitre Acquis
+     et à la médaille "Dernier acquis". Volontairement plus terne qu'un or
+     "trophée" classique (ton mat, jamais criard), cohérent avec la contrainte
+     produit "élégant, jamais ludique" (COACH-004). */
+  --coach-gold: #cda753;
+  --coach-gold-soft: rgba(205, 167, 83, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Journey Container — structure générale
+   ───────────────────────────────────────────────────────────────────────── */
+
+.coach-journey {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 22px;
+  gap: var(--space-2);
+  align-items: stretch;
+  margin-top: var(--space-2);
+}
+
+/* Colonne gauche — navigation permanente entre les 5 chapitres. */
+.coach-journey-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coach-journey-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-field);
+  background: transparent;
+  color: var(--text-muted);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--motion-fast) ease, background var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.coach-journey-nav-item:hover {
+  color: var(--text-soft);
+  background: var(--surface-2);
+}
+
+.coach-journey-nav-label {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.coach-journey-nav-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Chapitre actif : hiérarchie obtenue par couleur/contraste/poids, jamais par
+   la taille (POLISH-004, "Hierarchy Before Size"). --chapter-accent est posée
+   inline par ui/coach.js (renderCoachJourney) à partir d'un token existant. */
+.coach-journey-nav-item.active {
+  color: var(--text);
+  background: color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 12%, transparent);
+  border-color: color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 32%, transparent);
+}
+
+.coach-journey-nav-item.active .coach-journey-nav-label {
+  color: var(--chapter-accent, var(--cosmos-strong));
+}
+
+.coach-journey-nav-item.active .coach-journey-nav-hint {
+  color: color-mix(in srgb, var(--chapter-accent, var(--cosmos-strong)) 70%, var(--text-muted));
+}
+
+/* Conteneur scrollable central — hauteur FIXE, unique propriétaire du scroll
+   des 5 chapitres (même piège/solution que #journal-panel, D-041 : jamais de
+   max-height seule, toujours height + min-height:0 + overflow-y:auto). */
+.coach-journey-viewport {
+  height: var(--coach-journey-height);
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+}
+
+.coach-journey-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+.coach-journey-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+.coach-journey-viewport::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+.coach-journey-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Chaque chapitre occupe la pleine hauteur du viewport : un seul pleinement
+   visible à la fois (principe du Journey Container). scroll-snap-align
+   aligne proprement le chapitre visé lors d'un clic sur la navigation/dots. */
+.coach-chapter {
+  min-height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: var(--space-3);
+  scroll-snap-align: start;
+  border-left: 2px solid transparent;
+  /* POLISH-005 : identité subtile de chapitre — un simple liseré gauche
+     teinté par --chapter-accent (posé par ui/coach.js), jamais un fond plein
+     ni une bordure épaisse. */
+  border-left-color: color-mix(in srgb, var(--chapter-accent, transparent) 45%, transparent);
+}
+
+/* POLISH-003 — Transitions : le chapitre "monte légèrement et disparaît" en
+   sortant du champ de vision, "apparaît depuis le bas" en y entrant. Piloté
+   par IntersectionObserver (ui/coach.js), qui bascule .in-view. Durée courte
+   (280ms), jamais > 300ms (charte Cosmos). */
+.coach-chapter > * {
+  opacity: 0.35;
+  transform: translateY(14px);
+  transition: opacity 280ms ease, transform 280ms ease;
+  width: 100%;
+}
+
+.coach-chapter.in-view > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Colonne droite — indicateurs de progression, sobres, jamais spectaculaires. */
+.coach-journey-dots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.coach-journey-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: background var(--motion-fast) ease, transform var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+}
+
+.coach-journey-dot:hover {
+  background: var(--text-muted);
+}
+
+.coach-journey-dot.active {
+  background: var(--chapter-accent, var(--cosmos-glow-bright, var(--cosmos)));
+  transform: scale(1.35);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--chapter-accent, var(--cosmos-glow, var(--cosmos))) 55%, transparent);
+}
+
+@media (max-width: 900px) {
+  .coach-journey {
+    grid-template-columns: 1fr;
+  }
+  .coach-journey-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .coach-journey-nav-item {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  .coach-journey-dots {
+    flex-direction: row;
+    justify-content: center;
+    order: 3;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   COACH-001 — Mission Workspace
+   ───────────────────────────────────────────────────────────────────────── */
+
+.coach-mission-card {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 640px;
+}
+
+.coach-mission-card .section-header {
+  align-items: center;
+}
+
+.coach-priority {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+}
+
+.coach-priority--high {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+}
+
+.coach-priority--medium {
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 14%, transparent);
+}
+
+.coach-priority--low {
+  color: var(--cosmos-strong);
+  background: color-mix(in srgb, var(--cosmos) 14%, transparent);
+}
+
+.coach-mission-reasoning {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-field);
+  background: var(--bg-soft);
+  color: var(--text-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.coach-mission-cta {
+  justify-self: start;
+}
+
+#coach-empty-state {
+  margin-top: var(--space-2);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   COACH-002 — Playbook Workspace ("Plan d'action")
+   ───────────────────────────────────────────────────────────────────────── */
+
+.coach-playbook-card {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 640px;
+}
+
+.playbook-header {
+  align-items: center;
+}
+
+.playbook-state-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: var(--cosmos-strong);
+  background: color-mix(in srgb, var(--cosmos) 14%, transparent);
+}
+
+.coach-playbook-card[data-state="completed"] .playbook-state-badge {
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+}
+
+.coach-playbook-card[data-state="completed"] {
+  opacity: 0.88;
+}
+
+.playbook-objective {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.playbook-section {
+  display: grid;
+  gap: 6px;
+}
+
+.playbook-section-label {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.playbook-actions,
+.playbook-tips,
+.playbook-criteria {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.playbook-actions li,
+.playbook-criteria li {
+  color: var(--text);
+}
+
+.playbook-section--tips .playbook-tips {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.coach-playbook-empty {
+  margin-top: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   COACH-003 — Progress Workspace ("Progression")
+   ───────────────────────────────────────────────────────────────────────── */
+
+.coach-progress-card {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 640px;
+}
+
+.progress-header {
+  align-items: center;
+}
+
+.progress-state-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, transparent);
+}
+
+.progress-summary {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-milestones {
+  display: flex;
+  gap: 6px;
+}
+
+.progress-milestone {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+}
+
+.progress-milestone.filled {
+  border-color: color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 45%, transparent);
+  background: color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 35%, transparent);
+}
+
+.progress-indicator-label {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--text-soft);
+}
+
+.progress-trend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-field);
+  background: var(--bg-soft);
+  color: var(--text-soft);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.progress-trend-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.progress-trend--progress .progress-trend-icon {
+  color: var(--success);
+}
+
+.progress-trend--regression .progress-trend-icon {
+  color: var(--warning);
+}
+
+.progress-trend--stable .progress-trend-icon {
+  color: var(--cosmos-strong);
+}
+
+.progress-coach-comment {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 2px solid color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 40%, transparent);
+  color: var(--text-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.coach-progress-empty {
+  margin-top: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   COACH-004 — Achievements Workspace ("Acquis")
+   ───────────────────────────────────────────────────────────────────────── */
+
+.coach-achievements-card {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 640px;
+}
+
+.achievements-header {
+  align-items: center;
+}
+
+/* COACH-POLISH-001 (médaille premium) : la carte "Dernier acquis" passe en
+   layout flex horizontal — texte à gauche (.achievement-latest-text), médaille
+   à droite, centrée verticalement (align-items: center). La hauteur de la
+   carte reste dictée par le texte : la médaille (44px) ne l'augmente jamais. */
+.achievement-latest {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 10px 14px;
+  border-left: 2px solid color-mix(in srgb, var(--chapter-accent, var(--coach-gold)) 45%, transparent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius-field) var(--radius-field) 0;
+}
+
+.achievement-latest-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.achievement-latest-label {
+  margin: 0 0 4px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.achievement-latest-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.achievement-latest-description {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-soft);
+  line-height: 1.4;
+}
+
+/* Médaille : dimensions fixes, jamais un facteur d'agrandissement de la carte
+   (flex-shrink: 0). Léger glow doré très mat (drop-shadow diffus, jamais un
+   halo saturé) — cohérent avec la contrainte "sombre et raffiné" du ticket. */
+.achievement-latest-medal {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.achievement-latest-medal svg {
+  display: block;
+  filter: drop-shadow(0 0 6px var(--coach-gold-soft)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+}
+
+.achievement-gallery {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.achievement-category {
+  display: grid;
+  gap: 6px;
+}
+
+.achievement-category-label {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.achievement-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.achievement-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  cursor: default;
+}
+
+.achievement-item-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+/* Accent de chapitre = or (--coach-gold) désormais, plus corail. */
+.achievement-item.unlocked {
+  border-color: color-mix(in srgb, var(--chapter-accent, var(--coach-gold)) 40%, transparent);
+  background: color-mix(in srgb, var(--chapter-accent, var(--coach-gold)) 12%, transparent);
+  color: color-mix(in srgb, var(--chapter-accent, var(--coach-gold)) 85%, var(--text));
+}
+
+.achievement-item.unlocked .achievement-item-dot {
+  background: var(--chapter-accent, var(--coach-gold));
+}
+
+.achievement-item.locked {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.achievement-category--consolidated .achievement-category-label {
+  color: color-mix(in srgb, var(--chapter-accent, var(--coach-gold)) 80%, var(--text-muted));
+}
+
+.achievement-next-hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.coach-achievements-empty {
+  margin-top: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   COACH-005 — Digital Twin Workspace ("Profil trader")
+   ───────────────────────────────────────────────────────────────────────── */
+
+.coach-digitaltwin-card {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 640px;
+}
+
+.digitaltwin-header {
+  align-items: center;
+}
+
+.digitaltwin-state-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: var(--cosmos-strong);
+  background: color-mix(in srgb, var(--cosmos) 14%, transparent);
+}
+
+.digitaltwin-portrait {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.digitaltwin-section {
+  display: grid;
+  gap: 6px;
+}
+
+.digitaltwin-section-label {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.digitaltwin-strengths {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.digitaltwin-strength {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 30%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 8%, transparent);
+  color: var(--chapter-accent, var(--cosmos-strong));
+  font-size: 11px;
+}
+
+.digitaltwin-growth-areas {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.digitaltwin-coach-perspective {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 2px solid color-mix(in srgb, var(--chapter-accent, var(--cosmos)) 40%, transparent);
+  color: var(--text-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.coach-digitaltwin-empty {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .coach-mission-card,
+  .coach-playbook-card,
+  .coach-progress-card,
+  .coach-achievements-card,
+  .coach-digitaltwin-card {
+    max-width: 100%;
+  }
+
+  /* La médaille reste, mais la carte "Dernier acquis" repasse en colonne
+     sous 640px pour ne jamais compresser le texte en dessous d'une largeur
+     confortable. */
+  .achievement-latest {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .achievement-latest-medal {
+    align-self: flex-end;
+  }
+}
+
+/* Respect de la préférence utilisateur "réduire les animations" (déjà
+   appliquée globalement dans animations.css) : le Journey Container doit lui
+   aussi désactiver ses transitions de chapitre dans ce cas. */
+@media (prefers-reduced-motion: reduce) {
+  .coach-journey-viewport {
+    scroll-behavior: auto;
+  }
+  .coach-chapter > * {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}

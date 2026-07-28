@@ -2,7 +2,7 @@
 // déplacés tels quels depuis main.js. cache()/render() sont le point d'entrée qui
 // assemble et rafraîchit toutes les vues ; renderChips/renderChecklist/setKpi/
 // openModal/closeModal/toast sont des helpers réutilisés par Dashboard, Journal,
-// Analytics, Insights et Settings.
+// Analytics, Coach et Settings.
 //
 // DASH-001 (Phase 2) : le Feature Registry et le badge de version ne sont plus
 // rendus (panneau "Architecture V3" retiré du Dashboard, voir DECISIONS_LOG.md
@@ -13,6 +13,32 @@
 // "kpi-avg-duration", "kpi-plan-respect") sont retirés de cache(). Deux nouveaux
 // ids Analytics ("analytics-kpi-capital", "analytics-kpi-drawdown") sont ajoutés,
 // ces KPI ayant rejoint la vue Analytics (D-048).
+//
+// COACH-001 (Mission Workspace Foundation) : Insights est intégralement remplacé
+// par Coach (voir DECISIONS_LOG.md — Insights devient Coach, COACH_PRODUCT_VISION.md
+// et COACH_UI_ARCHITECTURE.md font désormais autorité sur ce module, en lieu et
+// place du Document 02 "INSIGHTS IA"). Les ids "insights-*" et l'appel
+// this.renderInsights() sont retirés ; remplacés par les ids "coach-*" et
+// this.renderCoach() (voir coach.js).
+//
+// COACH-002 (Playbook Workspace) : ajoute l'id "coach-playbook-card".
+// COACH-003 (Progress Workspace) : ajoute l'id "coach-progress-card".
+// COACH-004 (Achievements Workspace) : ajoute l'id "coach-achievements-card".
+// COACH-005 (Digital Twin Workspace) : ajoute l'id "coach-digitaltwin-card",
+// même principe exact que les trois précédents — le conteneur générique dans
+// lequel ui/digitalTwin.js injecte tout son balisage. components.js n'a
+// besoin de connaître que ces quatre ids ; la structure interne de chacun
+// reste entièrement encapsulée dans son composant de présentation respectif
+// (séparation présentation/génération, voir coach.js, core/playbooks.js,
+// core/progress.js, core/achievements.js et core/digitalTwin.js). Ce ticket
+// clôt le cœur fonctionnel du module Coach.
+//
+// COACH-POLISH-001 (Premium Visual Polish) : ajoute trois ids pour le Journey
+// Container (voir ui/coach.js, renderCoachJourney()) — "coach-journey-nav"
+// (navigation latérale gauche), "coach-journey-viewport" (conteneur scrollable
+// à hauteur fixe contenant les 5 chapitres), "coach-journey-dots" (indicateurs
+// de progression à droite). Pure présentation : aucun de ces éléments n'est lu
+// ni écrit par core/*.
 //
 // ─────────────────────────────────────────────────────────────────────────────
 // Sprint 1 — ARCH-003 : Catalogue des composants génériques (Design System)
@@ -36,9 +62,10 @@
 //     - notes : string optionnelle, affichée sur une ligne séparée si non vide.
 //     - badges : tableau de { tone, label }, un badge() par élément.
 //     - actions : string HTML optionnelle (ex: boutons Modifier/Supprimer).
-//     Non utilisé par insights.js, qui a une mise en page à une seule colonne
-//     structurellement différente (voir commentaire dans insights.js) — l'utiliser
-//     là-bas en aurait fait un composant "fourre-tout" (Doc ARCH-003 §6).
+//     Non utilisé par coach.js/playbook.js/progress.js/achievements.js/
+//     digitalTwin.js, qui ont chacun une mise en page structurellement
+//     différente — l'utiliser là-bas en aurait fait un composant
+//     "fourre-tout" (Doc ARCH-003 §6).
 // ─────────────────────────────────────────────────────────────────────────────
 import { dom } from "./dom.js";
 import { state } from "../core/state.js";
@@ -56,12 +83,7 @@ export const componentsUi = {
       "rr-planned", "rr-obtained-display", "plan-respect-select",
       "result-currency-input", "result-percent-display", "trade-status-display",
       "theoretical-result-display", "real-result-display", "emotional-delta-display",
-      "emotional-cause-options", "emotional-cause-value", "emotional-causes-secondary-options",
-      // Bug préexistant (indépendant de DASH-001) : cet id était lu par
-      // journal.js (renderSelectors, `if (dom["emotional-causes-secondary-field"])`)
-      // mais n'avait jamais été ajouté à cache() — la condition était donc
-      // toujours fausse et les Causes secondaires ne s'affichaient jamais.
-      "emotional-causes-secondary-field",
+      "emotional-cause-options",
       "manual-intervention-options", "manual-intervention-value",
       "notes", "tags-options", "capture-slots",
       "validation-summary", "wizard-prev", "wizard-next", "wizard-progress-fill", "wizard-step-label",
@@ -75,7 +97,7 @@ export const componentsUi = {
       // dom["delta-note"] valait donc `undefined`, d'où le crash
       // "Cannot set properties of undefined (setting 'textContent')" qui
       // interrompait le reste de render() (renderTrades, renderSettings,
-      // renderAnalyticsFilters, updateAnalyticsView, renderInsights) à chaque appel.
+      // renderAnalyticsFilters, updateAnalyticsView, renderCoach) à chaque appel.
       "delta-note",
       "settings-modal", "settings-nav", "settings-content",
       "export-modal", "export-output", "import-modal", "import-input", "import-file", "import-feedback",
@@ -85,8 +107,8 @@ export const componentsUi = {
       // Dashboard (restent dans Analytics, ids "analytics-kpi-avg-rr"/"analytics-kpi-drawdown",
       // déjà en cache plus bas — inchangés). P&L théorique, Respect du plan et Capital
       // actuel rejoignent la colonne KPI principale du Dashboard.
-      "kpi-winrate", "kpi-theoretical", "kpi-plan-respect", "kpi-capital",
-      "view-dashboard", "view-journal", "view-analytics", "view-insights",
+      "kpi-winrate", "kpi-theoretical", "kpi-plan-respect", "kpi-capital", "dashboard-account-filter",
+      "view-dashboard", "view-journal", "view-analytics", "view-coach",
       // Milestone 3B : filtres et KPI de la vue Analytics.
       "analytics-filter-account", "analytics-filter-asset", "analytics-filter-session",
       "analytics-filter-htf", "analytics-filter-ltf", "analytics-filter-strategy",
@@ -101,8 +123,27 @@ export const componentsUi = {
       // ANALYTICS-002 (Bloc ③ Comprendre vos indicateurs) : même famille
       // d'ids que le Bloc ④ Preuves ci-dessus.
       "analytics-help-panel", "analytics-help-toggle", "analytics-help-toggle-icon", "analytics-help-collapsible",
-      "insights-empty-state", "insights-empty-copy", "insights-content",
-      "insights-forces", "insights-faiblesses", "insights-opportunites", "insights-recommandations",
+      // COACH-001 (Mission Workspace Foundation) : remplace les anciens ids
+      // "insights-*". Voir coach.js pour leur utilisation.
+      "coach-empty-state", "coach-empty-title", "coach-empty-copy", "coach-content",
+      "coach-mission-card", "coach-mission-priority", "coach-mission-title",
+      "coach-mission-description", "coach-mission-reasoning", "coach-mission-cta",
+      // COACH-002 (Playbook Workspace) : conteneur générique unique, tout le
+      // reste du balisage est injecté par ui/playbook.js (voir coach.js).
+      "coach-playbook-card",
+      // COACH-003 (Progress Workspace) : conteneur générique unique, tout le
+      // reste du balisage est injecté par ui/progress.js (voir coach.js).
+      "coach-progress-card",
+      // COACH-004 (Achievements Workspace) : conteneur générique unique, tout
+      // le reste du balisage est injecté par ui/achievements.js (voir coach.js).
+      "coach-achievements-card",
+      // COACH-005 (Digital Twin Workspace) : conteneur générique unique, tout
+      // le reste du balisage est injecté par ui/digitalTwin.js (voir coach.js).
+      "coach-digitaltwin-card",
+      // COACH-POLISH-001 (Journey Container) : navigation latérale, conteneur
+      // scrollable des 5 chapitres, indicateurs de progression. Voir
+      // ui/coach.js, renderCoachJourney().
+      "coach-journey-nav", "coach-journey-viewport", "coach-journey-dots",
       "digital-twin-chart", "digital-twin-gap", "digital-twin-legend", "mission-title", "mission-copy"
     ].forEach(id => {
       dom[id] = document.getElementById(id);
@@ -128,7 +169,13 @@ export const componentsUi = {
     this.renderSettings();
     this.renderAnalyticsFilters();
     this.updateAnalyticsView();
-    this.renderInsights();
+    // COACH-001 : this.renderInsights() → this.renderCoach() (voir coach.js).
+    // COACH-002/003/004/005 : renderCoach() couvre désormais aussi le rendu
+    // du Playbook, du Progress, des Achievements et du Digital Twin (délégués
+    // en interne) — rien à ajouter ici. COACH-POLISH-001 : renderCoach()
+    // construit aussi le Journey Container (nav/dots/scroll-spy) en fin de
+    // pipeline, toujours en interne — rien à ajouter ici non plus.
+    this.renderCoach();
   },
 
   renderChips(container, items, activeValue, onSelect) {
@@ -144,19 +191,25 @@ export const componentsUi = {
   },
   // Milestone 2C : liste à sélection multiple (confluences, causes secondaires du Delta Émotionnel).
   renderChecklist(container, items, activeValues, onToggle) {
-    if (!container) return;
-    container.innerHTML = "";
-    items.forEach(item => {
-      const label = document.createElement("label");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = activeValues.includes(item);
-      checkbox.addEventListener("change", () => onToggle(item));
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(item));
-      container.appendChild(label);
-    });
-  },
+  if (!container) return;
+  container.innerHTML = "";
+  items.forEach(item => {
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    
+    // RP-002B : identifiants uniques pour les cases à cocher
+    const safeValue = String(item).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    checkbox.id = `${container.id || "checklist"}-${safeValue}`;
+    checkbox.name = container.id || "checklist-item";
+
+    checkbox.checked = activeValues.includes(item);
+    checkbox.addEventListener("change", () => onToggle(item));
+    label.appendChild(checkbox);
+    label.appendChild(document.createTextNode(item));
+    container.appendChild(label);
+  });
+},
   // Milestone 2C : qualité du setup en 5 étoiles (Document 02, Carte 3).
   setKpi(element, value) {
     element.textContent = utils.formatPercent(value);
@@ -164,8 +217,9 @@ export const componentsUi = {
   },
   // Milestone 3A : navigation entre les 4 vues (Document 03). Ne détruit jamais le
   // contenu des vues non actives — bascule uniquement une classe CSS.
+  // COACH-001 : la vue "insights" devient "coach" (dom["view-coach"]).
   switchView(viewName) {
-    const views = { dashboard: dom["view-dashboard"], journal: dom["view-journal"], analytics: dom["view-analytics"], insights: dom["view-insights"] };
+    const views = { dashboard: dom["view-dashboard"], journal: dom["view-journal"], analytics: dom["view-analytics"], coach: dom["view-coach"] };
     if (!views[viewName]) return;
     state.currentView = viewName;
 
@@ -179,10 +233,11 @@ export const componentsUi = {
 
     if (viewName === "dashboard") this.renderDashboard();
     if (viewName === "analytics") this.updateAnalyticsView();
-    if (viewName === "insights") this.renderInsights();
+    if (viewName === "coach") this.renderCoach();
   },
   // Milestone 4 (Document 03) : état vide intelligent tant que l'échantillon est
-  // insuffisant (Document 05 §7), puis structure Forces/Faiblesses/Opportunités/Recommandations.
+  // insuffisant (Document 05 §7), puis structure Mission + Playbook + Progress
+  // + Achievements + Digital Twin (COACH-001 à COACH-005).
   openModal(modal) {
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
@@ -219,7 +274,7 @@ export const componentsUi = {
   // uniquement de l'assemblage de balisage.
 
   // Badge à teinte dynamique (positive/negative/neutral). 5 occurrences identiques
-  // avant ce composant (journal.js ×3, analytics.js ×1, insights.js indirectement).
+  // avant ce composant (journal.js ×3, analytics.js ×1, coach.js indirectement).
   badge(toneClass, label) {
     return `<span class="badge ${toneClass}">${label}</span>`;
   },
@@ -239,9 +294,11 @@ export const componentsUi = {
 
   // Ligne de trade (carte bordée). Couvre les deux usages identiques en forme
   // (journal.js : titre + méta + notes + 3 badges + actions ; analytics.js : titre +
-  // méta + 1 badge, sans actions). insights.js utilise une variante volontairement
-  // différente (une seule colonne, sans méta ni badge) et n'est pas concerné par ce
-  // composant — le forcer dedans en ferait un composant "fourre-tout" (Doc §6).
+  // méta + 1 badge, sans actions). coach.js et ses composants (Playbook, Progress,
+  // Achievements, Digital Twin) utilisent une mise en page volontairement
+  // différente (Card dédiée, sans méta ni badge de trade) et ne sont pas
+  // concernés par ce composant — le forcer dedans en aurait fait un composant
+  // "fourre-tout" (Doc §6).
   tradeRow({ title, meta, notes = "", badges = [], actions = "" }) {
     return `
             <article class="trade-row">

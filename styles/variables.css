@@ -53,6 +53,16 @@
   --analytics-positive-glow: #22e5a0;
   --analytics-positive-glow-soft: rgba(34, 229, 160, 0.4);
   --salmon: #ff9472;
+
+  /* RP-005 (Release Polish — Scrollbar Theming) : tokens dédiés aux scrollbars
+     personnalisées (#journal-panel, #analytics-workspace-viewport,
+     #analytics-proof-collapsible .trade-list, .coach-journey-viewport...).
+     Avant ce ticket, ces règles utilisaient des rgba(255,255,255,*) codés en
+     dur, invisibles en thème clair (fond clair + thumb blanc translucide).
+     Valeurs par défaut : apparence strictement identique au thème sombre
+     existant — aucune régression visuelle en dark mode. */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
     }
 
     [data-theme="light"] {
@@ -68,4 +78,10 @@
       --text-soft: #435063;
       --text-muted: #737f91;
       --shadow-soft: 0 18px 50px rgba(42, 56, 84, 0.12);
+
+      /* RP-005 : équivalents thème clair — thumb sombre translucide, lisible
+         sur les fonds clairs de surface/bg-soft utilisés par les conteneurs
+         scrollables concernés. */
+      --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+      --scrollbar-thumb-hover: rgba(0, 0, 0, 0.35);
     }

@@ -18,13 +18,13 @@
     import { dashboardUi } from "./ui/dashboard.js";
     import { journalUi } from "./ui/journal.js";
     import { analyticsUi } from "./ui/analytics.js";
-    import { insightsUi } from "./ui/insights.js";
+    import { coachUi } from "./ui/coach.js";
     import { settingsUi } from "./ui/settings.js";
 
     (() => {
       "use strict";
 
-      const ui = { ...componentsUi, ...dashboardUi, ...journalUi, ...analyticsUi, ...insightsUi, ...settingsUi };
+      const ui = { ...componentsUi, ...dashboardUi, ...journalUi, ...analyticsUi, ...coachUi, ...settingsUi };
 
       // MEDIA-001 (Livraison E) : conversion Blob -> Data URL (base64)
       function blobToBase64(blob) {
@@ -136,8 +136,8 @@
             setupQuality: state.selectedSetupQuality || null,
             confluences: [...state.selectedConfluences],
             planRespect: dom["plan-respect-select"].value,
-            emotionalCause: state.selectedEmotionalCause || null,
-            emotionalCausesSecondary: [...state.selectedEmotionalCausesSecondary],
+            emotionalCauses: [...state.selectedEmotionalCauses],
+            
             manualIntervention: dom["manual-intervention-value"].value || "Non",
             notes: dom.notes.value.trim(),
             // UX-004 (Dynamic Tag Chips) : tags provient désormais de state.selectedTags
@@ -261,7 +261,7 @@
           state.selectedDirection = trade.direction || "Buy";
           state.selectedSetupQuality = trade.setupQuality || 0;
           state.selectedConfluences = Array.isArray(trade.confluences) ? [...trade.confluences] : [];
-          state.selectedEmotionalCause = trade.emotionalCause || "";
+          state.selectedEmotionalCauses = Array.isArray(trade.emotionalCauses) ? [...trade.emotionalCauses] : [];
           state.selectedEmotionalCausesSecondary = Array.isArray(trade.emotionalCausesSecondary) ? [...trade.emotionalCausesSecondary] : [];
           state.selectedManualIntervention = trade.manualIntervention || "Non";
           // UX-004 : restaure les tags sélectionnés du trade en cours d'édition,
@@ -318,7 +318,7 @@
           state.selectedDirection = "Buy";
           state.selectedSetupQuality = 0;
           state.selectedConfluences = [];
-          state.selectedEmotionalCause = "";
+          state.selectedEmotionalCauses = [];
           state.selectedEmotionalCausesSecondary = [];
           state.selectedManualIntervention = "Non";
           // UX-004 : réinitialise les tags sélectionnés, même logique que les
@@ -329,7 +329,7 @@
           document.getElementById("strategy-value").value = "";
           dom["direction-value"].value = "Buy";
           dom["setup-quality-value"].value = "0";
-          dom["emotional-cause-value"].value = "";
+          
           dom["manual-intervention-value"].value = "Non";
           // MEDIA-001 (Livraison C) : si l'utilisateur a ajouté des captures sans
     // jamais enregistrer le trade (abandon, annulation), elles restent seules
@@ -637,6 +637,11 @@ async runImport() {
 
         dom["account-select"].addEventListener("change", () => ui.renderRiskOptions());
         dom["risk-select"].addEventListener("change", () => ui.updateRiskPreview());
+        // RP-001 (Dashboard Account Filter)
+dom["dashboard-account-filter"].addEventListener("change", () => {
+  state.dashboardAccountFilter = dom["dashboard-account-filter"].value;
+  ui.renderDashboard();
+});
 
         dom["wizard-prev"].addEventListener("click", () => ui.goToWizardCard(state.currentCard - 1));
         dom["wizard-next"].addEventListener("click", () => ui.goToWizardCard(state.currentCard + 1));
