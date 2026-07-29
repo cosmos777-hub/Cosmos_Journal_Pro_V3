@@ -13,6 +13,7 @@
     import { CAPTURE_SLOT_KEYS } from "./ui/journal.js";
     import { storage } from "./core/storage.js";
     import { isNativeCapture, isEncodedCapture } from "./core/migrations.js";
+    import { buildDemoTrades } from "./core/demoData.js";
     import { dom } from "./ui/dom.js";
     import { componentsUi } from "./ui/components.js";
     import { dashboardUi } from "./ui/dashboard.js";
@@ -388,9 +389,40 @@ ui.revokeCaptureUrlsForTrade(tradeId);
           ui.render();
           ui.toast("Trade supprimé.", "positive");
         },
+
+        // RP-006 — Onboarding : injection de trades de démonstration.
+        // Garde de sécurité : ne s'exécute jamais si des trades existent déjà
+        // (le bouton lui-même est masqué dans ce cas, voir dashboardUi.renderDashboard,
+        // mais cette vérification reste la source de vérité — jamais uniquement l'UI).
+        loadDemoExperience() {
+          if (state.data.trades.length > 0) return;
+
+          const account = state.data.accounts.find(a => !a.archived) || state.data.accounts[0];
+          if (!account) return;
+
+          const { trades, finalCapital } = buildDemoTrades(account);
+          // Les trades générés sont chronologiques (plus ancien en premier) ;
+          // reverse() respecte la convention "plus récent en premier" déjà
+          // utilisée par createTrade (state.data.trades.unshift(trade)).
+          state.data.trades = [...trades].reverse();
+          account.currentCapital = finalCapital;
+
+          storage.save();
+          ui.render();
+          ui.toast("Données de démonstration ajoutées — explorez le Dashboard, Analytics et Coach.", "positive");
+        },
         clearData() {
           if (!confirm("Voulez-vous vraiment vider l'historique des trades ? Les comptes et paramètres V3 seront conservés.")) return;
           state.data.trades = [];
+          // RP-006 : sans trade, le capital courant doit refléter le capital
+          // initial de chaque compte (plus aucun P&L accumulé). Couvre à la
+          // fois un reset de trades réels et le nettoyage des trades de
+          // démonstration — sans introduire de mécanisme dédié à la démo,
+          // conformément à la contrainte "réutiliser clearData() existant,
+          // aucun nouveau système de suppression".
+          state.data.accounts.forEach(account => {
+            account.currentCapital = account.initialCapital;
+          });
           mediaStorage.clear().catch(() => {});
           storage.save();
           ui.render();
@@ -729,6 +761,7 @@ dom["dashboard-account-filter"].addEventListener("change", () => {
           if (action === "toggle-analytics-proof") actions.toggleAnalyticsProof();
           if (action === "toggle-analytics-help") actions.toggleAnalyticsHelp();
           if (action === "clear-data") actions.clearData();
+          if (action === "load-demo-trades") actions.loadDemoExperience();
 
           const categoryButton = event.target.closest("[data-settings-category]");
           if (categoryButton) {

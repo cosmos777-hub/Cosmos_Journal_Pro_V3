@@ -342,3 +342,31 @@ Tests réalisés :
 * dimensions et comportement inchangés.
 
 RP-005 est considéré comme clôturé.
+
+## Phase 2 — Release Polishing — Terminée ✅
+
+La phase **Release Polishing** est désormais officiellement terminée.
+
+Cette étape avait pour objectif de finaliser l'expérience utilisateur sans modifier les fondations du produit. Tous les correctifs réalisés ont respecté les principes établis du projet :
+
+* aucune modification de l'architecture applicative ;
+* aucune évolution des calculs métier ;
+* aucun changement du Design System ;
+* aucune régression fonctionnelle volontaire.
+
+### Tickets validés
+
+* ✅ RP-001 — Filtre par compte du Dashboard.
+* ✅ RP-002 — Harmonisation du Delta émotionnel (sélection multiple des causes, simplification du Wizard et audit des dépendances).
+* ✅ RP-003 — Correction de la conservation des sélections (Session, HTF, LTF) dans le Journal.
+* ✅ RP-004 — Audit de la fonctionnalité Montant / Pourcentage et report à une version future.
+* ✅ RP-005 — Harmonisation des scrollbars entre thèmes clair et sombre via le Design System.
+* ✅ RP-006 — Expérience d'onboarding par injection de trades de démonstration.
+
+### Résultat
+
+L'application bénéficie désormais d'une expérience utilisateur plus cohérente, plus robuste et plus fluide, tout en conservant l'intégralité de son architecture, de ses calculs métier et de sa philosophie de conception.
+
+Les fonctionnalités reportées ont été documentées afin d'être réévaluées dans une future évolution du produit, sans compromettre la stabilité de cette version.
+
+**Statut : Phase Release Polishing terminée.**

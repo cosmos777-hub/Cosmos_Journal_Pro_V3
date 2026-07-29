@@ -61,6 +61,14 @@
                 <h2 id="mission-title">Construire une base statistique fiable</h2>
                 <p class="muted" id="mission-copy">Ajoutez vos premiers trades pour permettre à Cosmos de comparer le
                   résultat réel, le résultat théorique et le Delta émotionnel.</p>
+                <!-- RP-006 (Onboarding) : visible uniquement tant qu'aucun trade
+                     n'existe (state.data.trades.length === 0). Masqué/affiché par
+                     dashboardUi.renderDashboard(). Disparaît définitivement dès
+                     l'injection ou dès un premier trade réel. -->
+                <button class="button primary hidden" type="button" id="dashboard-demo-cta"
+                  data-action="load-demo-trades" style="margin-top:12px;">
+                  Découvrir avec des données de démonstration
+                </button>
               </div>
             </div>
             <div class="kpi-grid kpi-grid--primary">

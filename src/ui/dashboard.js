@@ -5,6 +5,13 @@ import { utils } from "../utils/index.js";
 
 export const dashboardUi = {
   renderDashboard() {
+    // RP-006 : le bouton d'onboarding n'est visible que tant qu'aucun trade
+    // n'existe — disparaît automatiquement dès l'injection ou dès le premier
+    // trade réel enregistré par l'utilisateur.
+    if (dom["dashboard-demo-cta"]) {
+      dom["dashboard-demo-cta"].classList.toggle("hidden", state.data.trades.length > 0);
+    }
+
     this.renderDashboardAccountFilter();
 
     const filterAccountId = state.dashboardAccountFilter || "";

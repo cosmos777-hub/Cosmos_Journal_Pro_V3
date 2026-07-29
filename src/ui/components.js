@@ -144,7 +144,8 @@ export const componentsUi = {
       // scrollable des 5 chapitres, indicateurs de progression. Voir
       // ui/coach.js, renderCoachJourney().
       "coach-journey-nav", "coach-journey-viewport", "coach-journey-dots",
-      "digital-twin-chart", "digital-twin-gap", "digital-twin-legend", "mission-title", "mission-copy"
+      "digital-twin-chart", "digital-twin-gap", "digital-twin-legend", "mission-title", "mission-copy",
+      "dashboard-demo-cta"
     ].forEach(id => {
       dom[id] = document.getElementById(id);
     });
