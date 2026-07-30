@@ -132,13 +132,7 @@ export const journalUi = {
             if (index === -1) state.selectedConfluences.push(value); else state.selectedConfluences.splice(index, 1);
           });
 
-          this.renderChecklist(dom["emotional-causes-secondary-options"], state.data.settings.emotionalCauses, state.selectedEmotionalCausesSecondary, value => {
-            const index = state.selectedEmotionalCausesSecondary.indexOf(value);
-            if (index === -1) state.selectedEmotionalCausesSecondary.push(value); else state.selectedEmotionalCausesSecondary.splice(index, 1);
-          });
-          if (dom["emotional-causes-secondary-field"]) {
-            dom["emotional-causes-secondary-field"].classList.toggle("hidden", !state.selectedEmotionalCause);
-          }
+          
 
           this.renderChecklist(dom["tags-options"], state.data.settings.tags, state.selectedTags, value => {
             const index = state.selectedTags.indexOf(value);

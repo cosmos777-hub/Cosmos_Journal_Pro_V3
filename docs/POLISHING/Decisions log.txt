@@ -746,7 +746,7 @@ Invisible Excellence.
 
 ## COACH-CORR-001 — Corrections issues de l'Audit Qualité
 
-### D-053 — Fenêtre "récent" unifiée dans Coach (CORR-002)
+### D-057 — Fenêtre "récent" unifiée dans Coach (CORR-002)
 **Contexte** : audit qualité du module Coach — `core/progress.js` utilisait une
 fenêtre de 10 trades pour définir le "récent", tandis que `core/achievements.js`
 en utilisait une de 20, sans qu'aucune des deux définitions ne soit justifiée
@@ -760,7 +760,7 @@ jugée plus stable pour dégager une tendance que 10.
 de "récent" doit importer `RECENT_TRADES_WINDOW` plutôt que définir sa propre
 valeur locale.
 
-### D-054 — Doctrine de Mission : R conservé, doctrine documentée (CORR-003)
+### D-058 — Doctrine de Mission : R conservé, doctrine documentée (CORR-003)
 **Contexte** : l'audit a relevé que la Mission (Centre de Mission, Dashboard +
 Coach) peut afficher des valeurs en R dans son raisonnement, ce qui la
 rapproche visuellement d'un mini rapport Analytics — en tension avec la
@@ -776,7 +776,7 @@ est souhaitée, elle devra faire l'objet d'un ticket dédié touchant explicitem
 `calculations.generateMission()`, avec mise à jour corrélée de la documentation
 (Document 05) et validation sur les deux consommateurs (Dashboard et Coach).
 
-### D-055 — Product Language Coach : harmonisation reportée au Premium Visual Polish (CORR-004)
+### D-059 — Product Language Coach : harmonisation reportée au Premium Visual Polish (CORR-004)
 **Contexte** : les noms actuels des Workspaces Coach (Playbook, Progress,
 Achievements, Digital Twin) mélangent anglais et français, et "Digital Twin"
 entre en collision terminologique avec le "Jumeau Numérique" déjà utilisé par
@@ -807,7 +807,7 @@ Workspaces doit respecter cette frontière temporelle (Progress = présent
 immédiat / Digital Twin = long terme) pour ne pas réintroduire la confusion
 corrigée ici.
 
-## D-0XX — Journey Before Information
+## D-060 — Journey Before Information
 
 Le module Coach adopte officiellement le principe **Journey Before Information**.
 
@@ -817,7 +817,7 @@ Le Coach révèle progressivement chaque chapitre afin de transformer une page d
 
 ---
 
-## D-0XX — Coach Journey Container
+## D-061 — Coach Journey Container
 
 Le Coach remplace définitivement l'empilement vertical de Workspaces par un conteneur fixe accueillant un chapitre actif à la fois.
 
@@ -825,7 +825,7 @@ Cette architecture reprend la philosophie du Double Fond introduite par le Journ
 
 ---
 
-## D-0XX — Product Language
+## D-062 — Product Language
 
 Le vocabulaire visible du Coach privilégie désormais des intitulés français immédiatement compréhensibles.
 
@@ -841,7 +841,7 @@ Le terme **Jumeau Numérique** reste exclusivement réservé au Dashboard.
 
 ---
 
-## D-0XX — Coach Philosophy
+## D-063 — Coach Philosophy
 
 Le Coach n'évalue jamais les performances financières.
 
@@ -849,8 +849,8 @@ Toutes les recommandations, Progressions, Acquis et Profils trader sont exclusiv
 
 Cette règle devient un principe fondamental du produit.
 
-DECISIONS_LOG.md
-D-0XX — Simplification du modèle des causes émotionnelles
+
+## D-064 — Simplification du modèle des causes émotionnelles
 
 Décision
 
@@ -871,7 +871,9 @@ emotionalCauses devient l'unique source de vérité.
 L'ordre de la Carte ⑤ est normalisé :
 Intervention manuelle
 Causes émotionnelles
-D-0XY — Maintien de la saisie manuelle du RR prévu
+
+
+## D-065 — Maintien de la saisie manuelle du RR prévu
 
 Décision
 
@@ -887,4 +889,13 @@ La saisie manuelle a donc été conservée.
 
 Principe retenu
 
-En phase de Release Polish, une expérimentation qui n'améliore pas clairement l'expérience utilisateur est abandonnée au profit de la solution existante
+En phase de Release Polish, une expérimentation qui n'améliore pas clairement l'expérience utilisateur est abandonnée au profit de la solution existante 
+
+
+## D-066 — CARTE 4 — GESTION & RÉSULTAT : 
+fusion des anciennes
+cartes ④ Gestion et ⑤ Résultat — une seule continuité mentale
+une fois le RR prévu renseigné, l'utilisateur passe directement
+au résultat. Reste compacte (wizard-card--compact) : le volume
+visuel cible est celui de l'ancienne carte ⑤ seule, pas la
+somme des deux anciennes cartes. -->

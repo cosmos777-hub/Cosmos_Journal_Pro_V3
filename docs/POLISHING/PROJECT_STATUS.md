@@ -370,3 +370,33 @@ L'application bénéficie désormais d'une expérience utilisateur plus cohéren
 Les fonctionnalités reportées ont été documentées afin d'être réévaluées dans une future évolution du produit, sans compromettre la stabilité de cette version.
 
 **Statut : Phase Release Polishing terminée.**
+
+## Release Polishing — Clôture officielle
+
+**Statut : TERMINÉ / VALIDÉ ✅**
+
+La phase Release Polishing est officiellement clôturée.
+
+Les audits de release **RC-001 à RC-006** ont été réalisés et leurs anomalies significatives ont été traitées par le registre **RCFIX**.
+
+### État final
+
+* **RC-001 → RC-006** : audités et validés.
+* **RCFIX-004 → RCFIX-005** : corrections de robustesse traitées.
+* **RCFIX-008 → RCFIX-013** : corrections documentaires et de maintenabilité traitées.
+* **RCFIX-006** : optimisation du rendu global différée — non bloquante.
+* **RCFIX-007** : éventuelle limitation du champ Notes différée — non bloquante.
+* Aucun défaut **Bloquant** ou **Majeur** connu ne reste ouvert.
+* Aucune modification fonctionnelle supplémentaire n'est requise pour clôturer cette phase.
+
+Les éléments différés restent volontairement tracés dans le registre RCFIX afin de préserver la traçabilité et pourront faire l'objet de tickets dédiés ultérieurement si l'usage réel du produit justifie leur traitement.
+
+### Verdict
+
+> **RELEASE POLISHING — OFFICIELLEMENT CLÔTURÉ ✅**
+
+Le produit quitte désormais la phase de polishing technique et documentaire.
+
+La prochaine étape est la **validation réelle du produit par son utilisation**, sans nouvelle modification préventive de l'architecture ou des fonctionnalités tant qu'un besoin concret n'est pas identifié.
+
+**Date de clôture : 30 juillet 2026**

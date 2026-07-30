@@ -30,6 +30,8 @@ src/
     progress.js
     achievements.js
     digitalTwin.js
+    coachConstants.js
+    demoData.js
 
   ui/
     components.js
@@ -42,9 +44,26 @@ src/
     achievements.js
     digitalTwin.js
     settings.js
+    dom.js
+
+  utils/
+    constants.js
+    formatters.js
+    helpers.js
+    index.js
 
 styles/
-  coach.css
+├── variables.css
+├── base.css
+├── layout.css
+├── typography.css
+├── components.css
+├── dashboard.css
+├── journal.css
+├── analytics.css
+├── coach.css
+├── settings.css
+└── animations.css
 
 docs/
   PRODUCT/
@@ -60,8 +79,15 @@ docs/
     COACH_IMPLEMENTATION_BLUEPRINT.md
 
   POLISHING/
+    Decisions log
+    PROJECT_STATUS
+    POLISHING_MASTER_PLAN
     REFERENCES/
+      Component catalog
       DESIGN_SYSTEM_CHARTER.md
+      Naming conventions
+      PROJECT_STRUCTURE
+            STATE_MODEL
 ------------------------------------------------------------------------
 
 # Layer Responsibilities

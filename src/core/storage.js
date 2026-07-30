@@ -111,7 +111,32 @@ export const storage = {
     }
   },
 
+  // RCFIX-A03 : storage.save() est désormais défensif contre tout échec
+  // d'écriture localStorage (QuotaExceededError, stockage indisponible,
+  // mode privé restrictif, etc.).
+  //
+  // Comportement inchangé en cas de succès : aucune différence observable.
+  //
+  // En cas d'échec :
+  //   - l'exception est interceptée, l'application ne plante jamais ;
+  //   - un console.warn donne le détail technique pour le diagnostic ;
+  //   - un CustomEvent "cosmos:storage-error" est émis sur `window`, afin que
+  //     la couche UI (qui seule a le droit d'afficher un toast — voir
+  //     PROJECT_STRUCTURE.md, "core/ ne manipule jamais le DOM") puisse
+  //     informer l'utilisateur sans que storage.js n'ait à connaître ui.toast()
+  //     ni le DOM directement. Voir main.js pour l'unique listener associé.
+  //
+  // Valeur de retour : true si l'écriture a réussi, false sinon. Aucun appel
+  // existant à storage.save() ne lit cette valeur — purement additif,
+  // rétrocompatible avec tous les appels actuels.
   save(data = state.data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      return true;
+    } catch (error) {
+      console.warn("Cosmos storage.save() failed — les données n'ont pas pu être sauvegardées.", error);
+      window.dispatchEvent(new CustomEvent("cosmos:storage-error", { detail: { error } }));
+      return false;
+    }
   }
 };

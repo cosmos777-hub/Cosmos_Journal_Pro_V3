@@ -263,7 +263,6 @@
           state.selectedSetupQuality = trade.setupQuality || 0;
           state.selectedConfluences = Array.isArray(trade.confluences) ? [...trade.confluences] : [];
           state.selectedEmotionalCauses = Array.isArray(trade.emotionalCauses) ? [...trade.emotionalCauses] : [];
-          state.selectedEmotionalCausesSecondary = Array.isArray(trade.emotionalCausesSecondary) ? [...trade.emotionalCausesSecondary] : [];
           state.selectedManualIntervention = trade.manualIntervention || "Non";
           // UX-004 : restaure les tags sélectionnés du trade en cours d'édition,
           // même logique que les autres sélections multiples ci-dessus.
@@ -320,7 +319,6 @@
           state.selectedSetupQuality = 0;
           state.selectedConfluences = [];
           state.selectedEmotionalCauses = [];
-          state.selectedEmotionalCausesSecondary = [];
           state.selectedManualIntervention = "Non";
           // UX-004 : réinitialise les tags sélectionnés, même logique que les
           // autres sélections multiples ci-dessus — sinon ils resteraient cochés
@@ -343,7 +341,9 @@
           // pour ne jamais laisser de données orphelines (cohérent avec la suppression
           // en cascade de deleteTrade ci-dessous).
           if (state.draftTradeId) {
-            mediaStorage.deleteAllForTrade(state.draftTradeId).catch(() => {});
+            mediaStorage.deleteAllForTrade(state.draftTradeId).catch(error => {
+              console.warn("Impossible de nettoyer les médias du brouillon abandonné :", error);
+            });
             ui.revokeCaptureUrlsForTrade(state.draftTradeId);
           }
           // MEDIA-001 (Livraison G — A2) : en mode édition, les captures du trade sont
@@ -379,7 +379,9 @@
           }
 
           state.data.trades = state.data.trades.filter(t => t.id !== tradeId);
-mediaStorage.deleteAllForTrade(tradeId).catch(() => {});
+mediaStorage.deleteAllForTrade(tradeId).catch(error => {
+  console.warn("Impossible de nettoyer les médias du trade supprimé :", error);
+});
 ui.revokeCaptureUrlsForTrade(tradeId);
           if (state.editingTradeId === tradeId) {
             actions.resetTradeForm();
@@ -423,7 +425,9 @@ ui.revokeCaptureUrlsForTrade(tradeId);
           state.data.accounts.forEach(account => {
             account.currentCapital = account.initialCapital;
           });
-          mediaStorage.clear().catch(() => {});
+          mediaStorage.clear().catch(error => {
+            console.warn("Impossible de nettoyer intégralement IndexedDB lors de la réinitialisation :", error);
+          });
           storage.save();
           ui.render();
           ui.toast("Historique réinitialisé.", "positive");
@@ -877,6 +881,15 @@ if (deleteAccountButton) {
       const file = imageItem.getAsFile();
       if (file) actions.handleCaptureFile(slotKey, file);
     });
+
+    // RCFIX-A03 : storage.save() peut désormais échouer (quota dépassé,
+        // stockage indisponible...). Il émet dans ce cas un CustomEvent plutôt
+        // que d'appeler ui.toast() lui-même (core/ ne touche jamais le DOM/UI —
+        // voir PROJECT_STRUCTURE.md). Ce listener est le seul point de la couche
+        // UI qui réagit à cet événement.
+        window.addEventListener("cosmos:storage-error", () => {
+          ui.toast("Impossible d'enregistrer vos données (stockage plein ou indisponible).", "negative");
+        });
 
     document.addEventListener("keydown", event => {
           if (event.key === "Escape") {
