@@ -9,7 +9,7 @@
 import { dom } from "./dom.js";
 import { state } from "../core/state.js";
 import { calculations } from "../core/calculations.js";
-import { mediaStorage } from "../core/mediaStorage.js";
+import { mediaStorage } from "../core/mediastorage.js";
 import { isNativeCapture, isLegacyMediaLink } from "../core/migrations.js";
 import { HISTORY_DISPLAY_LIMIT, riskLevelsFor } from "../utils/constants.js";
 import { utils } from "../utils/index.js";
