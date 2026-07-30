@@ -9,7 +9,7 @@
     import { utils } from "./utils/index.js";
     import { state } from "./core/state.js";
     import { calculations } from "./core/calculations.js";
-    import { mediastorage } from "./core/mediastorage.js";
+    import { mediaStorage } from "./core/mediastorage.js";
     import { CAPTURE_SLOT_KEYS } from "./ui/journal.js";
     import { storage } from "./core/storage.js";
     import { isNativeCapture, isEncodedCapture } from "./core/migrations.js";
