@@ -73,8 +73,8 @@
       gap: var(--space-2);
       margin-bottom: var(--space-2);
     }
-    .view { display: none; }
-    .view.active { display: block; animation: fadeSlide var(--motion) ease both; }
+    .view { display: none; min-width: 0; }
+.view.active { display: block; animation: fadeSlide var(--motion) ease both; }
 /* .panel et .card partageaient une déclaration groupée (`.panel, .card { ... }`)
    dans l'ancien style.css monolithique. Séparées ici pour respecter la frontière
    layout/components du ticket : mêmes déclarations, donc rendu strictement
