@@ -111,9 +111,25 @@
 @media (max-width: 640px) {
   /* Sous 640px, la largeur "content-driven" ferait déborder la ligne en
      une cascade de petites cartes — on repasse en pleine largeur pour
-     rester lisible (même logique que .kpi-grid standard). */
+     rester lisible (même logique que .kpi-grid standard).
+     MOB-002-C — Audit runtime (MOB-002-C2) : flex:1 1 100% seul ne
+     suffisait pas — un flex item garde par défaut min-width:auto, donc
+     la carte restait bloquée à la largeur de son contenu en
+     white-space:nowrap (label/valeur/note), provoquant un débordement du
+     document entier sur mobile (confirmé : #view-analytics 609px vs
+     .main 394px, document.documentElement.scrollWidth > clientWidth).
+     min-width:0 neutralise cette contrainte ; le retour au texte normal
+     permet à la carte de se compresser réellement dans son conteneur. */
   #view-analytics .kpi-grid--analytics-compact .kpi {
     flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #view-analytics .kpi-grid--analytics-compact .kpi-label,
+  #view-analytics .kpi-grid--analytics-compact .kpi-value,
+  #view-analytics .kpi-grid--analytics-compact .kpi-note {
+    white-space: normal;
+    overflow-wrap: break-word;
   }
 }
 
