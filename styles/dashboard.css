@@ -175,7 +175,7 @@
 }
 
 .winrate-ring-track { 
-  stroke: rgba(255, 255, 255, 0.08); 
+  stroke: var(--border-strong); 
   fill: none; 
 }
 
@@ -217,4 +217,30 @@
 .digital-twin-legend span:first-child span {
   background: var(--cosmos-glow-bright) !important;
   box-shadow: 0 0 8px var(--cosmos-glow-soft);
+}
+/* MOB-003 — Dashboard KPI overlap fix (mobile only, does not touch desktop) */
+@media (max-width: 640px) {
+  .kpi-row-layout {
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  #view-dashboard .card.kpi {
+    min-height: 108px;
+    padding: 14px 16px;
+  }
+
+  #view-dashboard .kpi-value {
+    margin-top: 8px;
+  }
+
+  #view-dashboard .kpi-note {
+    margin-top: 8px;
+    clear: both;
+  }
+
+  .winrate-ring-wrap,
+  .capital-badge-icon {
+    align-self: center;
+  }
 }

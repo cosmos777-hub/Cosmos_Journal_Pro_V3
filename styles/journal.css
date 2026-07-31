@@ -812,3 +812,20 @@
   background: color-mix(in srgb, var(--bg) 70%, transparent);
   backdrop-filter: blur(6px);
 }
+
+/* MOB-003 — Wizard gets more breathing room on mobile only.
+   Desktop reference (--journal-viewport-height: 400px, defined above)
+   is untouched — this override applies exclusively under 640px. */
+@media (max-width: 640px) {
+  #journal-panel {
+    height: 560px;
+  }
+
+  .journal-viewport-inner {
+    padding: var(--space-3) var(--space-3) var(--space-4);
+  }
+
+  .wizard-card.active > * + * {
+    margin-top: var(--space-3);
+  }
+}
