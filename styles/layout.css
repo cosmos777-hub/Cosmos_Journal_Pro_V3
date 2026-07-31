@@ -30,6 +30,7 @@
       margin: 0 auto;
       padding: var(--space-4) 0 var(--space-6);
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-3);
     }
     .hero-grid {
