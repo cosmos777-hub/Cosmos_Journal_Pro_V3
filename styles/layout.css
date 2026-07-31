@@ -91,6 +91,7 @@
 @media (max-width: 980px) {
   .app-header {
     grid-template-columns: 1fr;
+    transition: padding var(--motion) ease;
   }
   .top-nav,
   .header-actions {
@@ -99,6 +100,40 @@
   }
   .hero-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* MOB-002-A — Dashboard Panel Order : Pilotage avant Mission, mobile
+     uniquement. Aucun changement de DOM, aucune modification de contenu
+     ni de dimensions — uniquement l'ordre d'empilement vertical sous ce
+     breakpoint. Le layout desktop (proportions 1.2fr / 0.8fr de
+     .hero-grid) reste strictement inchangé. */
+  .hero-grid > .dashboard-pilot {
+    order: -1;
+  }
+
+  /* MOB-002-B — Mobile Adaptive Header. .brand-mark (logo) et .top-nav
+     (navigation principale) ne sont jamais concernés par ce repli : seuls
+     le bloc titre+slogan (.brand > div qui n'est pas .brand-mark) et les
+     actions secondaires (.header-actions) se replient au scroll. */
+  .brand > div:not(.brand-mark),
+  .header-actions {
+    max-height: 60px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height var(--motion) ease, opacity var(--motion-fast) ease, margin var(--motion) ease;
+  }
+
+  .app-header.header-compact {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .app-header.header-compact .brand > div:not(.brand-mark),
+  .app-header.header-compact .header-actions {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    pointer-events: none;
   }
 }
 

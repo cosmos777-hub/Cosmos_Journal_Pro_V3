@@ -910,6 +910,65 @@ if (deleteAccountButton) {
         });
       }
 
+      // MOB-002-B — Mobile Adaptive Header : repli progressif au scroll.
+// Un seul listener, rAF-throttled, avec hysteresis (accumulation directionnelle)
+// pour éviter tout effet de "pompage" sur un petit mouvement de scroll.
+function initAdaptiveHeader() {
+  const header = document.querySelector(".app-header");
+  if (!header) return;
+
+  const COMPACT_BREAKPOINT = 980; // même seuil que la media query CSS existante
+  const SCROLL_THRESHOLD = 50;    // px cumulés dans une direction avant bascule
+
+  let lastY = window.scrollY;
+  let accumulated = 0;
+  let ticking = false;
+
+  function evaluate() {
+    if (window.innerWidth > COMPACT_BREAKPOINT) {
+      header.classList.remove("header-compact");
+      accumulated = 0;
+      lastY = window.scrollY;
+      return;
+    }
+
+    const currentY = window.scrollY;
+
+    if (currentY <= 0) {
+      header.classList.remove("header-compact");
+      accumulated = 0;
+      lastY = currentY;
+      return;
+    }
+
+    const delta = currentY - lastY;
+
+    if ((delta > 0 && accumulated < 0) || (delta < 0 && accumulated > 0)) {
+      accumulated = 0;
+    }
+    accumulated += delta;
+
+    if (accumulated > SCROLL_THRESHOLD) {
+      header.classList.add("header-compact");
+      accumulated = 0;
+    } else if (accumulated < -SCROLL_THRESHOLD) {
+      header.classList.remove("header-compact");
+      accumulated = 0;
+    }
+
+    lastY = currentY;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      evaluate();
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
       function init() {
         ui.cache();
         state.data = storage.load();
@@ -918,6 +977,7 @@ if (deleteAccountButton) {
         ui.render();
         ui.goToWizardCard(1);
         ui.switchView("dashboard");
+        initAdaptiveHeader(); // MOB-002-B
         if (state.data.migratedFrom) ui.toast("Données V2 migrées vers les fondations V3.", "neutral");
       }
 

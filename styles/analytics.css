@@ -312,3 +312,29 @@
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px var(--coral-warm-soft));
 }
+
+/* MOB-002-C — Analytics Horizontal Alignment.
+   Le min-width:220px du champ "Regrouper par" était auparavant en style
+   inline dans index.html — impossible à surcharger proprement en media
+   query (spécificité inline non contournable sans !important). Déplacé
+   ici en classe dédiée, désormais surchargeable. Sur desktop/tablette,
+   valeur strictement identique à l'ancien style inline : aucun changement
+   visuel au-dessus de 640px. */
+.breakdown-dimension-field {
+  min-width: 220px;
+}
+
+/* Sous 640px, la somme du bloc titre (non contraint) + du champ à
+   min-width:220px dépasse l'espace disponible dans .panel, ce qui forçait
+   .section-header (nowrap par défaut) à déborder du document entier.
+   Correction strictement locale à ce panneau : le .section-header
+   générique (Dashboard, Journal, Coach, Settings) n'est pas concerné. */
+@media (max-width: 640px) {
+  .analytics-workspace-panel .section-header {
+    flex-wrap: wrap;
+  }
+  .analytics-workspace-panel .section-header .breakdown-dimension-field {
+    min-width: 0;
+    width: 100%;
+  }
+}
