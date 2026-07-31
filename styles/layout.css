@@ -124,8 +124,9 @@
   }
 
   .app-header.header-compact {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    transition: padding var(--motion) ease;
   }
 
   .app-header.header-compact .brand > div:not(.brand-mark),
@@ -134,6 +135,18 @@
     opacity: 0;
     margin: 0;
     pointer-events: none;
+  }
+
+  /* MOB-002-B2 — Nav légèrement resserrée en mode compact, pour maximiser
+     l'espace vertical disponible dans les workspaces (Journal/Analytics/
+     Coach/Settings), qui restent compacts en permanence. */
+  .app-header.header-compact .top-nav {
+    padding: 3px;
+  }
+  .app-header.header-compact .nav-button {
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
   }
 }
 

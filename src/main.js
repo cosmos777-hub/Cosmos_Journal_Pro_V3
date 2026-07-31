@@ -668,7 +668,7 @@ async runImport() {
     }
       };
 
-      function bindEvents() {
+      function bindEvents(adaptiveHeader) {
         dom["trade-form"].addEventListener("submit", actions.saveTrade);
 
         dom["account-select"].addEventListener("change", () => ui.renderRiskOptions());
@@ -719,7 +719,12 @@ dom["dashboard-account-filter"].addEventListener("change", () => {
 
         document.addEventListener("click", event => {
           const navButton = event.target.closest("[data-view]");
-          if (navButton) ui.switchView(navButton.dataset.view);
+          if (navButton) {
+            ui.switchView(navButton.dataset.view);
+            // MOB-002-B2 : recalcule immédiatement l'état du header (compact
+            // permanent hors Dashboard) sans attendre un événement de scroll.
+            if (adaptiveHeader) adaptiveHeader.evaluate();
+          }
 
           const editButton = event.target.closest("[data-edit-trade]");
           if (editButton) actions.startEditTrade(editButton.dataset.editTrade);
@@ -910,55 +915,51 @@ if (deleteAccountButton) {
         });
       }
 
-      // MOB-002-B — Mobile Adaptive Header : repli progressif au scroll.
-// Un seul listener, rAF-throttled, avec hysteresis (accumulation directionnelle)
-// pour éviter tout effet de "pompage" sur un petit mouvement de scroll.
+      // MOB-002-B2 — Header UX Refinement.
+// Dashboard : header complet par défaut, passe en compact dès que l'utilisateur
+// quitte le haut de page (seuil anti-oscillation), ne redevient complet que
+// lorsque scrollTop revient exactement à 0. Plus de logique directionnelle.
+// Journal / Analytics / Coach / Settings : compact en permanence, quelle que
+// soit la position de scroll — ce sont des workspaces, l'espace vertical prime.
 function initAdaptiveHeader() {
   const header = document.querySelector(".app-header");
-  if (!header) return;
+  if (!header) return null;
 
   const COMPACT_BREAKPOINT = 980; // même seuil que la media query CSS existante
-  const SCROLL_THRESHOLD = 50;    // px cumulés dans une direction avant bascule
+  const DASHBOARD_SCROLL_THRESHOLD = 40; // px avant bascule en compact sur Dashboard
 
-  let lastY = window.scrollY;
-  let accumulated = 0;
-  let ticking = false;
-
-  function evaluate() {
-    if (window.innerWidth > COMPACT_BREAKPOINT) {
-      header.classList.remove("header-compact");
-      accumulated = 0;
-      lastY = window.scrollY;
-      return;
-    }
-
-    const currentY = window.scrollY;
-
-    if (currentY <= 0) {
-      header.classList.remove("header-compact");
-      accumulated = 0;
-      lastY = currentY;
-      return;
-    }
-
-    const delta = currentY - lastY;
-
-    if ((delta > 0 && accumulated < 0) || (delta < 0 && accumulated > 0)) {
-      accumulated = 0;
-    }
-    accumulated += delta;
-
-    if (accumulated > SCROLL_THRESHOLD) {
-      header.classList.add("header-compact");
-      accumulated = 0;
-    } else if (accumulated < -SCROLL_THRESHOLD) {
-      header.classList.remove("header-compact");
-      accumulated = 0;
-    }
-
-    lastY = currentY;
+  function isMobile() {
+    return window.innerWidth <= COMPACT_BREAKPOINT;
   }
 
+  // Point d'entrée unique : recalcule l'état du header à partir de la vue
+  // active (state.currentView) et, pour le Dashboard uniquement, de la
+  // position de scroll. Appelé à la fois par le listener de scroll et
+  // explicitement après tout changement de vue (voir bindEvents ci-dessous),
+  // pour que le header réagisse immédiatement au clic sur la nav, sans
+  // attendre un événement de scroll.
+  function evaluate() {
+    if (!isMobile()) {
+      header.classList.remove("header-compact");
+      return;
+    }
+
+    if (state.currentView !== "dashboard") {
+      header.classList.add("header-compact");
+      return;
+    }
+
+    // Dashboard : critère uniquement positionnel, jamais directionnel.
+    if (window.scrollY <= 0) {
+      header.classList.remove("header-compact");
+    } else if (window.scrollY > DASHBOARD_SCROLL_THRESHOLD) {
+      header.classList.add("header-compact");
+    }
+    // Entre 0 et le seuil : aucun changement (évite l'oscillation sur un
+    // micro-mouvement de scroll juste après le haut de page).
+  }
+
+  let ticking = false;
   window.addEventListener("scroll", () => {
     if (ticking) return;
     ticking = true;
@@ -967,17 +968,22 @@ function initAdaptiveHeader() {
       ticking = false;
     });
   }, { passive: true });
+
+  window.addEventListener("resize", evaluate, { passive: true });
+
+  evaluate();
+  return { evaluate };
 }
 
       function init() {
         ui.cache();
         state.data = storage.load();
         storage.save();
-        bindEvents();
+        const adaptiveHeader = initAdaptiveHeader(); // MOB-002-B2 — déplacé avant bindEvents
+        bindEvents(adaptiveHeader);
         ui.render();
         ui.goToWizardCard(1);
         ui.switchView("dashboard");
-        initAdaptiveHeader(); // MOB-002-B
         if (state.data.migratedFrom) ui.toast("Données V2 migrées vers les fondations V3.", "neutral");
       }
 
