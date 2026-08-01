@@ -116,8 +116,9 @@
 }
 
 #dashboard-pilot-panel .kpi-value {
-  font-size: 1.5rem;       /* Ajuste légèrement la taille du chiffre */
-  margin: 4px 0;          /* Rapproche le chiffre du titre et de la note */
+  font-size: 1.5rem;
+  margin: 4px 0;
+  line-height: normal;
 }
 
 #dashboard-pilot-panel .kpi-note {
