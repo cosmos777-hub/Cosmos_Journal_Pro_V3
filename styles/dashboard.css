@@ -111,20 +111,42 @@
 }
 /* Compactage des cartes du panneau de pilotage */
 #dashboard-pilot-panel .card.kpi {
-  padding: 12px 16px;
-  min-height: unset;
+  padding: 12px 16px;     /* Réduit l'espace interne (haut/bas) */
+  min-height: unset;       /* Supprime la hauteur minimale héritée */
 }
 
 #dashboard-pilot-panel .kpi-value {
-  font-size: 1.5rem;
-  line-height: 1.2;
-  margin: 4px 0 2px 0;
+  font-size: 1.5rem;       /* Ajuste légèrement la taille du chiffre */
+  margin: 4px 0;          /* Rapproche le chiffre du titre et de la note */
 }
 
 #dashboard-pilot-panel .kpi-note {
-  margin-top: 0;
-  font-size: 0.75rem;
-  line-height: 1.1;
+  margin-top: 2px;
+  font-size: 0.75rem;      /* Rend la note discrète et compacte */
+}
+/* MOB-003-A — Correction layout du chevauchement WinRate / Capital sur mobile.
+   Cause : .kpi-value est un <strong> inline (jamais redéfini par components.css) ;
+   .kpi-row-layout (enfant) déclare height:100%, qui ne peut se résoudre sur un
+   parent inline — le contenu le plus haut (l'anneau/icône, 36px/34px) déborde
+   alors de la boîte de ligne au lieu d'agrandir proprement son conteneur.
+   Correction : .kpi-value devient un conteneur de bloc dans ce contexte précis,
+   avec une hauteur minimale suffisante pour l'icône — taille des badges
+   totalement inchangée (aucune règle .winrate-ring-wrap svg / .capital-badge-icon
+   touchée). Scopé au panneau de pilotage mobile uniquement : aucun impact
+   desktop, aucun autre KPI concerné. */
+@media (max-width: 980px) {
+  #dashboard-pilot-panel .card.kpi {
+    min-height: 104px;
+  }
+
+  #dashboard-pilot-panel .kpi-value {
+    display: block;
+    min-height: 36px;
+  }
+
+  #dashboard-pilot-panel .kpi-note {
+    margin-top: 6px;
+  }
 }
 /* ─────────────────────────────────────────────────────────────────────
    DASH-001 — Premium Visual Polish (V2)
@@ -160,14 +182,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 100%;
-}
-
-/* Force le bloc de texte à s'empiler proprement en colonne */
-.kpi-row-layout > div:first-child {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  height: 100%; /* S'adapte à la hauteur existante du KPI */
 }
 
 .winrate-ring-wrap {
@@ -226,22 +241,4 @@
 .digital-twin-legend span:first-child span {
   background: var(--cosmos-glow-bright) !important;
   box-shadow: 0 0 8px var(--cosmos-glow-soft);
-}
-/* Correctif Mobile - Alignement KPI (Dashboard) */
-@media (max-width: 640px) {
-  #dashboard-pilot-panel .card.kpi {
-    min-height: 110px;
-    padding: 14px 16px;
-  }
-
-  #dashboard-pilot-panel .kpi-value {
-    margin-top: 6px;
-    margin-bottom: 4px;
-  }
-
-  .winrate-ring-wrap,
-  .capital-badge-icon {
-    align-self: center;
-    flex-shrink: 0;
-  }
 }
