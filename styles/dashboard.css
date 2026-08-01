@@ -118,7 +118,7 @@
 #dashboard-pilot-panel .kpi-value {
   font-size: 1.5rem;
   margin: 4px 0;
-  line-height: normal;
+  height: 36px;
 }
 
 #dashboard-pilot-panel .kpi-note {
