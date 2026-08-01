@@ -118,7 +118,12 @@
 #dashboard-pilot-panel .kpi-value {
   font-size: 1.5rem;
   margin: 4px 0;
-  line-height: normal;
+}
+
+#dashboard-pilot-panel .winrate-ring-wrap svg,
+#dashboard-pilot-panel .capital-badge-icon svg {
+  vertical-align: top;
+  font-size: 0;
 }
 
 #dashboard-pilot-panel .kpi-note {
