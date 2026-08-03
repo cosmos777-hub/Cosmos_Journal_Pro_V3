@@ -99,7 +99,7 @@ export const componentsUi = {
       // interrompait le reste de render() (renderTrades, renderSettings,
       // renderAnalyticsFilters, updateAnalyticsView, renderCoach) à chaque appel.
       "delta-note",
-      "settings-modal", "settings-nav", "settings-content",
+      "settings-modal", "settings-nav", "settings-nav-mobile", "settings-content",
       "export-modal", "export-output", "import-modal", "import-input", "import-file", "import-feedback",
       "toast-stack",
       "capture-viewer-modal", "capture-viewer-image",

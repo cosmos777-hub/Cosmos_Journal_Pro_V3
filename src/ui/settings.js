@@ -110,6 +110,21 @@ export const settingsUi = {
             </button>
           `).join("");
 
+          // MOB-003-B (Option A) : dropdown mobile, même liste de catégories,
+          // même valeur (category.id) que data-settings-category ci-dessus —
+          // aucune logique dupliquée, juste une seconde représentation visuelle
+          // de la même sélection. La délégation d'événement "change" est gérée
+          // dans main.js/bindEvents, aux côtés du clic desktop existant.
+          if (dom["settings-nav-mobile"]) {
+            dom["settings-nav-mobile"].innerHTML = `
+              <select id="settings-category-select" aria-label="Catégorie de paramètres">
+                ${categories.map(category => `
+                  <option value="${category.id}" ${category.id === active ? "selected" : ""}>${utils.escape(category.label)}</option>
+                `).join("")}
+              </select>
+            `;
+          }
+
           const category = categories.find(item => item.id === active) || categories[0];
           dom["settings-content"].innerHTML = settingsCategories.renderCategory(category);
         },

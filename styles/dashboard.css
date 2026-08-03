@@ -102,11 +102,41 @@
   /* Sous 640px, l'info et le graphique ne peuvent plus cohabiter sur une
      largeur aussi contrainte sans dégrader la lisibilité du graphique —
      on repasse en empilement vertical uniquement à ce point de rupture. */
-  .kpi--digital-twin {
+  /* MOB-003-A : le sélecteur .kpi--digital-twin (sans le point .card
+     devant) ne correspondait à rien dans le markup (la classe réelle est
+     .card.kpi--digital-twin) — cette règle était donc silencieusement
+     ignorée. Corrigé ci-dessous avec le sélecteur exact déjà utilisé par
+     dashboard.css pour ce composant. */
+  .card.kpi--digital-twin {
     flex-direction: column;
+    align-items: stretch !important;
+    /* La hauteur fixe (132px, héritée du gabarit KPI standard) n'a de sens
+       qu'en layout horizontal compact. En colonne, le texte du gap peut
+       tenir sur 3-4 lignes sur un écran étroit : on la libère pour éviter
+       tout chevauchement texte/graphique (cause racine MOB-003-A.2). */
+    min-height: 132px;
+    max-height: none;
+    height: auto;
   }
+
+  /* MOB-003-A.1 : min-width:270px (fixe) est la cause racine du texte
+     tronqué — sur un viewport ~360-390px, cette largeur minimale dépasse
+     l'espace réellement disponible dans le panel. On la neutralise
+     uniquement ici (media query mobile), donc aucun impact desktop. */
   .digital-twin-col--info {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Le graphique reprend une hauteur dédiée, indépendante du texte
+     au-dessus (qui peut désormais varier en nombre de lignes sans
+     compresser le SVG). Le SVG lui-même (viewBox + preserveAspectRatio
+     "none", généré par dashboardUi.renderDigitalTwin) n'a besoin d'aucune
+     modification : il s'adapte déjà à la taille de son conteneur. */
+  .digital-twin-col--chart {
+    width: 100%;
+    height: 110px;
   }
 }
 /* Compactage des cartes du panneau de pilotage */

@@ -899,3 +899,33 @@ une fois le RR prévu renseigné, l'utilisateur passe directement
 au résultat. Reste compacte (wizard-card--compact) : le volume
 visuel cible est celui de l'ancienne carte ⑤ seule, pas la
 somme des deux anciennes cartes. -->
+
+## D-007 — Mobile UX Finalization
+
+### Décision
+
+Finalisation de l'expérience mobile avant publication.
+
+### Décisions validées
+
+- Header complet réservé uniquement à l'écran d'accueil Dashboard.
+- Header compact permanent dans les modules Journal, Analytics, Coach et Settings.
+- Réorganisation du Dashboard mobile (Pilotage avant Mission).
+- Suppression des débordements horizontaux Analytics.
+- Refonte de la structure interne des KPI enrichis afin d'assurer un rendu cohérent sur Safari iOS tout en conservant les badges WinRate et Comptes actifs.
+
+### Justification
+
+La priorité de cette phase était d'obtenir une expérience mobile premium sans compromettre l'architecture existante ni le Design System.
+
+Les corrections retenues privilégient des améliorations structurelles plutôt que des contournements spécifiques à un navigateur.
+
+### Impact
+
+Aucune régression Desktop.
+
+Aucune modification des calculs métier.
+
+Aucune modification des composants du Design System partagé.
+
+Expérience utilisateur homogène sur Desktop et Mobile.

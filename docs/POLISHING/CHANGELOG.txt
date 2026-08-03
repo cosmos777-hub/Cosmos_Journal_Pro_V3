@@ -1,0 +1,37 @@
+## Version 3.0.0
+
+### Added
+
+- Coach Workspace
+- Analytics Workspace
+- Dashboard Premium
+- Responsive Mobile Experience
+- Adaptive Header
+- Mobile Dashboard Optimization
+- Analytics Responsive Layout
+- Premium KPI Components
+- Design System Foundation
+
+### Improved
+
+- Architecture entièrement modulaire
+- Performance générale
+- Responsive Desktop / Mobile
+- UX de saisie des trades
+- Cohérence visuelle
+- Robustesse des composants
+- Harmonisation des thèmes
+
+### Fixed
+
+- Mobile compatibility
+- Analytics horizontal overflow
+- Dashboard KPI alignment
+- Safari iOS rendering issues
+- Scrollbars harmonization
+- State persistence
+- Journal UX consistency
+
+### Status
+
+✅ Release Candidate Ready

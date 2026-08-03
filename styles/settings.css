@@ -64,11 +64,46 @@
       color: var(--text-muted);
     }
 @media (max-width: 980px) {
+  /* MOB-003-B : grid-template-rows explicite, absent jusqu'ici — c'est la
+     cause racine du chevauchement. Sans cette contrainte, les deux zones
+     (nav + body) n'avaient pas de piste de grille dédiée et pouvaient se
+     superposer visuellement selon le contenu (voir audit MOB-003-B). */
   .settings-modal {
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
   }
+
+  /* La liste de boutons verticale (.settings-tab) est remplacée par un
+     <select> unique sous ce seuil (Option A validée) — masquée ici,
+     jamais supprimée du DOM/JS, pour ne rien casser au-dessus de 980px. */
   .settings-nav {
-    border-right: 0;
+    display: none;
+  }
+
+  /* Nouveau composant mobile : dropdown de catégories, rendu par
+     settingsUi.renderSettings() (voir src/ui/settings.js). Caché par
+     défaut au-dessus de 980px (règle desktop plus bas dans ce fichier). */
+  .settings-nav-mobile {
+    display: block;
+    padding: var(--space-2);
     border-bottom: 1px solid var(--border);
   }
+
+  .settings-nav-mobile select {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-field);
+    background: var(--bg-soft);
+    color: var(--text);
+    font-size: 14px;
+  }
+}
+
+/* Le dropdown mobile n'existe que sous 980px — cette règle desktop garantit
+   qu'il reste invisible au-dessus du seuil même si le markup est toujours
+   présent dans le DOM (généré inconditionnellement par renderSettings()). */
+.settings-nav-mobile {
+  display: none;
 }

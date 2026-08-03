@@ -804,6 +804,21 @@ if (deleteAccountButton) {
           if (addAccountForm) actions.addAccount(event);
         });
 
+        // MOB-003-B : délégation "change" sur le dropdown mobile de Paramètres.
+        // Reproduit exactement la même action que le clic desktop sur
+        // [data-settings-category] ci-dessus — même source de vérité
+        // (state.data.preferences.activeSettingsCategory), aucune logique
+        // dupliquée. Le select est régénéré à chaque renderSettings() ; la
+        // délégation sur le document (plutôt que sur l'élément lui-même)
+        // survit donc à cette régénération.
+        document.addEventListener("change", event => {
+          const mobileSelect = event.target.closest("#settings-category-select");
+          if (!mobileSelect) return;
+          state.data.preferences.activeSettingsCategory = mobileSelect.value;
+          storage.save();
+          ui.renderSettings();
+        });
+
         dom["import-file"].addEventListener("change", event => {
           actions.loadImportFile(event.target.files[0]);
         });
