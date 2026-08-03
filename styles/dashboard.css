@@ -125,22 +125,40 @@
   font-size: 0.75rem;      /* Rend la note discrète et compacte */
 }
 @media (max-width: 980px) {
-  #dashboard-pilot-panel .winrate-ring-wrap,
-  #dashboard-pilot-panel .capital-badge-icon {
-    display: none;
+  /* MOB-003-A (réintroduction badges) — .kpi-row-layout reste neutralisé en
+     display:contents (sa boîte disparaît, ses enfants — texte + badge —
+     remontent directement dans .kpi-value). La différence avec la version
+     qui chevauchait : .kpi-value devient lui-même le SEUL conteneur flex,
+     au lieu d'englober un enfant flex imbriqué (.kpi-row-layout). Un seul
+     niveau de flex, sans imbrication bloc->flex->flex — structure jamais
+     mise en cause dans l'audit (Delta, qui ne chevauche jamais, n'a lui
+     aucun flex du tout ; ce niveau unique reste le minimum nécessaire pour
+     aligner texte + badge côte à côte). */
+  #dashboard-pilot-panel .kpi-value {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
   }
 
-  /* Le chevauchement persistait même badge masqué : la cause n'est donc pas
-     le badge lui-même mais le fait que .kpi-value contienne un wrapper
-     .kpi-row-layout en display:flex (contexte de mise en page imbriqué),
-     par opposition à un texte direct (cas de Delta émotionnel, qui ne
-     chevauche jamais). Sur mobile, une fois le badge retiré, ce wrapper flex
-     n'a plus aucune utilité (il ne reste qu'un seul enfant, le texte) —
-     neutralisé en display:contents pour que .kpi-row-layout disparaisse du
-     calcul de boîte et que .kpi-value ne contienne plus qu'un texte direct,
-     exactement comme les autres KPI du Dashboard. */
   #dashboard-pilot-panel .kpi-row-layout {
     display: contents;
+  }
+
+  /* Badges réintroduits, à taille réduite pour rester cohérents avec le
+     gabarit compact du panneau pilotage mobile (voir MOB-003-A, audit
+     initial : les dimensions fixes 36px/34px avaient été identifiées comme
+     disproportionnées par rapport au compactage du texte, indépendamment
+     du bug de chevauchement lui-même — les deux sujets étaient liés mais
+     distincts). */
+  #dashboard-pilot-panel .winrate-ring-wrap svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  #dashboard-pilot-panel .capital-badge-icon {
+    width: 26px;
+    height: 26px;
   }
 }
 /* ─────────────────────────────────────────────────────────────────────
