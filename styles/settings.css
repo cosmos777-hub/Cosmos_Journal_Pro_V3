@@ -63,6 +63,18 @@
       background: transparent;
       color: var(--text-muted);
     }
+/* Le dropdown mobile n'existe que sous 980px — cette règle desktop garantit
+   qu'il reste invisible au-dessus du seuil même si le markup est toujours
+   présent dans le DOM (généré inconditionnellement par renderSettings()).
+   MOB-003-B (correctif) : cette règle doit être déclarée AVANT la media
+   query ci-dessous. À spécificité CSS égale, c'est l'ordre d'apparition
+   dans le fichier qui détermine la règle gagnante — placée après, elle
+   écrasait silencieusement le "display:block" du mode mobile, empêchant
+   le select d'apparaître à tous les breakpoints. */
+.settings-nav-mobile {
+  display: none;
+}
+
 @media (max-width: 980px) {
   /* MOB-003-B : grid-template-rows explicite, absent jusqu'ici — c'est la
      cause racine du chevauchement. Sans cette contrainte, les deux zones
@@ -81,8 +93,7 @@
   }
 
   /* Nouveau composant mobile : dropdown de catégories, rendu par
-     settingsUi.renderSettings() (voir src/ui/settings.js). Caché par
-     défaut au-dessus de 980px (règle desktop plus bas dans ce fichier). */
+     settingsUi.renderSettings() (voir src/ui/settings.js). */
   .settings-nav-mobile {
     display: block;
     padding: var(--space-2);
@@ -99,11 +110,4 @@
     color: var(--text);
     font-size: 14px;
   }
-}
-
-/* Le dropdown mobile n'existe que sous 980px — cette règle desktop garantit
-   qu'il reste invisible au-dessus du seuil même si le markup est toujours
-   présent dans le DOM (généré inconditionnellement par renderSettings()). */
-.settings-nav-mobile {
-  display: none;
 }
