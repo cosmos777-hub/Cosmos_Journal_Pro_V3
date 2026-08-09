@@ -929,3 +929,53 @@ Aucune modification des calculs métier.
 Aucune modification des composants du Design System partagé.
 
 Expérience utilisateur homogène sur Desktop et Mobile.
+
+## D-067 — MOB-003 : Correctifs mobile post-clôture (Jumeau Numérique + Navigation Paramètres)
+
+**Contexte** : la clôture de la phase Release Polishing (03 Août 2026) a été
+prononcée avant que deux anomalies mobiles identifiées ultérieurement
+(Dashboard KPI "Jumeau Numérique" et navigation Paramètres) n'aient été
+auditées et corrigées. Ces deux points rouvrent donc rétroactivement le
+périmètre Mobile Optimization, sous le ticket **MOB-003**.
+
+**Décision** :
+- **MOB-003-A** — `styles/dashboard.css` : sous `@media (max-width: 640px)`,
+  neutralisation de `min-width: 270px` sur `.digital-twin-col--info` (cause
+  racine du texte tronqué) et passage de `.card.kpi--digital-twin` en
+  `height: auto` (cause racine de la compression texte/graphique). Le SVG du
+  Jumeau Numérique (`dashboardUi.renderDigitalTwin`) n'a nécessité aucune
+  modification, son `viewBox`/`preserveAspectRatio` s'adaptant déjà à son
+  conteneur une fois celui-ci libéré.
+- **MOB-003-B** — Remplacement de la sidebar de catégories des Paramètres
+  (`.settings-nav`, liste de boutons) par un `<select>` natif
+  (`#settings-category-select`, `.settings-nav-mobile`) sous 980px, Option A
+  validée. Fichiers modifiés : `styles/settings.css` (masquage conditionnel +
+  `grid-template-rows` explicite, cause racine du chevauchement),
+  `src/ui/settings.js` (génération du `<select>`, même liste de catégories que
+  la sidebar desktop), `index.html` (conteneur `#settings-nav-mobile`),
+  `src/ui/components.js` (ajout de l'id au cache DOM), `src/main.js`
+  (délégation d'événement `change` sur le select, réutilisant exactement la
+  même logique que le clic desktop sur `[data-settings-category]` — aucune
+  duplication de logique métier).
+- **Correctif d'ordre CSS** : la première version de `.settings-nav-mobile {
+  display: none; }` avait été placée *après* la media query mobile dans
+  `styles/settings.css`. À spécificité égale, l'ordre d'apparition dans le
+  fichier détermine la règle gagnante — la règle desktop écrasait donc
+  silencieusement `display: block` sur tous les breakpoints, y compris mobile.
+  Corrigé en déplaçant la règle `display: none` avant le bloc
+  `@media (max-width: 980px)`.
+
+**Justification** : les deux corrections sont strictement scopées à des
+media queries mobiles déjà existantes (640px pour le Dashboard, 980px pour
+Paramètres) — aucune règle CSS desktop n'est modifiée, aucun calcul, aucune
+donnée ni le stockage ne sont concernés (conforme Document 06 §4).
+
+**Conséquence durable** : la clôture officielle de Release Polishing
+(PROJECT_STATUS.md) est corrigée en conséquence — voir note de réouverture
+ci-dessous. MOB-003 devient le dernier ticket du périmètre Mobile
+Optimization avant re-clôture.
+
+**Note de gouvernance** : la clôture d'une phase ne doit être prononcée
+qu'après épuisement des anomalies connues et non résolues à cette date — un
+audit signalé mais non encore corrigé (comme MOB-003-A/B ici) ne doit pas
+être considéré comme implicitement inclus dans une clôture déjà écrite.

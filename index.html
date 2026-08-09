@@ -7,6 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosmos Journal Pro V3 - Trading Intelligence Platform</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- PWA-002 : intégration manifest, aucune logique de Service Worker à ce stade -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#07080d">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 
 <body>
@@ -982,6 +988,26 @@
 
 
   <script type="module" src="src/main.js"></script>
+
+  <!-- PWA-003 : enregistrement du Service Worker, isolé de main.js pour ne
+       jamais risquer d'impacter la logique métier (IIFE existante). Non
+       bloquant : un échec d'enregistrement laisse Cosmos fonctionner
+       normalement comme application web classique (Étape 5). -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js", { scope: "./" })
+          .then(registration => {
+            console.log("[Cosmos PWA] Service Worker enregistré.", registration.scope);
+          })
+          .catch(error => {
+            // Échec silencieux pour l'utilisateur : Cosmos continue de
+            // fonctionner en mode application web classique (Étape 5).
+            console.warn("[Cosmos PWA] Enregistrement du Service Worker impossible.", error);
+          });
+      });
+    }
+  </script>
 
 </body>
 

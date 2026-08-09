@@ -412,6 +412,26 @@ Tous les tickets planifiés ont été validés :
 - ✅ MOB-002-C — Analytics Responsive Layout
 - ✅ MOB-003 — Dashboard KPI Mobile Alignment
 
+### ✅ MOB-003 — Mobile UI Fixes (Jumeau Numérique + Navigation Paramètres)
+
+**Statut : Terminé**
+
+Résumé :
+- **MOB-003-A** : correction de la troncature de texte et de la compression
+  du graphique du KPI "Jumeau Numérique" sur mobile (<640px). Cause racine :
+  largeur minimale fixe (`min-width: 270px`) et hauteur de carte figée
+  (`max-height: 132px`) incompatibles avec un viewport étroit.
+- **MOB-003-B** : remplacement de la sidebar de catégories des Paramètres
+  par un menu déroulant (`<select>`) natif sur mobile (<980px), Option A
+  validée. Cause racine du chevauchement initial : absence de
+  `grid-template-rows` explicite sur `.settings-modal` en layout mobile.
+  Un correctif complémentaire d'ordre des règles CSS a été nécessaire pour
+  que le `<select>` s'affiche effectivement (règle `display: none` placée
+  après sa contrepartie mobile dans le fichier source).
+
+Aucune régression desktop, aucun impact sur les calculs, le stockage ou les
+exports (conforme Document 06 §4).
+
 Le produit est désormais considéré comme stable sur Desktop et Mobile.
 
 Architecture, Design System, UX et Responsive sont alignés avec les objectifs de Cosmos Journal Pro V3.
