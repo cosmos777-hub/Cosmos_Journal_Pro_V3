@@ -9,7 +9,7 @@
 // Version de cache PWA — indépendante de APP_VERSION (src/utils/constants.js).
 // Incrémenter cette chaîne (jamais APP_VERSION) déclenche une nouvelle
 // installation du Service Worker et invalide l'ancien cache statique.
-const CACHE_VERSION = "cosmos-static-v1";
+const CACHE_VERSION = "cosmos-static-v2";
 
 // Chemins relatifs au scope d'enregistrement du SW (racine du projet, voir
 // index.html). Compatibles GitHub Pages en sous-répertoire : aucun chemin
@@ -68,14 +68,19 @@ const PRECACHE_URLS = [
   "src/utils/constants.js",
   "src/utils/formatters.js",
   "src/utils/helpers.js",
-  "src/utils/index.js"
+  "src/utils/index.js",
 
-  // Icônes PWA (icons/icon-192.png, icons/icon-512.png, icons/icon-512-maskable.png)
-  // volontairement absentes de cette liste : elles n'existent pas encore dans
-  // le projet (bloquant PWA-002). Les ajouter ici avant leur création ferait
-  // échouer cache.addAll() sur un 404, ce qui annulerait tout le précache
-  // (comportement natif de Cache.addAll : échec atomique). À ajouter dans un
-  // futur ticket dès que les fichiers PNG existent réellement.
+  // IDENTITY-001 : icônes Cosmos Trader désormais présentes dans le projet —
+  // ajoutées au precache pour que l'identité (favicon, icône d'accueil PWA)
+  // reste disponible hors ligne. Ce SW utilise déjà Promise.allSettled (voir
+  // plus bas) et non cache.addAll() : un fichier manquant n'annule donc pas
+  // le reste du précache (comportement non-atomique, safe par design).
+  "icons/cosmos-trader-32.png",
+  "icons/cosmos-trader-64.png",
+  "icons/cosmos-trader-180.png",
+  "icons/cosmos-trader-192.png",
+  "icons/cosmos-trader-512.png",
+  "icons/cosmos-trader-512-maskable.png"
 ];
 
 // ─────────────────────────────────────────────────────────────────────────

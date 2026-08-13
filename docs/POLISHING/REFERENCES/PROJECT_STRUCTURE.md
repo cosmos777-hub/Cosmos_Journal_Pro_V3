@@ -14,6 +14,8 @@ after the completion of Phase 1.
 
 index.html
 style.css
+manifest.json
+sw.js
 
 src/
   main.js
