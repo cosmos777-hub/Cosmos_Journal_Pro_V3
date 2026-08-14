@@ -339,3 +339,27 @@
     width: 100%;
   }
 }
+
+/* UI-005 (PWA-UPDATE-001) : Bannière de mise à jour PWA */
+.update-banner {
+  position: fixed;
+  bottom: calc(var(--space-2) + 60px); /* Au-dessus des toasts */
+  right: var(--space-2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--cosmos) 40%, var(--border));
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: fadeSlide var(--motion) ease both;
+}
+
+.update-banner p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+}

@@ -204,3 +204,14 @@ self.addEventListener("fetch", event => {
   // Toute autre requête GET same-origin non précachée (aucune API n'existe
   // dans ce projet, voir Étape 6) : laissée au réseau natif, sans interception.
 });
+
+// ─────────────────────────────────────────────────────────────────────────
+// MESSAGE — écoute les commandes envoyées par le client (index.html).
+// Utilisé pour forcer l'activation du nouveau Service Worker en attente
+// uniquement lorsque l'utilisateur le demande explicitement via l'UI.
+// ─────────────────────────────────────────────────────────────────────────
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});

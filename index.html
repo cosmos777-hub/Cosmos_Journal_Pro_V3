@@ -988,27 +988,78 @@
       <img id="capture-viewer-image" alt="Capture agrandie">
     </div>
   </div>
+
+  <!-- UI-005 (PWA-UPDATE-001) : Bannière de mise à jour PWA -->
+  <div id="pwa-update-banner" class="update-banner hidden">
+    <p>Une nouvelle version est disponible.</p>
+    <button id="pwa-update-btn" class="button primary">Mettre à jour</button>
+  </div>
+
   <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
 
   <script type="module" src="src/main.js"></script>
 
-  <!-- PWA-003 : enregistrement du Service Worker, isolé de main.js pour ne
+  <!-- PWA-003 / PWA-UPDATE-001 : enregistrement du Service Worker, isolé de main.js pour ne
        jamais risquer d'impacter la logique métier (IIFE existante). Non
        bloquant : un échec d'enregistrement laisse Cosmos fonctionner
        normalement comme application web classique (Étape 5). -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
+        
+        function showUpdateBanner(worker) {
+          const banner = document.getElementById('pwa-update-banner');
+          const btn = document.getElementById('pwa-update-btn');
+          if (banner && btn) {
+            banner.classList.remove('hidden');
+            btn.onclick = () => {
+              banner.classList.add('hidden');
+              worker.postMessage({ type: 'SKIP_WAITING' });
+            };
+          }
+        }
+
         navigator.serviceWorker.register("sw.js", { scope: "./" })
           .then(registration => {
             console.log("[Cosmos PWA] Service Worker enregistré.", registration.scope);
+            
+            // Si un SW est déjà en attente au chargement ET qu'on a déjà un contrôleur actif
+            if (registration.waiting && navigator.serviceWorker.controller) {
+              showUpdateBanner(registration.waiting);
+            }
+
+            // Écoute l'arrivée d'un nouveau SW
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  // Le nouveau SW a fini de s'installer et passe en attente
+                  if (newWorker.state === 'installed') {
+                    // On vérifie qu'il y a déjà un contrôleur actif (évite d'afficher
+                    // la bannière lors de la toute première installation de la PWA)
+                    if (navigator.serviceWorker.controller) {
+                      showUpdateBanner(newWorker);
+                    }
+                  }
+                });
+              }
+            });
           })
           .catch(error => {
             // Échec silencieux pour l'utilisateur : Cosmos continue de
             // fonctionner en mode application web classique (Étape 5).
             console.warn("[Cosmos PWA] Enregistrement du Service Worker impossible.", error);
           });
+          
+        // Écoute l'activation du nouveau SW (suite au skipWaiting) pour recharger la page
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
       });
     }
   </script>
