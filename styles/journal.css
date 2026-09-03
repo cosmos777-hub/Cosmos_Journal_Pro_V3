@@ -782,35 +782,145 @@
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--cosmos) 30%, transparent);
 }
 
-/* MEDIA-001 (Livraison D) — Visionneuse. Réutilise .modal-backdrop (flou,
-   fermeture ESC/clic extérieur déjà gérés par components.js/main.js) ; seul le
-   panel interne est spécifique : pas de padding standard (l'image doit pouvoir
-   toucher les bords), largeur/hauteur bornées à la fenêtre. */
+/* MEDIA-001 (Livraison D) & MEDIA-ACCESS-001 — Visionneuse de captures.
+   Réutilise .modal-backdrop (flou, fermeture ESC/clic extérieur déjà gérés
+   par components.js/main.js) ; supporte la navigation HTF -> LTF -> Résultat. */
 .capture-viewer {
   position: relative;
   padding: 0;
-  max-width: min(90vw, 900px);
+  max-width: min(92vw, 960px);
   max-height: 90vh;
   overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
 }
 
-.capture-viewer img {
-  display: block;
-  max-width: 100%;
-  max-height: 90vh;
-  object-fit: contain;
+.capture-viewer-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.capture-viewer-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.capture-viewer-tabs .chip {
+  padding: 4px 12px;
+  font-size: 12px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.capture-viewer-single-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  padding: 4px 10px;
+  background: var(--surface-2);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
 }
 
 .capture-viewer-close {
-  position: absolute;
-  top: var(--space-1);
-  right: var(--space-1);
-  z-index: 1;
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  width: auto;
+  min-width: unset;
+  padding: 4px 12px;
+  height: 28px;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
   backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+.capture-viewer-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 240px;
+  max-height: 85vh;
+  padding-top: 48px;
+  background: var(--bg);
+}
+
+.capture-viewer-body img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(85vh - 48px);
+  object-fit: contain;
+}
+
+.capture-viewer-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter: blur(6px);
+  color: var(--text);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
+  padding: 0;
+  line-height: 1;
+}
+
+.capture-viewer-nav:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--cosmos);
+}
+
+.capture-viewer-nav.prev {
+  left: var(--space-1);
+}
+
+.capture-viewer-nav.next {
+  right: var(--space-1);
+}
+
+.trade-row-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .trade-row-actions {
+    width: 100%;
+    margin-top: 4px;
+  }
+  .trade-row-actions .button {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 /* MOB-003 — Wizard gets more breathing room on mobile only.

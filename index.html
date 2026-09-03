@@ -980,12 +980,18 @@
     </div>
   </div>
 
-  <!-- MEDIA-001 (Livraison D) : visionneuse simple, même gabarit .modal-backdrop
-       que Settings/Export/Import. Contenu généré dynamiquement (voir openCaptureViewer). -->
+  <!-- MEDIA-001 (Livraison D) / MEDIA-ACCESS-001 : visionneuse avec navigation HTF -> LTF -> Résultat. -->
   <div class="modal-backdrop" id="capture-viewer-modal" aria-hidden="true">
     <div class="panel capture-viewer" role="dialog" aria-modal="true">
-      <button class="button ghost capture-viewer-close" type="button" data-action="close-capture-viewer">Fermer</button>
-      <img id="capture-viewer-image" alt="Capture agrandie">
+      <div class="capture-viewer-header">
+        <div class="capture-viewer-tabs" id="capture-viewer-tabs"></div>
+        <button class="button ghost capture-viewer-close" type="button" data-action="close-capture-viewer">Fermer</button>
+      </div>
+      <div class="capture-viewer-body">
+        <button type="button" class="capture-viewer-nav prev" id="capture-viewer-prev" aria-label="Capture précédente" data-action="prev-capture">‹</button>
+        <img id="capture-viewer-image" alt="Capture agrandie">
+        <button type="button" class="capture-viewer-nav next" id="capture-viewer-next" aria-label="Capture suivante" data-action="next-capture">›</button>
+      </div>
     </div>
   </div>
 

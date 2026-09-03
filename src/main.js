@@ -754,12 +754,22 @@ dom["dashboard-account-filter"].addEventListener("change", () => {
     const captureViewButton = event.target.closest("[data-capture-view]");
     if (captureViewButton) ui.openCaptureViewer(captureViewButton.dataset.captureView);
 
+    // MEDIA-ACCESS-001 : clic sur "Captures" dans l'historique → visionneuse directe en lecture seule.
+    const viewCapturesButton = event.target.closest("[data-view-trade-captures]");
+    if (viewCapturesButton) ui.openTradeCaptures(viewCapturesButton.dataset.viewTradeCaptures);
+
+    // MEDIA-ACCESS-001 : changement de slot dans la visionneuse.
+    const viewerSlotButton = event.target.closest("[data-viewer-slot]");
+    if (viewerSlotButton) ui.switchViewerSlot(viewerSlotButton.dataset.viewerSlot);
+
           const action = event.target.closest("[data-action]")?.dataset.action;
           if (action === "open-settings") ui.openModal(dom["settings-modal"]);
           if (action === "close-settings") ui.closeModal(dom["settings-modal"]);
           if (action === "export-json") actions.exportJSON();
           if (action === "export-json-captures") actions.exportJSONWithCaptures();
           if (action === "close-capture-viewer") ui.closeCaptureViewer();
+          if (action === "prev-capture") ui.prevCaptureViewerSlot();
+          if (action === "next-capture") ui.nextCaptureViewerSlot();
           if (action === "close-export") ui.closeModal(dom["export-modal"]);
           if (action === "copy-export") actions.copyExport();
           if (action === "import-json") actions.openImport();
@@ -912,13 +922,19 @@ if (deleteAccountButton) {
         });
 
     document.addEventListener("keydown", event => {
-          if (event.key === "Escape") {
-            ui.closeModal(dom["settings-modal"]);
-            ui.closeModal(dom["export-modal"]);
-            ui.closeModal(dom["import-modal"]);
-            ui.closeCaptureViewer();
-          }
-        });
+      if (event.key === "Escape") {
+        ui.closeModal(dom["settings-modal"]);
+        ui.closeModal(dom["export-modal"]);
+        ui.closeModal(dom["import-modal"]);
+        ui.closeCaptureViewer();
+      } else if (dom["capture-viewer-modal"]?.classList.contains("open")) {
+        if (event.key === "ArrowLeft") {
+          ui.prevCaptureViewerSlot();
+        } else if (event.key === "ArrowRight") {
+          ui.nextCaptureViewerSlot();
+        }
+      }
+    });
 
         [dom["settings-modal"], dom["export-modal"], dom["import-modal"], dom["capture-viewer-modal"]].forEach(modal => {
           modal.addEventListener("click", event => {

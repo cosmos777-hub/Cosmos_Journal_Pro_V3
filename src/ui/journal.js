@@ -44,11 +44,9 @@ const captureObjectUrls = {};
 // à la différence de state.selected/draftMedia qui font partie du cycle de vie du trade.
 let activeCaptureSlotKey = null;
 
-// Sprint Polishing — MEDIA-001 (Livraison D) : état d'ouverture de la visionneuse.
-// Même principe que les modales existantes (settings/export/import), mais générée
-// dynamiquement (l'image affichée change à chaque ouverture) plutôt que présente
-// dans index.html — pas de contenu statique à préremplir.
+// Sprint Polishing — MEDIA-001 (Livraison D) & MEDIA-ACCESS-001 : état de la visionneuse.
 let viewerObjectUrl = null;
+let viewerContext = null;
 
 function captureCacheKey(tradeId, slotKey) {
   return `${tradeId}::${slotKey}`;
@@ -261,23 +259,117 @@ export const journalUi = {
           return activeCaptureSlotKey;
         },
 
-        // MEDIA-001 (Livraison D) : visionneuse simple. Réutilise .modal-backdrop
-        // (components.css) — pas un 5e composant modal, juste un nouveau contenu
-        // injecté dans le même gabarit que Settings/Export/Import.
+        // MEDIA-001 (Livraison D) & MEDIA-ACCESS-001 : visionneuse de captures.
+        // Réutilise .modal-backdrop (components.css) et l'architecture IndexedDB.
+        // Factorisée pour être appelée aussi bien depuis le Wizard que depuis l'historique.
         async openCaptureViewer(slotKey) {
           const { tradeId, media } = this.currentCaptureContext();
-          if (!tradeId || !isNativeCapture(media[slotKey])) return;
+          if (!tradeId) return;
+          await this.showCaptureViewer({ tradeId, media, initialSlotKey: slotKey });
+        },
 
-          const entry = await mediaStorage.get(tradeId, slotKey);
+        // MEDIA-ACCESS-001 : ouverture directe depuis l'historique des trades.
+        async openTradeCaptures(tradeId, initialSlotKey = null) {
+          if (!tradeId) return;
+          const trade = state.data.trades.find(t => t.id === tradeId);
+          if (!trade || !trade.media) return;
+          await this.showCaptureViewer({ tradeId, media: trade.media, initialSlotKey });
+        },
+
+        async showCaptureViewer({ tradeId, media, initialSlotKey = null }) {
+          if (!tradeId || !media) return;
+          // Ordre officiel garanti par CAPTURE_SLOTS : HTF -> LTF -> Résultat
+          const availableSlots = CAPTURE_SLOTS.filter(slot => isNativeCapture(media[slot.key]));
+          if (!availableSlots.length) return;
+
+          const targetSlotKey = (initialSlotKey && availableSlots.some(s => s.key === initialSlotKey))
+            ? initialSlotKey
+            : availableSlots[0].key;
+
+          const entry = await mediaStorage.get(tradeId, targetSlotKey);
           if (!entry) return;
 
-          if (viewerObjectUrl) URL.revokeObjectURL(viewerObjectUrl);
+          if (viewerObjectUrl) {
+            URL.revokeObjectURL(viewerObjectUrl);
+            viewerObjectUrl = null;
+          }
           viewerObjectUrl = URL.createObjectURL(entry.blob);
 
+          viewerContext = { tradeId, media, availableSlots, currentSlotKey: targetSlotKey };
+
           if (!dom["capture-viewer-modal"]) return;
-          dom["capture-viewer-image"].src = viewerObjectUrl;
+          if (dom["capture-viewer-image"]) {
+            dom["capture-viewer-image"].src = viewerObjectUrl;
+            const slotObj = CAPTURE_SLOTS.find(s => s.key === targetSlotKey);
+            dom["capture-viewer-image"].alt = slotObj ? `Capture ${slotObj.label}` : "Capture agrandie";
+          }
+
+          this.renderViewerControls();
           this.openModal(dom["capture-viewer-modal"]);
         },
+
+        async switchViewerSlot(slotKey) {
+          if (!viewerContext || viewerContext.currentSlotKey === slotKey) return;
+          if (!viewerContext.availableSlots.some(s => s.key === slotKey)) return;
+
+          const entry = await mediaStorage.get(viewerContext.tradeId, slotKey);
+          if (!entry) return;
+
+          if (viewerObjectUrl) {
+            URL.revokeObjectURL(viewerObjectUrl);
+            viewerObjectUrl = null;
+          }
+          viewerObjectUrl = URL.createObjectURL(entry.blob);
+
+          viewerContext.currentSlotKey = slotKey;
+
+          if (dom["capture-viewer-image"]) {
+            dom["capture-viewer-image"].src = viewerObjectUrl;
+            const slotObj = CAPTURE_SLOTS.find(s => s.key === slotKey);
+            dom["capture-viewer-image"].alt = slotObj ? `Capture ${slotObj.label}` : "Capture agrandie";
+          }
+
+          this.renderViewerControls();
+        },
+
+        prevCaptureViewerSlot() {
+          if (!viewerContext || viewerContext.availableSlots.length <= 1) return;
+          const currentIndex = viewerContext.availableSlots.findIndex(s => s.key === viewerContext.currentSlotKey);
+          const prevIndex = (currentIndex - 1 + viewerContext.availableSlots.length) % viewerContext.availableSlots.length;
+          this.switchViewerSlot(viewerContext.availableSlots[prevIndex].key);
+        },
+
+        nextCaptureViewerSlot() {
+          if (!viewerContext || viewerContext.availableSlots.length <= 1) return;
+          const currentIndex = viewerContext.availableSlots.findIndex(s => s.key === viewerContext.currentSlotKey);
+          const nextIndex = (currentIndex + 1) % viewerContext.availableSlots.length;
+          this.switchViewerSlot(viewerContext.availableSlots[nextIndex].key);
+        },
+
+        renderViewerControls() {
+          const modal = dom["capture-viewer-modal"];
+          if (!modal || !viewerContext) return;
+
+          const tabsContainer = modal.querySelector("#capture-viewer-tabs");
+          if (tabsContainer) {
+            if (viewerContext.availableSlots.length > 1) {
+              tabsContainer.innerHTML = viewerContext.availableSlots.map(slot => `
+                <button type="button" class="chip${slot.key === viewerContext.currentSlotKey ? " active" : ""}" data-viewer-slot="${slot.key}">${utils.escape(slot.label)}</button>
+              `).join("");
+            } else if (viewerContext.availableSlots.length === 1) {
+              tabsContainer.innerHTML = `<span class="capture-viewer-single-tag">${utils.escape(viewerContext.availableSlots[0].label)}</span>`;
+            } else {
+              tabsContainer.innerHTML = "";
+            }
+          }
+
+          const prevBtn = modal.querySelector("#capture-viewer-prev");
+          const nextBtn = modal.querySelector("#capture-viewer-next");
+          const showNav = viewerContext.availableSlots.length > 1;
+          if (prevBtn) prevBtn.style.display = showNav ? "flex" : "none";
+          if (nextBtn) nextBtn.style.display = showNav ? "flex" : "none";
+        },
+
         closeCaptureViewer() {
           if (!dom["capture-viewer-modal"]) return;
           this.closeModal(dom["capture-viewer-modal"]);
@@ -285,7 +377,13 @@ export const journalUi = {
             URL.revokeObjectURL(viewerObjectUrl);
             viewerObjectUrl = null;
           }
-          dom["capture-viewer-image"].src = "";
+          if (dom["capture-viewer-image"]) {
+            dom["capture-viewer-image"].src = "";
+          }
+          const modal = dom["capture-viewer-modal"];
+          const tabsContainer = modal.querySelector("#capture-viewer-tabs");
+          if (tabsContainer) tabsContainer.innerHTML = "";
+          viewerContext = null;
         },
 
         // MEDIA-001 (Livraison D) : bascule visuelle pendant un drag-over, sur la
@@ -468,6 +566,7 @@ export const journalUi = {
             const resultR = Number(trade.resultR) || 0;
             const deltaR = Number(trade.emotionalDeltaR) || 0;
             const theoreticalR = resultR - deltaR;
+            const hasCaptures = CAPTURE_SLOTS.some(slot => isNativeCapture(trade.media?.[slot.key]));
             return this.tradeRow({
               title: `${utils.escape(trade.asset || "Actif non défini")} · ${utils.escape(trade.strategy || "Stratégie non définie")}`,
               meta: `${utils.escape(trade.date)} · ${utils.escape(trade.session)} · ${utils.escape(trade.timeframeCombination || trade.ltf || "")}`,
@@ -478,7 +577,8 @@ export const journalUi = {
                 { tone: utils.tone(deltaR), label: `Delta ${utils.formatR(deltaR)}` }
               ],
               actions: `
-                <div style="display:flex; gap:6px;">
+                <div class="trade-row-actions">
+                  ${hasCaptures ? `<button type="button" class="button ghost" data-view-trade-captures="${utils.escape(trade.id)}">Captures</button>` : ""}
                   <button type="button" class="button ghost" data-edit-trade="${utils.escape(trade.id)}">Modifier</button>
                   <button type="button" class="button danger" data-delete-trade="${utils.escape(trade.id)}">Supprimer</button>
                 </div>
