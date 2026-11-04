@@ -9,7 +9,7 @@
 // Version de cache PWA — indépendante de APP_VERSION (src/utils/constants.js).
 // Incrémenter cette chaîne (jamais APP_VERSION) déclenche une nouvelle
 // installation du Service Worker et invalide l'ancien cache statique.
-const CACHE_VERSION = "cosmos-static-v2";
+const CACHE_VERSION = "cosmos-static-v3";
 
 // Chemins relatifs au scope d'enregistrement du SW (racine du projet, voir
 // index.html). Compatibles GitHub Pages en sous-répertoire : aucun chemin
