@@ -116,12 +116,33 @@
      (navigation principale) ne sont jamais concernés par ce repli : seuls
      le bloc titre+slogan (.brand > div qui n'est pas .brand-mark) et les
      actions secondaires (.header-actions) se replient au scroll. */
-  .brand > div:not(.brand-mark),
-  .header-actions {
+  .brand > div:not(.brand-mark) {
     max-height: 60px;
     opacity: 1;
     overflow: hidden;
     transition: max-height var(--motion) ease, opacity var(--motion-fast) ease, margin var(--motion) ease;
+  }
+
+  /* MOB-IMPORT-001 — Restauration du scroll horizontal pour .header-actions sur mobile
+     lorsque le header est déplié (Dashboard au repos). Préserve le repli au scroll. */
+  .header-actions {
+    max-height: 60px;
+    opacity: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    transition: max-height var(--motion) ease, opacity var(--motion-fast) ease, margin var(--motion) ease;
+  }
+  .header-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Évite la déformation par .button { width: 100%; } sous 640px (components.css) */
+  .header-actions .button {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .app-header.header-compact {
@@ -136,6 +157,7 @@
     opacity: 0;
     margin: 0;
     pointer-events: none;
+    overflow: hidden;
   }
 
   /* MOB-002-B2 — Nav légèrement resserrée en mode compact, pour maximiser
