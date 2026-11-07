@@ -7,8 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosmos Trader - Trading Intelligence Platform</title>
 
-  <!-- BOOT-001 : Détection précoce des erreurs de démarrage -->
+  <!-- BOOT-001 : Suivi d'état et détection précoce des erreurs de démarrage -->
   <script>
+    window.__cosmosCssStatus = "pending";
     window.__cosmosBootErrors = [];
     window.addEventListener("error", function(event) {
       if (window.CosmosBoot && !window.CosmosBoot.isResolved()) {
@@ -21,8 +22,8 @@
 
   <!-- BOOT-001 : Chargement non bloquant de style.css pour affichage immédiat du loader -->
   <link rel="stylesheet" href="style.css" id="main-css" media="print"
-        onload="this.media='all'; if (window.CosmosBoot) window.CosmosBoot.onCssLoaded();"
-        onerror="if (window.CosmosBoot) window.CosmosBoot.onCssError();">
+        onload="this.media='all'; window.__cosmosCssStatus='loaded'; if (window.CosmosBoot) window.CosmosBoot.onCssLoaded();"
+        onerror="window.__cosmosCssStatus='error'; if (window.CosmosBoot) window.CosmosBoot.onCssError();">
   <noscript>
     <link rel="stylesheet" href="style.css">
     <style>#app-boot-loader { display: none !important; }</style>
@@ -176,7 +177,8 @@
       var errorBox = document.getElementById("boot-error");
       var errorDesc = document.getElementById("boot-error-desc");
 
-      var cssReady = false;
+      // Initialise l'état CSS à partir du statut réel mémorisé dès le <head>
+      var cssReady = (window.__cosmosCssStatus === "loaded");
       var jsReady = false;
       var resolved = false;
 
@@ -248,6 +250,12 @@
         }
       };
 
+      // Si le CSS a échoué avant la création de l'orchestrateur
+      if (window.__cosmosCssStatus === "error") {
+        window.CosmosBoot.onCssError();
+      }
+
+      // Si des erreurs de script précoces ont été capturées avant l'instanciation de CosmosBoot
       if (window.__cosmosBootErrors && window.__cosmosBootErrors.length) {
         window.CosmosBoot.onScriptError(window.__cosmosBootErrors[0]);
       }
