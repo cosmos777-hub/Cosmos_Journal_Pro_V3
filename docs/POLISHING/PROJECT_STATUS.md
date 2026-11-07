@@ -1,8 +1,9 @@
 # PROJECT_STATUS.md
 
 > **Project:** Cosmos Journal Pro V3\
-> **Document Version:** 2.0\
-> **Status:** Official -- Phase 1 Closed
+> **Document Version:** 3.1\
+> **Status:** Official -- Phase 2 Closed & Post-Release Stabilized\
+> **Last Updated:** 07 Novembre 2026
 
 ------------------------------------------------------------------------
 
@@ -447,3 +448,89 @@ Le produit quitte désormais la phase de polishing technique et documentaire.
 La prochaine étape est la **validation réelle du produit par son utilisation**, sans nouvelle modification préventive de l'architecture ou des fonctionnalités tant qu'un besoin concret n'est pas identifié.
 
 **Date de clôture : 03 Août 2026**
+
+---
+
+# Phase 3 — Post-Release Stabilization & PWA Readiness (Completed ✅)
+
+Cette phase regroupe les travaux de fiabilisation et d'optimisation menés après la clôture initiale du Release Polishing : fiabilisation PWA, consultation directe des médias, ergonomie mobile du header, gouvernance du cache et expérience de démarrage sécurisée.
+
+## ✅ PWA-UPDATE-001 — Fiabilisation du cycle de mise à jour PWA
+
+**Statut : Terminé et validé**  
+**Date : 14 Août 2026**  
+**Fichiers :** `index.html`, `styles/components.css`, `sw.js`
+
+### Résumé
+Mise en place d'un protocole de mise à jour in-app explicite et non bloquant pour la PWA installée :
+- Détection proactive des Service Workers en attente (`registration.waiting`) et écoute de l'événement `updatefound` / passage à l'état `installed`.
+- Contrôle de sécurité évitant l'affichage intempestif de la bannière lors de la première installation (`navigator.serviceWorker.controller`).
+- Affichage d'une bannière in-app dédiée (`.update-banner`) invitant l'utilisateur à appliquer la mise à jour.
+- Activation sécurisée par message `SKIP_WAITING` et rafraîchissement contrôlé (`controllerchange`) avec protection anti-boucle.
+- Préservation intégrale des données locales (`localStorage`, `IndexedDB`).
+
+---
+
+## ✅ MEDIA-ACCESS-001 — Consultation directe des captures & Visionneuse multi-slots
+
+**Statut : Terminé et validé**  
+**Date : 03 Septembre 2026**  
+**Fichiers :** `index.html`, `src/main.js`, `src/ui/journal.js`, `styles/journal.css`
+
+### Résumé
+Amélioration de l'accessibilité des captures d'écran associées aux trades :
+- Ajout d'une action directe « Captures » sur chaque trade de l'historique possédant au moins un média associé (`hasCaptures`), permettant une consultation immédiate en lecture seule sans ouvrir le Wizard d'édition.
+- Évolution de la visionneuse (`#capture-viewer-modal`) vers un format multi-slots avec onglets de sélection (HTF, LTF, Résultat) et contrôles de navigation Précédent / Suivant (`‹` / `›`).
+- Support de la navigation au clavier (flèches gauche et droite).
+- Optimisation responsive mobile de la barre d'actions des trades (`.trade-row-actions`).
+- Validation sur desktop et mobile sans aucun effet de bord sur le modèle de données.
+
+---
+
+## ✅ MOB-IMPORT-001 — Scroll horizontal des actions du Header sur Mobile
+
+**Statut : Terminé et validé**  
+**Date : 04 Novembre 2026**  
+**Fichiers :** `styles/layout.css`
+
+### Résumé
+Correction de l'accessibilité des actions du header sur Safari iOS et petits viewports :
+- Remplacement du masquage strict `overflow: hidden` par un défilement horizontal fluide (`overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;`) sur `.header-actions` lorsque le Dashboard est affiché et déplié.
+- Rétablissement de l'accès à l'action « Importer JSON » sur mobile.
+- Neutralisation de l'étirement des boutons du header (`width: auto; flex-shrink: 0; white-space: nowrap;`).
+- Préservation intégrale du comportement adaptatif : masquage strict maintenu (`overflow: hidden; opacity: 0; max-height: 0;`) lors du défilement et sur l'ensemble des modules hors Dashboard (Journal, Analytics, Coach, Settings).
+
+---
+
+## ✅ PWA-UPDATE-002 — Invalidation du cache statique PWA sur iOS
+
+**Statut : Terminé et validé**  
+**Date : 04 Novembre 2026**  
+**Fichiers :** `sw.js`
+
+### Résumé
+Résolution du blocage de mise à jour des ressources CSS dans la PWA installée sur iOS :
+- Identification de la cause racine : modification de `styles/layout.css` sans incrémentation de `CACHE_VERSION` dans `sw.js`, bloquant le renouvellement sous stratégie Cache-First.
+- Incrémentation ciblée de `CACHE_VERSION` de `"cosmos-static-v2"` à `"cosmos-static-v3"`.
+- Déclenchement automatique de la détection de mise à jour par le navigateur, précachage des assets actualisés et activation de la bannière PWA-UPDATE-001.
+- Validation sur PWA iOS installée sans désinstallation ni impact sur les données locales.
+
+---
+
+## ✅ BOOT-001 — Expérience de démarrage sécurisée & Orchestrateur de Boot
+
+**Statut : Terminé et validé**  
+**Date : 07 Novembre 2026**  
+**Fichiers :** `index.html`, `src/main.js`
+
+### Résumé
+Élimination de l'effet d'écran noir / FOUC au chargement et sécurisation de la phase d'initialisation :
+- CSS critique inline dans le `<head>` pour un rendu visuel immédiat (fond sombre `#030712`, marque Cosmos, pulse spinner).
+- Chargement non bloquant de `style.css` via `media="print"` basculé en `media="all"` au chargement, évitant le blocage du premier rendu par les 11 directives `@import`.
+- Suivi d'état immédiat dans le `<head>` (`window.__cosmosCssStatus = "pending"`) et capture des erreurs précoces (`window.__cosmosBootErrors`).
+- Orchestrateur `window.CosmosBoot` synchronisant la disponibilité du CSS et la fin de l'initialisation JavaScript (`src/main.js`).
+- Paliers informatifs discrets à 3 secondes ("Préparation de votre espace…") et 8 secondes ("Le chargement se prolonge…") sans coupure ni timeout fatal.
+- Transition douce immédiate dès que l'application est prête (aucun délai artificiel).
+- Rideau de protection d'incident : en cas d'erreur avérée (CSS, script ou initialisation `init()`), le rideau `#app-boot-loader` est maintenu, le spinner est arrêté et une carte d'erreur sobre s'affiche avec bouton de rechargement manuel. Aucun écran dégradé ou incomplet n'est exposé.
+- Validation technique : 44/44 assertions validées dans la suite de tests automatisés.
+- Validation physique : navigateurs desktop, Safari iPhone et PWA iOS installée.

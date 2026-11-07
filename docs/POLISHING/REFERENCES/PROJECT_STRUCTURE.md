@@ -17,6 +17,19 @@ style.css
 manifest.json
 sw.js
 
+icons/
+  cosmos-trader-32.png
+  cosmos-trader-64.png
+  cosmos-trader-180.png
+  cosmos-trader-192.png
+  cosmos-trader-512.png
+  cosmos-trader-512-maskable.png
+  cosmos-trader-master-2048.png
+
+.github/
+  workflows/
+    deploy.yml
+
 src/
   main.js
 
@@ -157,6 +170,35 @@ Responsibilities:
 -   routing
 -   global actions
 -   orchestration between core and ui
+
+------------------------------------------------------------------------
+
+## Boot & Startup Layer (BOOT-001)
+
+Point d'entrée du démarrage et orchestration du cycle d'affichage initial (`index.html`).
+
+Responsibilities:
+
+-   CSS critique inline (`#app-boot-loader`, pulse spinner Cosmos, marque).
+-   Chargement asynchrone non bloquant de la feuille de style principale (`media="print"` basculé en `media="all"`).
+-   Mémorisation de l'état CSS (`window.__cosmosCssStatus`) dès le `<head>`.
+-   Capture préventive des erreurs globales et modules (`window.__cosmosBootErrors`).
+-   Orchestrateur `window.CosmosBoot` garantissant la double condition de succès (`cssReady && jsReady`).
+-   Paliers informatifs non létaux (3s et 8s).
+-   Rideau de protection d'incident (`#boot-error`) maintenant l'interface masquée en cas d'échec critique avec proposition de rechargement manuel.
+
+------------------------------------------------------------------------
+
+## PWA & Service Worker Layer (PWA-001 à PWA-003, PWA-UPDATE-001/002)
+
+Gestion du fonctionnement hors-ligne, de la mise en cache et des mises à jour applicatives.
+
+Responsibilities:
+
+-   `manifest.json` : déclaration PWA autonome (nom, icônes, thème, display standalone).
+-   `sw.js` : Service Worker dédié aux assets statiques (`PRECACHE_URLS`), stratégie Cache-First, invalidation de cache par incrémentation de `CACHE_VERSION` (`cosmos-static-v3`).
+-   Notification de mise à jour in-app (`.update-banner` / `#pwa-update-banner`) déclenchée par détection de `registration.waiting` et activation à la demande via `SKIP_WAITING`.
+-   Isolation stricte : aucune donnée utilisateur (`localStorage`, `IndexedDB`) n'est manipulée par le Service Worker.
 
 ------------------------------------------------------------------------
 

@@ -233,18 +233,19 @@ Le stockage est assuré exclusivement par `mediaStorage.js`.
 
 ---
 
-## Media Viewer
+## Media Viewer (MEDIA-001 & MEDIA-ACCESS-001)
 
-Visionneuse plein écran.
+Visionneuse de captures d'écran responsive plein écran.
 
 Fonctions :
 
-- ouverture
-- fermeture
-- Escape
-- clic extérieur
-
-Compatible avec les trois captures.
+- Déclenchement direct depuis l'historique des trades (`[data-view-trade-captures]`) en lecture seule sans ouvrir le Wizard.
+- Déclenchement depuis les slots du Wizard (`[data-capture-view]`).
+- Barre d'onglets contextuels (`.capture-viewer-tabs`) permettant de basculer instantanément entre les captures associées (HTF, LTF, Résultat).
+- Contrôles de navigation séquentielle Suivant / Précédent (`.capture-viewer-nav` `‹` / `›`).
+- Raccourcis clavier : navigation via flèches directionnelles (`ArrowLeft`, `ArrowRight`), fermeture via `Escape`.
+- Fermeture par clic sur l'arrière-plan (`.modal-backdrop`) ou sur le bouton Fermer.
+- Disposition d'image contenue (`object-fit: contain`) bornée au viewport sans distorsion.
 
 ---
 
@@ -399,5 +400,35 @@ Il accueille un seul chapitre actif à la fois tout en conservant une hauteur fi
 - Hierarchy Before Size
 - Double Fond
 - Compact First
+
+---
+
+# System Components
+
+## Update Banner (PWA-UPDATE-001)
+
+Notification in-app discrète signalant la disponibilité d'une nouvelle version de la PWA.
+
+Caractéristiques :
+
+- Positionnement fixe flottant au-dessus des toasts (`.update-banner`).
+- Bouton d'action direct « Mettre à jour » envoyant le signal `SKIP_WAITING` au Service Worker.
+- Affichage conditionné à l'existence d'un contrôleur actif (aucun affichage à la première installation).
+
+---
+
+## Boot Loader Curtain & Incident Boundary (BOOT-001)
+
+Écran de chargement initial et barrière de protection contre les erreurs d'amorçage.
+
+Composants internes :
+
+- `#app-boot-loader` : rideau de masquage immédiat (`#030712`) avec fondu de sortie fluide (`.hidden`).
+- `#boot-spinner` : spinner orbital Cosmos avec animation pulsée CSS inline.
+- `#boot-status` : zone de message d'étape discret (paliers non bloquants à 3s et 8s).
+- `#boot-error` : boîte d'incident sobre affichée en cas de défaillance réseau/script avec message contextuel et bouton d'action `window.location.reload()`.
+- Rôle protecteur : maintient l'occultation du DOM tant que la feuille de style et l'initialisation JavaScript ne sont pas simultanément prêtes.
+
+---
 
 End of Document

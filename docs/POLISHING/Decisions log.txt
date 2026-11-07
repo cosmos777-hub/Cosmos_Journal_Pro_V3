@@ -979,3 +979,92 @@ Optimization avant re-clôture.
 qu'après épuisement des anomalies connues et non résolues à cette date — un
 audit signalé mais non encore corrigé (comme MOB-003-A/B ici) ne doit pas
 être considéré comme implicitement inclus dans une clôture déjà écrite.
+
+---
+
+## D-068 — Cycle de vie et mise à jour in-app de la PWA (PWA-UPDATE-001)
+
+**Contexte** : Dans une PWA installée (standalone sur mobile ou bureau), le Service Worker met en cache les assets statiques (`cosmos-static-*`). Par défaut, le cycle de vie standard du Service Worker maintient le nouveau worker à l'état `waiting` tant que des onglets ou fenêtres de l'ancienne version restent actifs. Dans une PWA installée, cette attente peut être indéfinie, laissant l'utilisateur bloqué sur une ancienne version.
+
+**Décision** :
+1. Mise en place d'une détection applicative explicite du Service Worker en attente (`registration.waiting` et écoute de `updatefound` / `installed`).
+2. Condition de sécurité : vérification de l'existence d'un contrôleur actif (`navigator.serviceWorker.controller`) pour empêcher l'affichage de la notification lors du tout premier démarrage.
+3. Affichage d'une bannière in-app sobre (`.update-banner`, `#pwa-update-banner`) informant l'utilisateur qu'une mise à jour est prête.
+4. Activation à la demande : au clic sur "Mettre à jour", transmission d'un message `{ type: 'SKIP_WAITING' }` au Service Worker.
+5. Écoute de l'événement `controllerchange` pour déclencher `window.location.reload()` avec protection anti-boucle de rafraîchissement (`refreshing = false`).
+
+**Justification** : L'utilisateur conserve le contrôle de sa session de trading (aucun rechargement intempestif en pleine saisie), tout en garantissant que les mises à jour critiques sont notifiées et appliquées sans désinstallation de la PWA.
+
+**Impact** :
+- `index.html` : enregistrement du SW instrumenté et composant `.update-banner`.
+- `styles/components.css` : styles du toast/bannière flottante.
+- `sw.js` : gestionnaire `message` pour `self.skipWaiting()`.
+- Données locales (`localStorage`, `IndexedDB`) : strictement préservées.
+
+---
+
+## D-069 — Consultation directe des captures depuis l'historique et navigation multi-slots (MEDIA-ACCESS-001)
+
+**Contexte** : Dans la version initiale de MEDIA-001, la consultation des captures d'écran associées à un trade exigeait d'ouvrir le Wizard en mode modification, imposant une friction cognitive et un risque involontaire d'altération des données lors d'une simple relecture d'historique.
+
+**Décision** :
+1. Ajout d'une action directe « Captures » sur chaque ligne de trade de l'historique du Journal (`#journal-panel`) dès lors qu'au moins une capture est attachée au trade (`hasCaptures`).
+2. Refonte de la modale de visionneuse (`#capture-viewer-modal`) : intégration d'onglets de sélection rapides (HTF, LTF, Résultat) et de boutons directionnels Suivant / Précédent (`‹` / `›`).
+3. Support de la navigation au clavier (`ArrowLeft` / `ArrowRight`) et fermeture standard (`Escape`, clic extérieur).
+4. Restructuration CSS de `.trade-row-actions` pour garantir une disposition flex fluide sur mobile (< 640px).
+
+**Justification** : Le Journal sert d'outil d'analyse et de révision rétrospective. Permettre l'accès immédiat aux graphiques en lecture seule respecte le principe *Workflow First* et renforce l'utilité quotidienne du Journal.
+
+**Impact** : `index.html`, `src/main.js`, `src/ui/journal.js`, `styles/journal.css`. Aucun impact sur le modèle de stockage IndexedDB (`mediaStorage.js`) ni sur les calculs.
+
+---
+
+## D-070 — Accessibilité des actions du header sur mobile et maintien du repli adaptatif (MOB-IMPORT-001)
+
+**Contexte** : Sur mobile (<= 640px), les actions du header (`.header-actions`) utilisaient `overflow: hidden`, masquant les boutons excédant la largeur disponible. L'action « Importer JSON » était ainsi devenue totalement inaccessible sur Safari iOS. De plus, la règle générique `.button { width: 100% }` sous 640px provoquait des écrasements de mise en page.
+
+**Décision** :
+1. Remplacement de `overflow: hidden` par un défilement horizontal fluide sur mobile (`overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none;`).
+2. Neutralisation de la déformation des boutons du header : `.header-actions .button { width: auto; flex-shrink: 0; white-space: nowrap; }`.
+3. Maintien strict de la règle métier d'affichage du header : visibilité complète des actions **uniquement** sur le Dashboard au repos. Dès que l'utilisateur fait défiler la page ou navigue vers un autre module (Journal, Analytics, Coach, Settings), `.app-header.header-compact .header-actions` réapplique immédiatement `overflow: hidden`, `opacity: 0` et `max-height: 0`.
+
+**Justification** : Résout l'anomalie d'inaccessibilité de l'importation sur mobile sans trahir la charte ergonomique du header adaptatif validée précédemment.
+
+**Impact** : `styles/layout.css`. Aucun impact sur desktop, aucun impact sur les contrôleurs JS.
+
+---
+
+## D-071 — Gouvernance du cache statique Service Worker et invalidation PWA installée (PWA-UPDATE-002)
+
+**Contexte** : Suite à la correction CSS de MOB-IMPORT-001, les utilisateurs de la PWA installée sur iOS ne recevaient pas la mise à jour, tandis que Safari la chargeait correctement. Le fichier `sw.js` n'ayant subi aucune modification octet par octet lors du correctif CSS, le navigateur n'initiait aucune réinstallation du Service Worker, servant indéfiniment `styles/layout.css` depuis l'ancien cache `cosmos-static-v2`.
+
+**Décision** :
+1. Établissement d'une règle stricte de gouvernance : toute modification apportée aux fichiers statiques déclarés dans `PRECACHE_URLS` doit s'accompagner d'une incrémentation de la constante `CACHE_VERSION` dans `sw.js` (passage de `cosmos-static-v2` à `cosmos-static-v3`).
+2. Découplage formel : `CACHE_VERSION` (cache statique PWA) est strictement indépendante de `APP_VERSION` (version fonctionnelle du produit dans `src/utils/constants.js`).
+3. Interdiction de purger les stockages de données métier : l'activation du nouveau cache (`activate` event) supprime exclusivement les anciens caches statiques `cosmos-static-*` sans jamais toucher à `localStorage` ni à `IndexedDB`.
+
+**Justification** : La stratégie Cache-First du Service Worker exige une modification explicite du fichier `sw.js` pour déclencher l'algorithme d'installation du navigateur.
+
+**Impact** : `sw.js`. Propagation immédiate et automatique des correctifs vers toutes les PWA installées.
+
+---
+
+## D-072 — Architecture de démarrage sécurisée, CSS non bloquant et rideau de protection (BOOT-001)
+
+**Contexte** : Au démarrage de l'application, l'utilisateur constatait un bref écran noir ou un risque de FOUC (*Flash of Unstyled Content*), accentué par le caractère bloquant de `style.css` et de ses 11 directives `@import`. Par ailleurs, en cas d'erreur de chargement réseau ou de script, l'utilisateur risquait de se retrouver face à une interface partielle et muette.
+
+**Décision** :
+1. Implémentation d'un rideau de démarrage statique (`#app-boot-loader`) avec styles critiques inline dans le `<head>` (fond `#030712`, pulse spinner Cosmos, structure typographique), affiché instantanément avant toute requête réseau.
+2. Chargement non bloquant de `style.css` via `<link rel="stylesheet" href="style.css" id="main-css" media="print" onload="this.media='all'; ...">`, libérant le fil de rendu initial. Fallback `<noscript>` assurant l'accès direct sans JavaScript.
+3. Mémorisation globale précoce de l'état du CSS dès le `<head>` (`window.__cosmosCssStatus = "pending"`, mis à jour à `"loaded"` ou `"error"` dans `onload`/`onerror`).
+4. Création de l'orchestrateur `window.CosmosBoot` dans le `<body>` :
+   - Initialisation de `cssReady = (window.__cosmosCssStatus === "loaded")`.
+   - Prise en charge immédiate des erreurs antérieures (CSS ou scripts précoces).
+   - Double condition de succès : disparition du loader uniquement lorsque `cssReady` **et** `jsReady` sont tous deux validés (`tryReveal()`).
+   - Révélation immédiate dès synchronisation réussie (aucun délai artificiel imposé).
+   - Paliers informatifs bienveillants à 3s ("Préparation...") et 8s ("Le chargement se prolonge...") sans aucun timeout fatal.
+5. Rideau de protection d'incident : en cas d'exception dans `init()` (`src/main.js`), d'erreur réseau CSS ou d'échec de module ES, le rideau `#app-boot-loader` n'est jamais masqué ; il fige le spinner et affiche la boîte d'incident `#boot-error` avec description et bouton de rafraîchissement manuel. Aucun Dashboard corrompu n'est exposé.
+
+**Justification** : Offre une expérience de démarrage haut de gamme digne d'une application native, tout en isolant l'utilisateur des états dégradés intermédiaires.
+
+**Impact** : `index.html` (CSS critique, loader HTML, orchestrateur), `src/main.js` (sécurisation `try/catch` de `init()`). 44 assertions automatisées et tests physiques (Desktop, Safari iOS, PWA iOS) validés.

@@ -1,3 +1,31 @@
+## Version 3.1.0 — Post-Release Stabilization & PWA Readiness (Novembre 2026)
+
+### Added
+- **PWA-UPDATE-001** : Bannière in-app de mise à jour PWA (`.update-banner`) avec activation explicite via `SKIP_WAITING` et rafraîchissement contrôlé (`controllerchange`).
+- **MEDIA-ACCESS-001** : Action directe « Captures » sur chaque trade de l'historique (`hasCaptures`) pour consultation en lecture seule sans ouvrir le Wizard.
+- **MEDIA-ACCESS-001** : Visionneuse de captures multi-slots (`#capture-viewer-modal`) avec onglets HTF / LTF / Résultat et navigation directionnelle (boutons `‹`/`›` et touches fléchées).
+- **BOOT-001** : Écran de démarrage initial (`#app-boot-loader`) avec styles critiques inline dans le `<head>` (fond `#030712`, pulse spinner Cosmos, marque).
+- **BOOT-001** : Écran d'incident sobre (`#boot-error`) avec description contextuelle et bouton de rechargement manuel en cas d'erreur réseau ou script.
+- **CI/CD** : Déploiement automatisé GitHub Pages avec gestion de la concurrence (`.github/workflows/deploy.yml`).
+
+### Improved
+- **BOOT-001** : Chargement non bloquant de `style.css` via `media="print"` basculé en `media="all"`, éliminant le blocage du premier rendu par les directives `@import`.
+- **BOOT-001** : Paliers informatifs non létaux à 3s ("Préparation...") et 8s ("Le chargement se prolonge...") sans interruption ni timeout fatal.
+- **BOOT-001** : Double synchronisation stricte (`cssReady` && `jsReady`) avant révélation de l'application, éliminant tout FOUC ou écran noir.
+- **MOB-IMPORT-001** : Défilement horizontal fluide (`overflow-x: auto`) des actions du header sur mobile au repos sur le Dashboard.
+- **MOB-IMPORT-001** : Préservation de l'intégrité visuelle des boutons du header sur mobile (`width: auto`, `white-space: nowrap`).
+
+### Fixed
+- **MOB-IMPORT-001** : Restauration de l'accessibilité de l'action « Importer JSON » sur Safari iOS et viewports étroits (< 640px).
+- **PWA-UPDATE-002** : Détection de mise à jour et invalidation du cache statique sur PWA iOS installée par incrémentation de `CACHE_VERSION` (`cosmos-static-v3`).
+- **BOOT-001** : Élimination de la condition de concurrence au démarrage via mémorisation de l'état CSS dans `window.__cosmosCssStatus`.
+- **BOOT-001** : Sécurisation de l'initialisation applicative (`init()` dans `src/main.js`) avec maintien du rideau de protection contre l'exposition d'écrans partiels.
+
+### Status
+✅ Production & PWA Ready
+
+---
+
 ## Version 3.0.0
 
 ### Added
