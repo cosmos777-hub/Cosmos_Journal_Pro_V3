@@ -1007,15 +1007,27 @@ function initAdaptiveHeader() {
 }
 
       function init() {
-        ui.cache();
-        state.data = storage.load();
-        storage.save();
-        const adaptiveHeader = initAdaptiveHeader(); // MOB-002-B2 — déplacé avant bindEvents
-        bindEvents(adaptiveHeader);
-        ui.render();
-        ui.goToWizardCard(1);
-        ui.switchView("dashboard");
-        if (state.data.migratedFrom) ui.toast("Données V2 migrées vers les fondations V3.", "neutral");
+        try {
+          ui.cache();
+          state.data = storage.load();
+          storage.save();
+          const adaptiveHeader = initAdaptiveHeader(); // MOB-002-B2 — déplacé avant bindEvents
+          bindEvents(adaptiveHeader);
+          ui.render();
+          ui.goToWizardCard(1);
+          ui.switchView("dashboard");
+          if (state.data.migratedFrom) ui.toast("Données V2 migrées vers les fondations V3.", "neutral");
+
+          // BOOT-001 : Signalement officiel du succès de l'initialisation JavaScript
+          if (window.CosmosBoot) window.CosmosBoot.onJsSuccess();
+        } catch (error) {
+          console.error("[Cosmos Boot] Échec critique d'initialisation :", error);
+          if (window.CosmosBoot) {
+            window.CosmosBoot.onJsError(error);
+          } else {
+            throw error;
+          }
+        }
       }
 
       init();

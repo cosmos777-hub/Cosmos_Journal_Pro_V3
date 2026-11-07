@@ -6,7 +6,140 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosmos Trader - Trading Intelligence Platform</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- BOOT-001 : Détection précoce des erreurs de démarrage -->
+  <script>
+    window.__cosmosBootErrors = [];
+    window.addEventListener("error", function(event) {
+      if (window.CosmosBoot && !window.CosmosBoot.isResolved()) {
+        window.CosmosBoot.onScriptError(event.error || event.message);
+      } else {
+        window.__cosmosBootErrors.push(event);
+      }
+    });
+  </script>
+
+  <!-- BOOT-001 : Chargement non bloquant de style.css pour affichage immédiat du loader -->
+  <link rel="stylesheet" href="style.css" id="main-css" media="print"
+        onload="this.media='all'; if (window.CosmosBoot) window.CosmosBoot.onCssLoaded();"
+        onerror="if (window.CosmosBoot) window.CosmosBoot.onCssError();">
+  <noscript>
+    <link rel="stylesheet" href="style.css">
+    <style>#app-boot-loader { display: none !important; }</style>
+  </noscript>
+
+  <!-- BOOT-001 : Styles critiques inline du loader (premier rendu immédiat) -->
+  <style>
+    #app-boot-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #07080d;
+      color: #f4f7fb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      transition: opacity 250ms ease, visibility 250ms ease;
+    }
+    #app-boot-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .boot-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+    }
+    .boot-brand {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #5aa7ff, #7f7cff);
+      box-shadow: 0 0 34px rgba(90, 167, 255, 0.28);
+      color: #fff;
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .boot-spinner {
+      width: 26px;
+      height: 26px;
+      border: 2px solid rgba(145, 158, 190, 0.18);
+      border-top-color: #5aa7ff;
+      border-radius: 50%;
+      animation: bootSpin 0.85s linear infinite;
+    }
+    @keyframes bootSpin {
+      to { transform: rotate(360deg); }
+    }
+    .boot-status {
+      font-size: 13px;
+      color: #a8b1c2;
+      margin: 14px 0 0;
+      min-height: 20px;
+      opacity: 0;
+      transition: opacity 250ms ease;
+      line-height: 1.4;
+    }
+    .boot-status.visible {
+      opacity: 1;
+    }
+    .boot-error {
+      margin-top: 16px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: rgba(224, 95, 112, 0.08);
+      border: 1px solid rgba(224, 95, 112, 0.24);
+      animation: bootFadeIn 200ms ease both;
+    }
+    @keyframes bootFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .boot-error.hidden {
+      display: none;
+    }
+    .boot-error-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f4f7fb;
+      margin: 0 0 6px;
+    }
+    .boot-error-desc {
+      font-size: 13px;
+      color: #a8b1c2;
+      margin: 0 0 16px;
+      line-height: 1.4;
+    }
+    .boot-reload-btn {
+      min-height: 36px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(90, 167, 255, 0.38);
+      background: linear-gradient(135deg, #5aa7ff, #7f7cff);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 160ms ease;
+    }
+    .boot-reload-btn:hover {
+      opacity: 0.92;
+    }
+  </style>
 
   <!-- PWA-002 : intégration manifest, aucune logique de Service Worker à ce stade -->
   <!-- IDENTITY-001 : favicon et Apple Touch Icon mis à jour avec les assets Cosmos Trader -->
@@ -20,6 +153,107 @@
 </head>
 
 <body>
+  <!-- BOOT-001 : Écran de démarrage minimaliste Cosmos -->
+  <div id="app-boot-loader" aria-live="polite">
+    <div class="boot-content">
+      <div class="boot-brand" aria-hidden="true">C</div>
+      <div class="boot-spinner" id="boot-spinner" aria-hidden="true"></div>
+      <p class="boot-status" id="boot-status"></p>
+      <div class="boot-error hidden" id="boot-error">
+        <p class="boot-error-title">Impossible de démarrer Cosmos Trader</p>
+        <p class="boot-error-desc" id="boot-error-desc">Une erreur est survenue lors de l'initialisation des composants.</p>
+        <button class="boot-reload-btn" type="button" onclick="window.location.reload()">Recharger l'application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOT-001 : Orchestrateur de démarrage -->
+  <script>
+    (function() {
+      var loader = document.getElementById("app-boot-loader");
+      var spinner = document.getElementById("boot-spinner");
+      var statusEl = document.getElementById("boot-status");
+      var errorBox = document.getElementById("boot-error");
+      var errorDesc = document.getElementById("boot-error-desc");
+
+      var cssReady = false;
+      var jsReady = false;
+      var resolved = false;
+
+      // Palier 1 : 3 secondes (indication sobre de chargement ralenti)
+      var slowTimer = setTimeout(function() {
+        if (!resolved && statusEl) {
+          statusEl.textContent = "Préparation de votre espace de trading…";
+          statusEl.classList.add("visible");
+        }
+      }, 3000);
+
+      // Palier 2 : 8 secondes (chargement prolongé, sans interruption ni erreur)
+      var prolongedTimer = setTimeout(function() {
+        if (!resolved && statusEl) {
+          statusEl.textContent = "Le chargement se prolonge. Merci de patienter…";
+          statusEl.classList.add("visible");
+        }
+      }, 8000);
+
+      function tryReveal() {
+        if (cssReady && jsReady && !resolved) {
+          resolved = true;
+          clearTimeout(slowTimer);
+          clearTimeout(prolongedTimer);
+          if (loader) {
+            loader.classList.add("hidden");
+            setTimeout(function() {
+              if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+            }, 300);
+          }
+        }
+      }
+
+      function triggerError(message, detail) {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(slowTimer);
+        clearTimeout(prolongedTimer);
+        if (detail) console.error("[Cosmos Boot]", detail);
+
+        if (loader) {
+          if (spinner) spinner.style.display = "none";
+          if (statusEl) statusEl.style.display = "none";
+          if (errorBox) {
+            if (message && errorDesc) errorDesc.textContent = message;
+            errorBox.classList.remove("hidden");
+          }
+        }
+      }
+
+      window.CosmosBoot = {
+        isResolved: function() { return resolved; },
+        onCssLoaded: function() {
+          cssReady = true;
+          tryReveal();
+        },
+        onCssError: function() {
+          triggerError("La feuille de style principale n'a pas pu être chargée.");
+        },
+        onJsSuccess: function() {
+          jsReady = true;
+          tryReveal();
+        },
+        onJsError: function(err) {
+          triggerError("Une erreur est survenue lors de l'initialisation des composants.", err);
+        },
+        onScriptError: function(err) {
+          triggerError("Impossible de charger les fichiers du programme principal.", err);
+        }
+      };
+
+      if (window.__cosmosBootErrors && window.__cosmosBootErrors.length) {
+        window.CosmosBoot.onScriptError(window.__cosmosBootErrors[0]);
+      }
+    })();
+  </script>
+
   <div class="app-shell">
     <header class="app-header">
       <div class="brand">
@@ -1004,7 +1238,8 @@
   <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
 
-  <script type="module" src="src/main.js"></script>
+  <!-- BOOT-001 : Détection explicite des erreurs sur la balise script module -->
+  <script type="module" src="src/main.js" onerror="if (window.CosmosBoot) window.CosmosBoot.onScriptError('Échec de chargement du module principal src/main.js');"></script>
 
   <!-- PWA-003 / PWA-UPDATE-001 : enregistrement du Service Worker, isolé de main.js pour ne
        jamais risquer d'impacter la logique métier (IIFE existante). Non
