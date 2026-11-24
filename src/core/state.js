@@ -36,5 +36,8 @@ export const state = {
   // le trade existant (state.data.trades) — ce champ n'est alors pas utilisé.
   draftMedia: { htf: null, ltf: null, result: null },
   // RP-001 (Dashboard Account Filter) : filtre local au Dashboard, jamais persisté.
-  dashboardAccountFilter: ""
+  dashboardAccountFilter: "",
+  // RISK-001 : indicateur d'interaction explicite avec le sélecteur de risque
+  // en cours d'édition (évite la régularisation passive sur trade sans snapshot).
+  hasInteractedWithRisk: false
 };

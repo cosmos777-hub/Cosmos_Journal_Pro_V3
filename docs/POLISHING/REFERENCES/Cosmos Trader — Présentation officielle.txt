@@ -1,0 +1,48 @@
+# Cosmos Trader — Présentation officielle
+*Voix off — environ 1 min 30 à 1 min 45*
+
+**[01 — Le problème | 0:00–0:20]**
+
+En trading, connaître ses gains et ses pertes ne suffit pas toujours pour progresser.
+
+Une sortie anticipée, une intervention inutile ou un plan non respecté peuvent affecter tes résultats sans que tu mesures réellement leur impact.
+
+C'est pour répondre à ce problème que Cosmos Trader a été conçu.
+
+**[02 — La philosophie | 0:20–0:40]**
+
+Cosmos Trader est un journal de trading qui va au-delà du simple suivi des performances.
+
+Il te permet d'enregistrer tes trades, de comparer tes résultats réels à tes objectifs et d'identifier les comportements sur lesquels tu peux travailler.
+
+L'objectif : mieux comprendre ton exécution pour progresser avec méthode.
+
+**[03 — L'installation | 0:40–1:00]**
+
+Cosmos Trader s'utilise directement depuis ton navigateur et peut être installé sur ton appareil.
+
+Sur ordinateur, ouvre l'application avec un navigateur compatible et utilise l'option d'installation lorsqu'elle est disponible.
+
+Sur iPhone, ouvre-la dans Safari, puis sélectionne « Sur l'écran d'accueil » depuis le menu de partage.
+
+Sur Android, utilise Chrome et l'option d'installation proposée par le navigateur.
+
+**[04 — La prise en main | 1:00–1:25]**
+
+À la première ouverture, tu arrives sur le Dashboard.
+
+Commence par vérifier ton compte de trading et ton capital initial. Tu peux aussi découvrir l'application avec des données de démonstration.
+
+Après chaque trade, ouvre le Journal, renseigne les informations essentielles et enregistre ton opération.
+
+**[05 — Comprendre et progresser | 1:25–1:45]**
+
+Le Dashboard te donne une vue d'ensemble.
+
+Analytics t'aide à comparer tes résultats. Et à partir de 30 trades, le Coach peut identifier une priorité de progression et te proposer des actions concrètes.
+
+**[06 — Sauvegarde et conclusion | 1:45–1:55]**
+
+Tes données sont stockées localement sur ton appareil. Pense donc à les exporter régulièrement pour les protéger.
+
+Cosmos Trader : moins de suppositions, plus de compréhension. Et surtout, une meilleure maîtrise de ton trading.

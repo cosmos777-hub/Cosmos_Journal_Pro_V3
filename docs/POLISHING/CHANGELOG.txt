@@ -1,4 +1,31 @@
-## Version 3.1.0 — Post-Release Stabilization & PWA Readiness (Novembre 2026)
+## RISK-001 — Risque nominal et intégrité des métriques de trade (Novembre 2026)
+
+### Added
+- **RISK-001** : Snapshot de capital (`riskCapitalSnapshot`) figé à la création
+  de chaque trade sur `account.initialCapital`. Garantit l'immuabilité du risque
+  historique indépendamment des variations ultérieures du solde.
+- **RISK-001** : Drapeau `state.hasInteractedWithRisk` permettant la régularisation
+  explicite des anciens trades sans snapshot, déclenchée uniquement par une
+  interaction directe de l'utilisateur avec le sélecteur de risque.
+- **RISK-001** : Distinction systématique entre valeur inconnue (`null`) et vrai
+  zéro dans les métriques de trade, les badges de l'historique et le cumul du
+  Delta émotionnel dans le Coach.
+- **RISK-001** : Seuil du Coach basé sur 30 deltas émotionnels **valides** (nombre
+  fini) plutôt que 30 trades totaux.
+
+### Changed
+- **RISK-001** : `updateTrade` applique les ajustements de solde en un bloc atomique
+  après calcul complet de l'état cible en mémoire, éliminant tout risque d'état
+  intermédiaire incohérent.
+- **RISK-001** : Validations strictes (`isStrictPositiveFiniteNumber`, `isFiniteNumber`)
+  appliquées systématiquement avant toute mutation financière.
+
+### Status
+✅ Clôturé — 85/85 tests logiques réussis
+
+## Post-Release Stabilization & PWA Readiness (Novembre 2026)
+
+> Note : Version cosmétique et technique de stabilisation post-release (la version fonctionnelle officielle reste `APP_VERSION = "3.0"`).
 
 ### Added
 - **PWA-UPDATE-001** : Bannière in-app de mise à jour PWA (`.update-banner`) avec activation explicite via `SKIP_WAITING` et rafraîchissement contrôlé (`controllerchange`).
@@ -22,7 +49,7 @@
 - **BOOT-001** : Sécurisation de l'initialisation applicative (`init()` dans `src/main.js`) avec maintien du rideau de protection contre l'exposition d'écrans partiels.
 
 ### Status
-✅ Production & PWA Ready
+✅ Committé et intégré à la branche de déploiement (origin/main)
 
 ---
 

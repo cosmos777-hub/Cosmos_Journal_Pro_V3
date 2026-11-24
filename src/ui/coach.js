@@ -67,8 +67,11 @@ export const coachUi = {
   missionPriority(trades) {
     if (!trades.length) return { level: "low", label: "Découverte" };
 
-    const cumulativeDeltaR = trades.reduce((sum, t) => sum + (Number(t.emotionalDeltaR) || 0), 0);
-    if (cumulativeDeltaR < -3) return { level: "high", label: "Priorité haute" };
+    const validDeltas = trades
+      .map(t => t.emotionalDeltaR)
+      .filter(d => typeof d === "number" && Number.isFinite(d));
+    const cumulativeDeltaR = validDeltas.length ? validDeltas.reduce((sum, d) => sum + d, 0) : null;
+    if (cumulativeDeltaR != null && cumulativeDeltaR < -3) return { level: "high", label: "Priorité haute" };
 
     const byIntervention = calculations.groupTradesByDimension(trades, "manualIntervention", []).filter(g => g.count >= 5);
     const interventionOui = byIntervention.find(g => g.label === "Oui");

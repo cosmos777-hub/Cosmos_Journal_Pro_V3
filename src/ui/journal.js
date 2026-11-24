@@ -429,6 +429,7 @@ export const journalUi = {
     }
   },
         // Affiche instantanément le montant réellement risqué en devise du compte actif.
+        // RISK-001 : basé sur le capital de référence (snapshot en édition si existant, sinon account.initialCapital).
         updateRiskPreview(account) {
           if (!dom["risk-amount-preview"]) return;
           const acc = account || state.data.accounts.find(a => a.id === dom["account-select"].value);
@@ -438,8 +439,12 @@ export const journalUi = {
             return;
           }
           const riskPercent = Number(dom["risk-select"].value) || 0;
-          const amount = calculations.riskAmount(acc.currentCapital, riskPercent);
-          dom["risk-amount-preview"].textContent = `Montant risqué : ${amount.toFixed(2)} ${acc.currency} (sur ${acc.currentCapital.toFixed(2)} ${acc.currency})`;
+          const editingTrade = state.editingTradeId ? state.data.trades.find(t => t.id === state.editingTradeId) : null;
+          const referenceCapital = editingTrade && typeof editingTrade.riskCapitalSnapshot === "number" && Number.isFinite(editingTrade.riskCapitalSnapshot) && editingTrade.riskCapitalSnapshot > 0
+            ? editingTrade.riskCapitalSnapshot
+            : acc.initialCapital;
+          const amount = calculations.riskAmount(referenceCapital, riskPercent);
+          dom["risk-amount-preview"].textContent = `Montant risqué : ${amount.toFixed(2)} ${acc.currency} (base capital : ${referenceCapital.toFixed(2)} ${acc.currency})`;
           if (dom["gestion-risk-summary"]) {
             dom["gestion-risk-summary"].textContent = `Risque : ${riskPercent}% · Montant risqué : ${amount.toFixed(2)} ${acc.currency}`;
           }
@@ -486,32 +491,87 @@ export const journalUi = {
         },
         // Milestone 2C : recalcule en direct tout ce qui dépend du résultat saisi (Cartes 4, 5, 6),
         // sans jamais dupliquer le moteur de calcul (calculations.buildTradeMetricsV3Cards).
+        // RISK-001 : aligné rigoureusement sur les règles de persistance de saveTrade / updateTrade.
         updateResultPreviews() {
           if (!dom["result-percent-display"]) return;
           const account = state.data.accounts.find(a => a.id === dom["account-select"].value);
           if (!account) return;
 
-          const riskPercent = Number(dom["risk-select"].value) || 0;
-          const riskCapitalSnapshot = state.editingTradeId
-            ? (state.data.trades.find(t => t.id === state.editingTradeId)?.riskCapitalSnapshot ?? account.currentCapital)
-            : account.currentCapital;
-          const riskAmount = calculations.riskAmount(riskCapitalSnapshot, riskPercent);
+          const editingTrade = state.editingTradeId ? state.data.trades.find(t => t.id === state.editingTradeId) : null;
+          const hasExistingSnapshot = !!(editingTrade && typeof editingTrade.riskCapitalSnapshot === "number" && Number.isFinite(editingTrade.riskCapitalSnapshot) && editingTrade.riskCapitalSnapshot > 0);
+          const hasExistingRiskAmount = !!(editingTrade && typeof editingTrade.riskAmount === "number" && Number.isFinite(editingTrade.riskAmount) && editingTrade.riskAmount > 0);
+
+          let riskCapitalSnapshot = null;
+          let riskAmount = null;
+
+          if (!editingTrade) {
+            // Création : initialCapital strictly positif
+            riskCapitalSnapshot = (typeof account.initialCapital === "number" && Number.isFinite(account.initialCapital) && account.initialCapital > 0)
+              ? account.initialCapital
+              : 0;
+            const riskPercent = Number(dom["risk-select"].value) || 0;
+            riskAmount = calculations.riskAmount(riskCapitalSnapshot, riskPercent);
+          } else if (hasExistingSnapshot) {
+            // Trade avec snapshot : référence immuable sauf changement de compte
+            riskCapitalSnapshot = editingTrade.riskCapitalSnapshot;
+            const currentFormRisk = Number(dom["risk-select"].value);
+            const riskPercent = Number.isFinite(currentFormRisk) ? currentFormRisk : editingTrade.riskPercent;
+            riskAmount = calculations.riskAmount(riskCapitalSnapshot, riskPercent);
+          } else if (state.hasInteractedWithRisk) {
+            // Ancien trade régularisé explicitement
+            riskCapitalSnapshot = (typeof account.initialCapital === "number" && Number.isFinite(account.initialCapital) && account.initialCapital > 0)
+              ? account.initialCapital
+              : 0;
+            const riskPercent = Number(dom["risk-select"].value) || 0;
+            riskAmount = calculations.riskAmount(riskCapitalSnapshot, riskPercent);
+          } else if (hasExistingRiskAmount) {
+            // Ancien trade sans snapshot avec riskAmount valide
+            riskCapitalSnapshot = null;
+            riskAmount = editingTrade.riskAmount;
+          } else {
+            // Ancien trade non régularisé sans snapshot et sans riskAmount
+            riskCapitalSnapshot = null;
+            riskAmount = null;
+          }
+
           const resultCurrency = Number(dom["result-currency-input"].value) || 0;
           const rrPlanned = Number(dom["rr-planned"].value) || 0;
 
-          const metrics = calculations.buildTradeMetricsV3Cards({ resultCurrency, riskAmount, riskCapitalSnapshot, rrPlanned });
+          const metrics = calculations.buildTradeMetricsV3Cards({
+            resultCurrency,
+            riskAmount: riskAmount || 0,
+            riskCapitalSnapshot: riskCapitalSnapshot || 0,
+            rrPlanned
+          });
           const hasResult = dom["result-currency-input"].value !== "";
 
           [dom["result-percent-display"], dom["trade-status-display"], dom["rr-obtained-display"]].forEach(el => {
             if (el) el.classList.toggle("hidden", !hasResult);
           });
-          dom["result-percent-display"].textContent = hasResult ? `Résultat % : ${metrics.resultPercent.toFixed(2)}%` : "";
-          dom["trade-status-display"].textContent = hasResult ? `Trade : ${metrics.tradeStatus}` : "";
-          dom["rr-obtained-display"].textContent = hasResult ? `RR obtenu : ${metrics.resultR.toFixed(2)}R` : "";
 
-          dom["theoretical-result-display"].textContent = `Théorique : ${metrics.theoreticalResultR.toFixed(2)}R`;
-          dom["real-result-display"].textContent = `Réel : ${metrics.resultR.toFixed(2)}R`;
-          dom["emotional-delta-display"].textContent = `Delta émotionnel : ${metrics.emotionalDeltaR.toFixed(2)}R soit ${metrics.emotionalDeltaCurrency.toFixed(2)} ${account.currency}`;
+          // RISK-001 : Si aucun snapshot de capital n'est disponible et non régularisé, masquer resultPercent
+          if (!riskCapitalSnapshot) {
+            dom["result-percent-display"].classList.add("hidden");
+            dom["result-percent-display"].textContent = "";
+          } else {
+            dom["result-percent-display"].textContent = hasResult ? `Résultat % : ${metrics.resultPercent.toFixed(2)}%` : "";
+          }
+
+          dom["trade-status-display"].textContent = hasResult ? `Trade : ${metrics.tradeStatus}` : "";
+
+          // RISK-001 : Si aucun riskAmount n'est disponible, masquer ou vider les métriques basées sur R
+          if (!riskAmount) {
+            dom["rr-obtained-display"].classList.add("hidden");
+            dom["rr-obtained-display"].textContent = "";
+            dom["theoretical-result-display"].textContent = "Théorique : —";
+            dom["real-result-display"].textContent = "Réel : —";
+            dom["emotional-delta-display"].textContent = "Delta émotionnel : —";
+          } else {
+            dom["rr-obtained-display"].textContent = hasResult ? `RR obtenu : ${metrics.resultR.toFixed(2)}R` : "";
+            dom["theoretical-result-display"].textContent = `Théorique : ${metrics.theoreticalResultR.toFixed(2)}R`;
+            dom["real-result-display"].textContent = `Réel : ${metrics.resultR.toFixed(2)}R`;
+            dom["emotional-delta-display"].textContent = `Delta émotionnel : ${metrics.emotionalDeltaR.toFixed(2)}R soit ${metrics.emotionalDeltaCurrency.toFixed(2)} ${account.currency}`;
+          }
 
           this.updateValidationSummary(metrics, account);
         },
@@ -563,18 +623,23 @@ export const journalUi = {
           const visibleTrades = trades.slice(0, HISTORY_DISPLAY_LIMIT);
 
           dom["trade-list"].innerHTML = visibleTrades.map(trade => {
-            const resultR = Number(trade.resultR) || 0;
-            const deltaR = Number(trade.emotionalDeltaR) || 0;
-            const theoreticalR = resultR - deltaR;
+            const hasResultR = typeof trade.resultR === "number" && Number.isFinite(trade.resultR);
+            const hasDeltaR = typeof trade.emotionalDeltaR === "number" && Number.isFinite(trade.emotionalDeltaR);
+            const hasTheoreticalR = hasResultR && hasDeltaR;
+
+            const resultR = hasResultR ? trade.resultR : null;
+            const deltaR = hasDeltaR ? trade.emotionalDeltaR : null;
+            const theoreticalR = hasTheoreticalR ? resultR - deltaR : null;
+
             const hasCaptures = CAPTURE_SLOTS.some(slot => isNativeCapture(trade.media?.[slot.key]));
             return this.tradeRow({
               title: `${utils.escape(trade.asset || "Actif non défini")} · ${utils.escape(trade.strategy || "Stratégie non définie")}`,
               meta: `${utils.escape(trade.date)} · ${utils.escape(trade.session)} · ${utils.escape(trade.timeframeCombination || trade.ltf || "")}`,
               notes: trade.notes ? utils.escape(trade.notes) : "",
               badges: [
-                { tone: utils.tone(resultR), label: `Réel ${utils.formatR(resultR)}` },
-                { tone: utils.tone(theoreticalR), label: `Plan ${utils.formatR(theoreticalR)}` },
-                { tone: utils.tone(deltaR), label: `Delta ${utils.formatR(deltaR)}` }
+                { tone: hasResultR ? utils.tone(resultR) : "neutral", label: hasResultR ? `Réel ${utils.formatR(resultR)}` : "Réel —" },
+                { tone: hasTheoreticalR ? utils.tone(theoreticalR) : "neutral", label: hasTheoreticalR ? `Plan ${utils.formatR(theoreticalR)}` : "Plan —" },
+                { tone: hasDeltaR ? utils.tone(deltaR) : "neutral", label: hasDeltaR ? `Delta ${utils.formatR(deltaR)}` : "Delta —" }
               ],
               actions: `
                 <div class="trade-row-actions">

@@ -1038,10 +1038,16 @@ audit signalé mais non encore corrigé (comme MOB-003-A/B ici) ne doit pas
 
 **Contexte** : Suite à la correction CSS de MOB-IMPORT-001, les utilisateurs de la PWA installée sur iOS ne recevaient pas la mise à jour, tandis que Safari la chargeait correctement. Le fichier `sw.js` n'ayant subi aucune modification octet par octet lors du correctif CSS, le navigateur n'initiait aucune réinstallation du Service Worker, servant indéfiniment `styles/layout.css` depuis l'ancien cache `cosmos-static-v2`.
 
-**Décision** :
-1. Établissement d'une règle stricte de gouvernance : toute modification apportée aux fichiers statiques déclarés dans `PRECACHE_URLS` doit s'accompagner d'une incrémentation de la constante `CACHE_VERSION` dans `sw.js` (passage de `cosmos-static-v2` à `cosmos-static-v3`).
+**Règle technique permanente** :
+1. Établissement d'une règle stricte de gouvernance : toute modification apportée aux fichiers statiques déclarés dans `PRECACHE_URLS` doit s'accompagner d'une incrémentation de la constante `CACHE_VERSION` dans `sw.js` selon une progression strictement monotone (v2 → v3 → v4 → v5...).
 2. Découplage formel : `CACHE_VERSION` (cache statique PWA) est strictement indépendante de `APP_VERSION` (version fonctionnelle du produit dans `src/utils/constants.js`).
 3. Interdiction de purger les stockages de données métier : l'activation du nouveau cache (`activate` event) supprime exclusivement les anciens caches statiques `cosmos-static-*` sans jamais toucher à `localStorage` ni à `IndexedDB`.
+4. Règle de non-réutilisation : un ancien identifiant de cache ne doit pas être réutilisé volontairement afin de garantir la suppression systématique des caches obsolètes lors de l'activation.
+
+**Historique et état réel du code** :
+- Lors des tests opérationnels sur iOS, une alternance manuelle entre `cosmos-static-v2` et `cosmos-static-v3` a été effectuée dans l'historique des commits pour forcer la détection de mise à jour par Safari/iOS PWA.
+- Dans l'état actuel du code committé sur `origin/main` (commit `3c70170`), la constante dans `sw.js` est `CACHE_VERSION = "cosmos-static-v2"`.
+- Conformément à la règle de progression monotone, la prochaine incrémentation requise lors d'une modification d'asset précaché sera `cosmos-static-v4` (afin de surpasser à la fois v2 et la v3 précédemment installée sur les terminaux de test).
 
 **Justification** : La stratégie Cache-First du Service Worker exige une modification explicite du fichier `sw.js` pour déclencher l'algorithme d'installation du navigateur.
 
@@ -1068,3 +1074,50 @@ audit signalé mais non encore corrigé (comme MOB-003-A/B ici) ne doit pas
 **Justification** : Offre une expérience de démarrage haut de gamme digne d'une application native, tout en isolant l'utilisateur des états dégradés intermédiaires.
 
 **Impact** : `index.html` (CSS critique, loader HTML, orchestrateur), `src/main.js` (sécurisation `try/catch` de `init()`). 44 assertions automatisées et tests physiques (Desktop, Safari iOS, PWA iOS) validés.
+
+## D-073 — RISK-001 : snapshot de capital immuable et intégrité des métriques
+
+**Contexte** : avant RISK-001, le risque des trades pouvait être recalculé à partir
+du solde courant du compte plutôt que du capital au moment de la prise de position,
+introduisant une incohérence rétroactive.
+
+**Décision** : chaque trade conserve un `riskCapitalSnapshot` = `account.initialCapital`
+au moment de sa création. Ce snapshot ne peut être modifié que lors d'un transfert
+vers un autre compte ou d'une régularisation explicite déclenchée par l'utilisateur
+(`state.hasInteractedWithRisk`).
+
+**Conséquence durable** : toute future évolution du moteur de calcul du risque doit
+préserver ce snapshot comme source de vérité unique pour le risque historique d'un
+trade. `currentCapital` ne doit jamais intervenir dans le calcul du risque nominal.
+
+---
+
+## D-074 — RISK-001 : limitation des anciens trades sans RR planifié (volontaire)
+
+**Contexte** : un ancien trade dont `rrPlanned` est absent ne peut pas être modifié
+via le formulaire d'édition car `parseStrictNumber` rejette le champ vide.
+
+**Décision** : ce comportement est conservé volontairement. Rendre le RR facultatif
+introduirait des métriques théoriques calculées sur une base absente. Les données
+existantes de ces trades sont préservées en lecture.
+
+**Conséquence durable** : documenter cette limitation (L-001 dans PROJECT_STATUS)
+plutôt que de la contourner. Une future interface dédiée à la correction des données
+incomplètes pourrait la lever sans toucher à la logique de sauvegarde.
+
+---
+
+## D-075 — RISK-001 : faux zéro V2 hors périmètre, documenté en backlog
+
+**Contexte** : `upgradeTradeV3Calc` peut produire `resultR = 0` pour des trades V2
+dont `riskPercent` est absent, via `calculations.resultInR()`. Ce `0` peut être
+interprété comme un break-even alors que la donnée est inconnue.
+
+**Décision** : ce comportement est antérieur à RISK-001 et n'est pas modifié dans
+ce chantier. Aucune donnée V3 n'est affectée. Documenté en tant que L-002 dans
+PROJECT_STATUS pour traitement futur si le volume de trades V2 concernés le justifie.
+
+**Conséquence durable** : ne pas corriger `upgradeTradeV3Calc` dans RISK-001. Si
+une correction est ultérieurement jugée nécessaire, elle devra vérifier si
+`riskPercent` est valide avant d'appeler `resultInR`, et assigner `null` plutôt
+que `0` si ce n'est pas le cas.

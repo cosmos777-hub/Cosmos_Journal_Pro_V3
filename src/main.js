@@ -85,6 +85,26 @@
         return parsed;
       }
 
+      // RISK-001 : Validations numériques strictes pour les opérations financières
+      function isStrictPositiveFiniteNumber(val) {
+        return typeof val === "number" && Number.isFinite(val) && val > 0;
+      }
+
+      function isFiniteNumber(val) {
+        return typeof val === "number" && Number.isFinite(val);
+      }
+
+      function parseStrictNumber(raw, fieldName) {
+        if (raw === "" || raw === null || raw === undefined) {
+          throw new Error(`Le champ "${fieldName}" est obligatoire.`);
+        }
+        const n = Number(raw);
+        if (!Number.isFinite(n)) {
+          throw new Error(`La valeur saisie pour "${fieldName}" est invalide.`);
+        }
+        return n;
+      }
+
       const actions = {
         saveTrade(event) {
           event.preventDefault();
@@ -96,16 +116,32 @@
 
           const accountId = dom["account-select"].value;
           const account = state.data.accounts.find(a => a.id === accountId);
-          const risk = Number(dom["risk-select"].value);
-          const resultCurrency = Number(dom["result-currency-input"].value) || 0;
-          const rrPlanned = Number(dom["rr-planned"].value) || 0;
+          if (!account) {
+            ui.toast("Compte sélectionné introuvable.", "negative");
+            return;
+          }
+
+          let risk, resultCurrency, rrPlanned;
+          try {
+            risk = parseStrictNumber(dom["risk-select"].value, "Risque %");
+            resultCurrency = parseStrictNumber(dom["result-currency-input"].value, "Résultat en devise");
+            rrPlanned = parseStrictNumber(dom["rr-planned"].value, "RR prévu");
+          } catch (err) {
+            ui.toast(err.message, "negative");
+            return;
+          }
 
           const payload = { account, accountId, risk, resultCurrency, rrPlanned };
 
+          let success = false;
           if (state.editingTradeId) {
-            actions.updateTrade(state.editingTradeId, payload);
+            success = actions.updateTrade(state.editingTradeId, payload);
           } else {
-            actions.createTrade(payload);
+            success = actions.createTrade(payload);
+          }
+
+          if (!success) {
+            return;
           }
 
           storage.save();
@@ -151,19 +187,31 @@
         },
 
         createTrade({ account, accountId, risk, resultCurrency, rrPlanned }) {
-          const riskCapitalSnapshot = account ? account.currentCapital : 0;
+          if (!account) {
+            ui.toast("Compte de trading introuvable.", "negative");
+            return false;
+          }
+          if (!isStrictPositiveFiniteNumber(account.initialCapital)) {
+            ui.toast("Le capital initial du compte est invalide. Enregistrement impossible.", "negative");
+            return false;
+          }
+          if (!isFiniteNumber(account.currentCapital)) {
+            ui.toast("Le solde actuel du compte est invalide. Enregistrement impossible.", "negative");
+            return false;
+          }
+
+          const riskCapitalSnapshot = account.initialCapital;
           const riskAmount = calculations.riskAmount(riskCapitalSnapshot, risk);
           const metrics = calculations.buildTradeMetricsV3Cards({ resultCurrency, riskAmount, riskCapitalSnapshot, rrPlanned });
           const createdAt = new Date().toISOString();
           const fields = actions.collectWizardFields();
 
-             const trade = {
-      id: state.draftTradeId || utils.uid("trade"),
-      accountId,
-      accountName: account ? account.name : "Compte inconnu",
-      ...fields,
-      media: { ...state.draftMedia },
-     
+          const trade = {
+            id: state.draftTradeId || utils.uid("trade"),
+            accountId,
+            accountName: account.name || "Compte inconnu",
+            ...fields,
+            media: { ...state.draftMedia },
 
             riskPercent: risk,
             riskCapitalSnapshot,
@@ -186,68 +234,225 @@
 
           state.data.trades.unshift(trade);
 
-          if (account) {
-            account.currentCapital = +((Number(account.currentCapital) || 0) + metrics.resultCurrency).toFixed(2);
-          }
-// Le trade est maintenant propriétaire de ce tradeId — le draft n'a plus
-    // lieu d'être, mais on ne supprime SURTOUT PAS ses captures.
-    state.draftTradeId = null;
-    state.draftMedia = { htf: null, ltf: null, result: null };
+          account.currentCapital = +(account.currentCapital + metrics.resultCurrency).toFixed(2);
+
+          // Le trade est maintenant propriétaire de ce tradeId — le draft n'a plus
+          // lieu d'être, mais on ne supprime SURTOUT PAS ses captures.
+          state.draftTradeId = null;
+          state.draftMedia = { htf: null, ltf: null, result: null };
           ui.toast("Trade enregistré.", "positive");
+          return true;
         },
 
-        updateTrade(tradeId, { account, accountId, risk, resultCurrency, rrPlanned }) {
+        updateTrade(tradeId, { accountId, risk, resultCurrency, rrPlanned }) {
+          // Étape 1 : Résolution et validation de l'existence du trade
           const trade = state.data.trades.find(t => t.id === tradeId);
           if (!trade) {
             ui.toast("Ce trade n'existe plus.", "negative");
-            return;
+            return false;
           }
 
+          // Étape 2 : Résolution et validation stricte des comptes
           const previousAccount = state.data.accounts.find(a => a.id === trade.accountId);
-          if (previousAccount) {
-            previousAccount.currentCapital = +((Number(previousAccount.currentCapital) || 0) - (Number(trade.resultCurrency) || 0)).toFixed(2);
+          const targetAccount = state.data.accounts.find(a => a.id === accountId);
+
+          if (!targetAccount) {
+            ui.toast("Le compte sélectionné est introuvable.", "negative");
+            return false;
           }
 
-          const riskCapitalSnapshot = account ? account.currentCapital : 0;
-          const riskAmount = calculations.riskAmount(riskCapitalSnapshot, risk);
-          const metrics = calculations.buildTradeMetricsV3Cards({ resultCurrency, riskAmount, riskCapitalSnapshot, rrPlanned });
+          const isTransfer = trade.accountId !== accountId;
+
+          if (isTransfer) {
+            if (!previousAccount) {
+              ui.toast("Le compte d'origine est introuvable. Transfert impossible.", "negative");
+              return false;
+            }
+            if (!isFiniteNumber(previousAccount.currentCapital)) {
+              ui.toast("Solde du compte d'origine corrompu. Transfert interrompu.", "negative");
+              return false;
+            }
+            if (!isFiniteNumber(trade.resultCurrency)) {
+              ui.toast("Résultat historique du trade invalide. Transfert interrompu.", "negative");
+              return false;
+            }
+            if (!isStrictPositiveFiniteNumber(targetAccount.initialCapital)) {
+              ui.toast("Capital initial du compte de destination invalide. Transfert interrompu.", "negative");
+              return false;
+            }
+            if (!isFiniteNumber(targetAccount.currentCapital)) {
+              ui.toast("Solde du compte de destination corrompu. Transfert interrompu.", "negative");
+              return false;
+            }
+          } else {
+            if (!isFiniteNumber(targetAccount.currentCapital)) {
+              ui.toast("Solde du compte corrompu. Mise à jour interrompue.", "negative");
+              return false;
+            }
+            if (!isFiniteNumber(trade.resultCurrency)) {
+              ui.toast("Résultat historique du trade invalide. Mise à jour interrompue.", "negative");
+              return false;
+            }
+          }
+
+          // Étape 3 : Détection des déclencheurs
+          const isLegacy = !isStrictPositiveFiniteNumber(trade.riskCapitalSnapshot);
+          const riskInteracted = Boolean(state.hasInteractedWithRisk);
+          const riskValueChanged = isFiniteNumber(trade.riskPercent) ? risk !== trade.riskPercent : true;
+          const riskTrigger = isLegacy ? riskInteracted : riskValueChanged;
+
+          const resultChanged = resultCurrency !== trade.resultCurrency;
+          const rrPlannedChanged = trade.rrPlanned != null ? rrPlanned !== trade.rrPlanned : true;
+
+          // Étape 4 : Calcul en mémoire de la mise à jour (aucune mutation)
+          let finalSnapshot = trade.riskCapitalSnapshot;
+          let finalRiskPercent = trade.riskPercent;
+          let finalRiskAmount = trade.riskAmount;
+          let finalResultCurrency = trade.resultCurrency;
+          let finalRrPlanned = trade.rrPlanned;
+          let finalResultR = trade.resultR;
+          let finalResultPercent = trade.resultPercent;
+          let finalTradeStatus = trade.tradeStatus;
+          let finalRrObtained = trade.rrObtained;
+          let finalRealPL = trade.realPL;
+          let finalTheoreticalPL = trade.theoreticalPL;
+          let finalEmotionalDelta = trade.emotionalDelta;
+          let finalEmotionalDeltaR = trade.emotionalDeltaR;
+          let finalEmotionalDeltaCurrency = trade.emotionalDeltaCurrency;
+
+          if (isTransfer) {
+            // Transfert vers un autre compte : nouveau snapshot = targetAccount.initialCapital
+            finalSnapshot = targetAccount.initialCapital;
+            finalRiskPercent = risk;
+            finalRiskAmount = calculations.riskAmount(finalSnapshot, finalRiskPercent);
+            finalResultCurrency = resultCurrency;
+            finalRrPlanned = rrPlanned;
+
+            const metrics = calculations.buildTradeMetricsV3Cards({
+              resultCurrency: finalResultCurrency,
+              riskAmount: finalRiskAmount,
+              riskCapitalSnapshot: finalSnapshot,
+              rrPlanned: finalRrPlanned
+            });
+
+            finalResultR = metrics.resultR;
+            finalResultPercent = metrics.resultPercent;
+            finalTradeStatus = metrics.tradeStatus;
+            finalRrObtained = metrics.resultR;
+            finalRealPL = +(metrics.resultR * finalRiskPercent).toFixed(4);
+            finalTheoreticalPL = +(metrics.theoreticalResultR * finalRiskPercent).toFixed(4);
+            finalEmotionalDelta = +(metrics.resultR * finalRiskPercent).toFixed(4) - +(metrics.theoreticalResultR * finalRiskPercent).toFixed(4);
+            finalEmotionalDeltaR = metrics.emotionalDeltaR;
+            finalEmotionalDeltaCurrency = metrics.emotionalDeltaCurrency;
+          } else {
+            // Même compte : gestion stricte des 4 situations et des cas legacy
+            if (riskTrigger) {
+              if (isLegacy) {
+                // Régularisation explicite : adossement au capital initial du compte
+                if (!isStrictPositiveFiniteNumber(targetAccount.initialCapital)) {
+                  ui.toast("Capital initial du compte invalide pour régulariser le risque.", "negative");
+                  return false;
+                }
+                finalSnapshot = targetAccount.initialCapital;
+              }
+              finalRiskPercent = risk;
+              finalRiskAmount = calculations.riskAmount(finalSnapshot, finalRiskPercent);
+            }
+
+            if (resultChanged) {
+              finalResultCurrency = resultCurrency;
+              const rounded = Math.round(finalResultCurrency * 100) / 100;
+              finalTradeStatus = rounded > 0 ? "Gagnant" : rounded < 0 ? "Perdant" : "BE";
+            }
+
+            if (rrPlannedChanged) {
+              finalRrPlanned = rrPlanned;
+            }
+
+            // Recalcul des métriques selon la disponibilité des données
+            if (riskTrigger || resultChanged || rrPlannedChanged) {
+              if (isStrictPositiveFiniteNumber(finalRiskAmount)) {
+                finalResultR = calculations.resultRFromCurrency(finalResultCurrency, finalRiskAmount);
+                finalRrObtained = finalResultR;
+                if (isFiniteNumber(finalRiskPercent)) {
+                  finalRealPL = +(finalResultR * finalRiskPercent).toFixed(4);
+                  finalTheoreticalPL = +(Number(finalRrPlanned || 0) * finalRiskPercent).toFixed(4);
+                  finalEmotionalDelta = finalRealPL - finalTheoreticalPL;
+                }
+                const deltaFull = calculations.emotionalDeltaFull(finalResultR, Number(finalRrPlanned || 0), finalRiskAmount);
+                finalEmotionalDeltaR = deltaFull.r;
+                finalEmotionalDeltaCurrency = deltaFull.currency;
+              } else {
+                // Trade legacy sans riskAmount valide et sans régularisation
+                finalResultR = null;
+                finalRrObtained = null;
+                finalRealPL = null;
+                finalTheoreticalPL = null;
+                finalEmotionalDelta = null;
+                finalEmotionalDeltaR = null;
+                finalEmotionalDeltaCurrency = null;
+              }
+
+              if (isStrictPositiveFiniteNumber(finalSnapshot)) {
+                finalResultPercent = +((finalResultCurrency / finalSnapshot) * 100).toFixed(2);
+              } else if (!resultChanged) {
+                finalResultPercent = trade.resultPercent; // conservation valeur historique
+              } else {
+                finalResultPercent = null; // résultat changé sans snapshot
+              }
+            }
+          }
+
+          // Étape 5 : Calcul des soldes cibles
+          let newPreviousCapital = null;
+          let newTargetCapital = null;
+
+          if (isTransfer) {
+            newPreviousCapital = +(previousAccount.currentCapital - trade.resultCurrency).toFixed(2);
+            newTargetCapital = +(targetAccount.currentCapital + finalResultCurrency).toFixed(2);
+          } else {
+            const balanceDelta = finalResultCurrency - trade.resultCurrency;
+            newTargetCapital = +(targetAccount.currentCapital + balanceDelta).toFixed(2);
+          }
+
+          // Étape 6 : Application atomique des mutations
           const fields = actions.collectWizardFields();
+
+          if (isTransfer) {
+            previousAccount.currentCapital = newPreviousCapital;
+            targetAccount.currentCapital = newTargetCapital;
+          } else {
+            targetAccount.currentCapital = newTargetCapital;
+          }
 
           Object.assign(trade, {
             accountId,
-            accountName: account ? account.name : trade.accountName,
+            accountName: targetAccount.name || trade.accountName,
             ...fields,
-            riskPercent: risk,
-            riskCapitalSnapshot,
-            riskAmount,
-            rrPlanned,
-            rrObtained: metrics.resultR,
-            realPL: +(metrics.resultR * risk).toFixed(4),
-            theoreticalPL: +(metrics.theoreticalResultR * risk).toFixed(4),
-            resultPercent: metrics.resultPercent,
-            resultR: metrics.resultR,
-            resultCurrency: metrics.resultCurrency,
-            tradeStatus: metrics.tradeStatus,
-            emotionalDelta: +(metrics.resultR * risk).toFixed(4) - +(metrics.theoreticalResultR * risk).toFixed(4),
-            emotionalDeltaR: metrics.emotionalDeltaR,
-            emotionalDeltaCurrency: metrics.emotionalDeltaCurrency,
-            source: "v3-journal-8cards",
+            riskPercent: finalRiskPercent,
+            riskCapitalSnapshot: finalSnapshot,
+            riskAmount: finalRiskAmount,
+            rrPlanned: finalRrPlanned,
+            rrObtained: finalRrObtained,
+            realPL: finalRealPL,
+            theoreticalPL: finalTheoreticalPL,
+            resultPercent: finalResultPercent,
+            resultR: finalResultR,
+            resultCurrency: finalResultCurrency,
+            tradeStatus: finalTradeStatus,
+            emotionalDelta: finalEmotionalDelta,
+            emotionalDeltaR: finalEmotionalDeltaR,
+            emotionalDeltaCurrency: finalEmotionalDeltaCurrency,
+            source: trade.source || "v3-journal-8cards",
             updatedAt: new Date().toISOString()
           });
 
-          if (account) {
-            account.currentCapital = +((Number(account.currentCapital) || 0) + metrics.resultCurrency).toFixed(2);
-          }
-
-          // MEDIA-001 (Livraison G — A2, correction) : révocation faite ICI, pas dans
-          // resetTradeForm() — à ce point, editingTradeId (= tradeId, paramètre de la
-          // fonction) est encore valide, et resetTradeForm() sera appelée juste après
-          // par saveTrade() alors qu'il sera déjà nul. Le nouveau brouillon (draft) créé
-          // ensuite par resetTradeForm() régénère de toute façon des slots vides —
-          // aucune image affichée ne référence plus ces URLs après ce point.
+          // Révocation des captures temporaires et nettoyage
           ui.revokeCaptureUrlsForTrade(tradeId);
           state.editingTradeId = null;
+          state.hasInteractedWithRisk = false;
           ui.toast("Trade mis à jour.", "positive");
+          return true;
         },
 
         // Passe le formulaire en mode édition pour un trade donné (Document 06 : jamais de
@@ -257,6 +462,7 @@
           if (!trade) return;
 
           state.editingTradeId = tradeId;
+          state.hasInteractedWithRisk = false;
           state.selectedAsset = trade.asset || "";
           state.selectedStrategy = trade.strategy || "";
           state.selectedDirection = trade.direction || "Buy";
@@ -312,6 +518,7 @@
           // déjà nullifié editingTradeId avant que resetTradeForm() ne soit appelée.
           const previousEditingTradeId = state.editingTradeId;
           state.editingTradeId = null;
+          state.hasInteractedWithRisk = false;
           dom["trade-form"].reset();
           state.selectedAsset = "";
           state.selectedStrategy = "";
@@ -672,7 +879,12 @@ async runImport() {
         dom["trade-form"].addEventListener("submit", actions.saveTrade);
 
         dom["account-select"].addEventListener("change", () => ui.renderRiskOptions());
-        dom["risk-select"].addEventListener("change", () => ui.updateRiskPreview());
+        dom["risk-select"].addEventListener("change", () => {
+          if (state.editingTradeId) {
+            state.hasInteractedWithRisk = true;
+          }
+          ui.updateRiskPreview();
+        });
         // RP-001 (Dashboard Account Filter)
 dom["dashboard-account-filter"].addEventListener("change", () => {
   state.dashboardAccountFilter = dom["dashboard-account-filter"].value;

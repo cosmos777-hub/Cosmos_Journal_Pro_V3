@@ -457,7 +457,7 @@ Cette phase regroupe les travaux de fiabilisation et d'optimisation menés aprè
 
 ## ✅ PWA-UPDATE-001 — Fiabilisation du cycle de mise à jour PWA
 
-**Statut : Terminé et validé**  
+**Statut : Committé et intégré à la branche de déploiement (origin/main) — Validé en test utilisateur**  
 **Date : 14 Août 2026**  
 **Fichiers :** `index.html`, `styles/components.css`, `sw.js`
 
@@ -473,7 +473,7 @@ Mise en place d'un protocole de mise à jour in-app explicite et non bloquant po
 
 ## ✅ MEDIA-ACCESS-001 — Consultation directe des captures & Visionneuse multi-slots
 
-**Statut : Terminé et validé**  
+**Statut : Committé et intégré à la branche de déploiement (origin/main) — Validé en test utilisateur**  
 **Date : 03 Septembre 2026**  
 **Fichiers :** `index.html`, `src/main.js`, `src/ui/journal.js`, `styles/journal.css`
 
@@ -489,7 +489,7 @@ Amélioration de l'accessibilité des captures d'écran associées aux trades :
 
 ## ✅ MOB-IMPORT-001 — Scroll horizontal des actions du Header sur Mobile
 
-**Statut : Terminé et validé**  
+**Statut : Committé et intégré à la branche de déploiement (origin/main) — Validé en test utilisateur**  
 **Date : 04 Novembre 2026**  
 **Fichiers :** `styles/layout.css`
 
@@ -504,7 +504,7 @@ Correction de l'accessibilité des actions du header sur Safari iOS et petits vi
 
 ## ✅ PWA-UPDATE-002 — Invalidation du cache statique PWA sur iOS
 
-**Statut : Terminé et validé**  
+**Statut : Committé et intégré à la branche de déploiement (origin/main) — Validé en test utilisateur**  
 **Date : 04 Novembre 2026**  
 **Fichiers :** `sw.js`
 
@@ -519,7 +519,7 @@ Résolution du blocage de mise à jour des ressources CSS dans la PWA installée
 
 ## ✅ BOOT-001 — Expérience de démarrage sécurisée & Orchestrateur de Boot
 
-**Statut : Terminé et validé**  
+**Statut : Committé et intégré à la branche de déploiement (origin/main) — Validé en tests automatisés (44/44) et test utilisateur**  
 **Date : 07 Novembre 2026**  
 **Fichiers :** `index.html`, `src/main.js`
 
@@ -534,3 +534,59 @@ Résolution du blocage de mise à jour des ressources CSS dans la PWA installée
 - Rideau de protection d'incident : en cas d'erreur avérée (CSS, script ou initialisation `init()`), le rideau `#app-boot-loader` est maintenu, le spinner est arrêté et une carte d'erreur sobre s'affiche avec bouton de rechargement manuel. Aucun écran dégradé ou incomplet n'est exposé.
 - Validation technique : 44/44 assertions validées dans la suite de tests automatisés.
 - Validation physique : navigateurs desktop, Safari iPhone et PWA iOS installée.
+
+## ✅ RISK-001 — Gestion du risque nominal et intégrité des métriques
+
+**Statut : TERMINÉ**
+**Date de clôture : 14 Novembre 2026**
+
+### Résumé
+
+RISK-001 introduit un modèle de risque fondé sur un snapshot immuable du capital
+initial (`riskCapitalSnapshot`) figé au moment de la création du trade. Ce snapshot
+garantit que les métriques historiques ne sont jamais affectées par l'évolution
+ultérieure du solde du compte.
+
+### Règles implémentées
+
+- Le risque nominal est toujours calculé sur `account.initialCapital`, jamais sur
+  `currentCapital`.
+- Chaque trade conserve un `riskCapitalSnapshot` immuable.
+- Les modifications purement descriptives ne recalculent aucune métrique financière.
+- Un changement de risque recalcule uniquement à partir du snapshot historique.
+- Les ajustements de solde sont effectués exactement une fois, après validation
+  complète de l'état cible en mémoire.
+- La distinction entre une valeur inconnue (`null`) et un vrai zéro est appliquée
+  de façon cohérente dans le Journal, le Coach et les calculs.
+
+### Tests réalisés
+
+- 85 assertions logiques réussies (0 échec) couvrant : création, modification,
+  transfert entre comptes, trades legacy, régularisation explicite, distinction
+  `null`/`0`, seuil des 30 deltas valides du Coach.
+- Vérifications manuelles recommandées en navigateur : persistance après
+  rechargement, comportement des trades legacy en édition, isolation du drapeau
+  `hasInteractedWithRisk`.
+
+### Limitations connues documentées
+
+Voir section Limitations connues ci-dessous.
+
+### Limitations connues
+
+**L-001 — Ancien trade sans RR planifié non modifiable depuis l'interface**
+Un trade dont `rrPlanned` est absent ou `null` ne peut pas être sauvegardé via
+le formulaire d'édition, même pour une modification purement descriptive. Le champ
+RR est soumis à une validation obligatoire (`parseStrictNumber`). Ce comportement
+est volontaire : il évite de produire des métriques théoriques sur une base absente.
+Les données existantes de ces trades sont préservées en lecture. Une future interface
+dédiée à la correction des trades incomplets pourrait lever cette limitation.
+
+**L-002 — Faux zéro possible sur les trades V2 migrés**
+La migration `upgradeTradeV3Calc` utilise `calculations.resultInR(trade.realPL, riskPercent)`.
+Si `riskPercent` est absent ou nul sur un ancien trade V2, cette fonction retourne `0`
+qui est stocké comme `resultR`. Ce `0` peut être interprété comme un break-even alors
+que la donnée est simplement inconnue. Ce comportement est antérieur à RISK-001 et
+n'a pas été modifié dans ce chantier. Aucun utilisateur de V3 pure n'est concerné.
+À traiter dans un futur chantier de migration si le volume de trades V2 affectés
+le justifie.
